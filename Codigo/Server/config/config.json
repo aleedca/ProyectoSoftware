@@ -1,0 +1,23 @@
+{
+  "development": {
+    "username": "InloTEC",
+    "password": "#$InloTEC1234",
+    "database": "InloTEC",
+    "host": "InloTEC.mssql.somee.com",
+    "dialect": "mysql"
+  },
+  "test": {
+    "username": "InloTEC",
+    "password": "#$InloTEC1234",
+    "database": "InloTEC",
+    "host": "InloTEC.mssql.somee.com",
+    "dialect": "mysql"
+  },
+  "production": {
+    "username": "InloTEC",
+    "password": "#$InloTEC1234",
+    "database": "InloTEC",
+    "host": "InloTEC.mssql.somee.com",
+    "dialect": "mysql"
+  }
+}
