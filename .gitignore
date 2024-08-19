@@ -22,7 +22,7 @@ db/
 # Build output
 build/
 dist/
-public/
+
 
 # Dependency directories
 jspm_packages/
