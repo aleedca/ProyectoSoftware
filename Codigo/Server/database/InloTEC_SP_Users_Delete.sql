@@ -5,8 +5,7 @@
 
 CREATE OR ALTER PROCEDURE [dbo].[InloTEC_SP_Users_Delete]
     -- Parameters
-	@IN_username NVARCHAR(32) = NULL,
-    @IN_passwordhash NVARCHAR(32),
+	@IN_passwordhash NVARCHAR(32),
 	@IN_email NVARCHAR(128)
     
 
