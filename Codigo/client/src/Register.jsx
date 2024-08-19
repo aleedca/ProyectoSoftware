@@ -3,11 +3,11 @@
 import './App.css'
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { Link } from 'react-router-dom';
 import { FaLock, FaEnvelope } from 'react-icons/fa';
+
 import imagen from './Assets/login.png';
 
-function Login() {
+function Register() {
 
   const [Email, setEmail] = useState('');
   const [Password, setPassword] = useState('');
@@ -67,7 +67,7 @@ function Login() {
   
           {/* Columna para el formulario */}
           <div className='columna columna-formulario'>
-            <h1>Iniciar sesión</h1>
+            <h1>Crear cuenta</h1>
             
             
               <body style={{ marginTop: '20px' }}>Correo electrónico</body>
@@ -84,7 +84,7 @@ function Login() {
               <body>¿Olvidó la contraseña?</body>
 
               <button style={{ marginTop: '20px' }} className="btn_naranja">Iniciar sesión</button>
-              <body> ¿No tienes una cuenta? <Link to="/registrarse" style={{color: '#018ABD', fontWeight: 'bold', marginLeft: '80px'}}>Registrarse</Link></body>
+             
 
           </div>
         </div>
@@ -94,4 +94,4 @@ function Login() {
   
 }
 
-export default Login;
+export default Register;

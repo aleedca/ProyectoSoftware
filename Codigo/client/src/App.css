@@ -1,57 +1,219 @@
-.App {
-  width: 100vw;
-  height: auto;
-  display: flex;
-  align-items: center;
-  padding-top: 40px;
-  flex-direction: column;
+:root {
+  --color-100: #001B48;
+  --color-200: #FFFFFF;
+  --color-300: #374151;
+  --color-400: #004581;
+  --color-500: #DD3915;
+  --color-600: #018ABD;
+  --color-700: #EEEEEE;  
+
+  --font: 'Inter', sans-serif;
 }
 
-body {
+* {
   margin: 0;
   padding: 0;
 }
 
-.post {
-  width: 400px;
-  height: 300px;
-  border-radius: 10px;
+.fondo-bienvenida, .fondo-login {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  background-position: fit;
+}
+
+/* Fondo por defecto para cada clase */
+.fondo-bienvenida {
+  background-image: url('./Assets/Background_01.png');
+}
+
+.fondo-login {
+  background-image: url('./Assets/Background_02.png');
+}
+
+
+h1 {
+  font-size: 40px;
+  margin-top: 10px;
+  margin-bottom: 15px;
+  color: var(--color-100);
+}
+
+h2 {
+  font-size: 18px;
+  margin-bottom: 20px;
+  margin-top: 20px;
+  color: var(--color-100);
+}
+
+body {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--color-300);
+  text-align: justify;
+}
+
+textarea {
+  width: 300px;
+  height: 100px;
+  resize: none;
+  font-size: 12px;
+}
+
+button {
+  padding: 10px 20px;
+  margin: 8px 0px 8px 0px;
+  width: 80%;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+}
+
+button:hover {
+  background-color:#004581;
+  border-color: #004581;
+  transform: scale(1.03);
+}
+
+ul {
+  list-style: none;
+  padding-bottom: 10px 0;
+  font-family: var(--font);
+}
+
+ul li {
+  text-align: left;
+  margin-top: 10px;
+  padding: 10px;
+  background-color: var(--color-700);
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+}
+
+ul li:hover {
+  background-color: var(--color-400);
+}
+
+
+.contenedor {
+  border-radius: 30px;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+  background-color: rgba(255, 255, 255, 0.6);
+  text-align: center;
+  justify-content: center;
+  font-family: var(--font);
+  position: center;
+
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+
+  justify-content: center;
+  align-items: center;
   display: flex;
   flex-direction: column;
-  margin-top: 50px;
-  border: 1px solid lightgray;
-  font-family: Arial, Helvetica, sans-serif;
-
-  box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
 }
 
-.post:hover {
-  box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
-  cursor: pointer;
-}
-.post .title {
-  flex: 20%;
-  border-bottom: 1px solid lightgray;
-  background-color: dodgerblue;
-  display: grid;
-  place-content: center;
-  color: white;
-}
-
-.post .body {
-  flex: 60%;
-  display: grid;
-  place-content: center;
-}
-
-.post .footer {
-  flex: 20%;
-  border-top: 1px solid lightgray;
+.contenedor-columnas {
   display: flex;
+  justify-content: center;
   align-items: center;
-  padding-left: 15px;
-  background-color: dodgerblue;
-  color: white;
-  border-bottom-left-radius: 10px;
-  border-bottom-right-radius: 10px;
+  height: 100%;
+  padding: 20px;
+  width: 650px;
+  height: 400px;
+  padding: 50px;
+}
+
+.columna {
+  flex: 1;
+  padding: 20px;
+}
+
+/* Ajuste para la columna que contiene la imagen */
+.columna-imagen {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.columna-imagen img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 10px;
+}
+
+/* Ajuste para la columna de los inputs y botones */
+.columna-formulario {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.input-contenedor {
+  position: relative;
+}
+
+.input-contenedor input[type=text], input[type=number],
+input[type=password], input[type=date], select, p, textarea{
+  font-weight: regular;
+  font-size: 12px;
+  font-family: var(--font);
+  background-color: var(--color-200);
+  text-align: center;
+  color: var(--color-100);
+
+  width: 100%;
+  padding: 10px;
+  margin: 6.5px 0px;
+  border: 1px solid var(--color-400);
+  border-radius: 6px;
+  box-sizing: border-box;
+}
+
+.input-contenedor .icono {
+  position: absolute;
+  left: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+
+/* Estilo para el botón de color naranja */
+.btn_naranja {
+  font-family: var(--font);
+  background: var(--color-500);
+  color: var(--color-200);
+  border: 2px solid var(--color-500);
+  border-radius: 6px;
+  padding: 12px;
+  width: 100%;
+}
+
+/* Estilo para el botón de color azul */
+.btn_azul {
+  font-family: var(--font);
+  background: var(--color-600);
+  color: var(--color-200);
+  border: 2px solid var(--color-600);
+  border-radius: 6px;
+  padding: 12px;
+  width: 100%;
+}
+
+.logo-container {
+  position: fixed;
+  bottom: 0px;
+  right: 20px;
+}
+
+.logo-container img {
+  width: 100px;
+  height: auto;
+  opacity: 60%;
 }
