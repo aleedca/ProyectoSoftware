@@ -5,10 +5,10 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { Link } from 'react-router-dom';
 import { FaLock, FaEnvelope } from 'react-icons/fa';
-import imagen from './Assets/login.png';
+import imagen from './Assets/inicio.png';
 import { useNavigate } from 'react-router-dom';
 
-function Login() {
+function Inicio() {
   const navigate = useNavigate();
 
   const [correo, setCorreo] = useState('');
@@ -58,38 +58,37 @@ function Login() {
   );*/
 
   return (
-    <div className='fondo-login'>
-      <div className='contenedor'>
-        <div className='contenedor-columnas'>
+    <div className='fondo-bienvenida'>
+      <div className='contenedor-base-columnas'>
+        <div className='contenedor-columnas-sin-ancho'>
 
           {/* Columna para la imagen */}
-          <div className='columna columna-imagen'>
-          <img src={imagen} alt='Imagen Login' />
+          <div className='columna '>
+          <img style={{ marginRight: '100px'}} src={imagen} alt='Imagen Login' />
           </div>
   
           {/* Columna para el formulario */}
-          <div className='columna columna-formulario'>
-            <h1>Iniciar sesión</h1>
+          <div style={{width : '368px'}}>
             
+              <body style={{ marginTop: '20px',textAlign:"end", fontWeight: 'bold', fontSize: '48px', color: '#004581'  }}>Bienvenido</body>
+             
+              <body style={{ marginTop: '20px',textAlign:"end", fontWeight: 'bold', fontSize: '36px', color: '#018ABD'  }}>Gestión Cursos</body>
+              
+              <body style={{ marginTop: '20px',textAlign:"end", fontWeight: 'bold', fontSize: '28px', color: '#AFAFAF'  }}>Técnico en logística e inventarios</body>
+              
             
-              <body style={{ marginTop: '20px' }}>Correo electrónico</body>
-              <div className="input-contenedor">
-                  <FaEnvelope  className="icono" />
-                  <input type="text" placeholder="example@domain.com" value={correo} onChange={(e) => setCorreo(e.target.value)} />
-              </div>
+              <body style={{ marginTop: '20px',textAlign:"end", fontWeight: 'bold', fontSize: '16px'  }}>Información sobre FUNDATEC</body>
+              
+              <body style={{ marginTop: '5px',textAlign:"end", color: 'gray', fontSize: '16px',color: '#6B7280'  }}>El Tecnológico de Costa Rica pone al servicio del sector productivo el potencial de recursos profesionales y de infraestructura a través de su Fundación.</body>
+              <body style={{ marginTop: '20px',textAlign:"end", fontWeight: 'bold', fontSize: '16px'  }}>Contacto</body>
+              
+              <body style={{ marginTop: '5px',textAlign:"end", color: 'gray', fontSize: '16px',color: '#6B7280'  }}  >fundatec@tec.ac.cr <br/>
+              https://www.tec.ac.cr/fundatec</body>
+              <button style={{ marginTop: '20px' }} className="btn_naranja" onClick={() => navigate('/')}>Continuar</button>
+              <body style={{ marginTop: '20px',textAlign:"end", fontWeight: 'bold', fontSize: '16px',textAlign: 'center'  }}>¿No sabes como usar la plataforma?</body>
+              <body style={{color: '#018ABD', fontWeight: 'bold', textAlign:'center'}}>  <Link to="" >Manual de usuario</Link></body>
 
-              <body style={{ marginTop: '20px' }}>Contraseña</body>
-              <div className="input-contenedor">
-                  <FaLock  className="icono" />
-                  <input type="Password" placeholder="Ingrese la contraseña" value={contrasenna} onChange={(e) => setContrasenna(e.target.value)} />
-              </div>
-              <div onClick={() => navigate('/recuperarcontrasena')}  style={{ cursor: 'pointer', textAlign:'start', color: 'black' }}>
-                ¿Olvidó la contraseña?
-              </div>
-
-              <button style={{ marginTop: '20px' }} className="btn_naranja">Iniciar sesión</button>
-              <body> ¿No tienes una cuenta? <Link to="/registrarse" style={{color: '#018ABD', fontWeight: 'bold', marginLeft: '80px'}}>Registrarse</Link></body>
-
+              
           </div>
         </div>
       </div>
@@ -98,4 +97,4 @@ function Login() {
   
 }
 
-export default Login;
+export default Inicio;

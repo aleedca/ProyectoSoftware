@@ -15,7 +15,7 @@
   padding: 0;
 }
 
-.fondo-bienvenida, .fondo-login, .fondo-crearCuenta {
+.fondo-bienvenida, .fondo-login, .fondo-crearCuenta,.fondo-cambiarContraseña {
   position: fixed;
   top: 0;
   left: 0;
@@ -37,6 +37,10 @@
 .fondo-crearCuenta {
   background-image: url('./Assets/Background_03.png');
 }
+.fondo-cambiarContraseña {
+  background-image: url('./Assets/Background_04.png');
+}
+
 
 
 h1 {
@@ -133,9 +137,41 @@ ul li:hover {
   height: auto;
   padding: 40px;
 }
+.contenedor-columnas-sin-ancho {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  padding: 20px;
+  
+  height: auto;
+  padding: 40px;
+}
+.contenedor-base-columnas {
+ 
+  
+  
+  text-align: center;
+  justify-content: center;
+  font-family: var(--font);
+  position: center;
 
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+
+  justify-content: center;
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+}
 .columna {
   flex: 1;
+  padding: 20px;
+}
+.columna2 {
+  flex: 2;
   padding: 20px;
 }
 
@@ -181,6 +217,13 @@ input[type=password], input[type=date], select, p, textarea{
   border-radius: 6px;
   box-sizing: border-box;
 }
+.text-izquierda {
+  text-align: start;
+}
+.text-izquierda::placeholder {
+  text-align: start;
+  direction: rtl; /* Esto fuerza el placeholder a alinearse a la derecha */
+}
 
 .input-contenedor .icono {
   position: absolute;
@@ -222,4 +265,14 @@ input[type=password], input[type=date], select, p, textarea{
   width: 100px;
   height: auto;
   opacity: 60%;
+}
+
+.input-contenedor.error input {
+  border: 1px solid red;
+}
+
+.error-message {
+  color: red;
+  font-size: 14px;
+  margin-bottom: 15px;
 }
