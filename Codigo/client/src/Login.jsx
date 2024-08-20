@@ -9,8 +9,8 @@ import imagen from './Assets/login.png';
 
 function Login() {
 
-  const [Email, setEmail] = useState('');
-  const [Password, setPassword] = useState('');
+  const [correo, setCorreo] = useState('');
+  const [contrasenna, setContrasenna] = useState('');
   const [error, setError] = useState('');
 
   const [listOfPosts, setListOfPosts] = useState([]);
@@ -36,12 +36,12 @@ function Login() {
                   <input placeholder="Enter your full name" className="form_style" type="text" />
                 </div>
                 <div className="form_group">
-                  <label className="sub_title" htmlFor="email">Email</label>
-                  <input placeholder="Enter your email" id="email" className="form_style" type="email" />
+                  <label className="sub_title" htmlFor="correo">correo</label>
+                  <input placeholder="Enter your correo" id="correo" className="form_style" type="correo" />
                 </div>
                 <div className="form_group">
-                  <label className="sub_title" htmlFor="password">Password</label>
-                  <input placeholder="Enter your password" id="password" className="form_style" type="password" />
+                  <label className="sub_title" htmlFor="contrasenna">contrasenna</label>
+                  <input placeholder="Enter your contrasenna" id="contrasenna" className="form_style" type="contrasenna" />
                 </div>
                 <div>
                   <button className="btn">SIGN UP</button>
@@ -73,13 +73,13 @@ function Login() {
               <body style={{ marginTop: '20px' }}>Correo electrónico</body>
               <div className="input-contenedor">
                   <FaEnvelope  className="icono" />
-                  <input type="text" placeholder="example@domain.com" value={Email} onChange={(e) => setEmail(e.target.value)} />
+                  <input type="text" placeholder="example@domain.com" value={correo} onChange={(e) => setCorreo(e.target.value)} />
               </div>
 
               <body style={{ marginTop: '20px' }}>Contraseña</body>
               <div className="input-contenedor">
                   <FaLock  className="icono" />
-                  <input type="password" placeholder="Ingrese la contraseña" value={Password} onChange={(e) => setPassword(e.target.value)} />
+                  <input type="Password" placeholder="Ingrese la contraseña" value={contrasenna} onChange={(e) => setContrasenna(e.target.value)} />
               </div>
               <body>¿Olvidó la contraseña?</body>
 

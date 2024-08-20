@@ -15,7 +15,7 @@
   padding: 0;
 }
 
-.fondo-bienvenida, .fondo-login {
+.fondo-bienvenida, .fondo-login, .fondo-crearCuenta {
   position: fixed;
   top: 0;
   left: 0;
@@ -32,6 +32,10 @@
 
 .fondo-login {
   background-image: url('./Assets/Background_02.png');
+}
+
+.fondo-crearCuenta {
+  background-image: url('./Assets/Background_03.png');
 }
 
 
@@ -100,7 +104,7 @@ ul li:hover {
 
 
 .contenedor {
-  border-radius: 30px;
+  border-radius: 15px;
   box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
   background-color: rgba(255, 255, 255, 0.6);
   text-align: center;
@@ -126,8 +130,8 @@ ul li:hover {
   height: 100%;
   padding: 20px;
   width: 650px;
-  height: 400px;
-  padding: 50px;
+  height: auto;
+  padding: 40px;
 }
 
 .columna {
@@ -137,9 +141,11 @@ ul li:hover {
 
 /* Ajuste para la columna que contiene la imagen */
 .columna-imagen {
+  margin-top: 40px;
   display: flex;
-  justify-content: center;
+  flex-direction: column;
   align-items: center;
+  justify-content: center;
 }
 
 .columna-imagen img {

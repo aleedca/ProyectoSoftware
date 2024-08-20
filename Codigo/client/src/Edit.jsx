@@ -7,7 +7,7 @@ import { Link } from 'react-router-dom';
 import { FaLock, FaEnvelope, FaUser, FaIdCard, FaUnlock} from 'react-icons/fa';
 import imagen from './Assets/register.png';
 
-function Register() {
+function Edit() {
 
   const [nombre, setNombre] = useState('');
   const [primerApellido, setPrimerApellido] = useState('');
@@ -24,7 +24,7 @@ function Register() {
 
           {/* Columna para el formulario */}
           <div className='columna columna-formulario'>
-            <h1>Crear cuenta</h1>
+            <h1>Editar cuenta</h1>
             
               <body>Nombre</body>
               <div className="input-contenedor">
@@ -66,8 +66,8 @@ function Register() {
           {/* Columna para la imagen */}
           <div className='columna columna-imagen'>
             <img style={{ marginTop: '40px' }} src={imagen} alt='Imagen Login' />
-            <button style={{ marginTop: '20px' }} className="btn_naranja">Registrar cuenta</button>
-            <body> ¿Ya tienes cuenta? <Link to="" style={{color: '#018ABD', fontWeight: 'bold', marginLeft: '80px'}}>Iniciar sesión</Link></body>
+            <button style={{ marginTop: '20px' }} className="btn_naranja">Actualizar cuenta</button>
+            <body> ¿Desea eliminar la cuenta? <Link to="" style={{color: '#018ABD', fontWeight: 'bold', marginLeft: '80px'}}>Eliminar</Link></body>
           </div>
 
         </div>
@@ -77,4 +77,4 @@ function Register() {
   
 }
 
-export default Register;
+export default Edit;
