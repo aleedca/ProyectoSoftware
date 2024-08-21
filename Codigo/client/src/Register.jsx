@@ -47,7 +47,7 @@ function Register() {
       return; // Detiene la ejecución si hay errores
     }
 
-    axios.post("http://localhost:3001/cuenta", {
+    axios.post("http://localhost:3001/addUser", {
       nombre,
       primerApellido,
       segundoApellido,

@@ -33,16 +33,4 @@ const getConnection = async () => {
     return pool;
 };
 
-const executeSQLFile = async (filePath) => {
-  try {
-    const pool = await getConnection();
-    const sqlQuery = fs.readFileSync(filePath, 'utf-8');
-    const result = await pool.request().query(sqlQuery);
-    return result;
-  } catch (error) {
-    console.error('Error al ejecutar el query:', error);
-    throw error;
-  }
-};
-
-module.exports = { getConnection, executeSQLFile };
+module.exports = { getConnection };
