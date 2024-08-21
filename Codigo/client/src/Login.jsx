@@ -50,6 +50,7 @@ function Login() {
       })
       .catch((error) => {
         console.error('Error al autenticar el usuario:', error.response.data);
+        alert('Usuario no encontrado')
         setError(error.response.data);
       });
   }
