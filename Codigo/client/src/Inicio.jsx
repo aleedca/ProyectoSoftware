@@ -71,7 +71,7 @@ function Inicio() {
           <div style={{width : '368px'}}>
             
               <body style={{ marginTop: '20px',textAlign:"end", fontWeight: 'bold', fontSize: '48px', color: '#004581'  }}>Bienvenido</body>
-             
+              
               <body style={{ marginTop: '20px',textAlign:"end", fontWeight: 'bold', fontSize: '36px', color: '#018ABD'  }}>Gestión Cursos</body>
               
               <body style={{ marginTop: '20px',textAlign:"end", fontWeight: 'bold', fontSize: '28px', color: '#AFAFAF'  }}>Técnico en logística e inventarios</body>
@@ -84,7 +84,7 @@ function Inicio() {
               
               <body style={{ marginTop: '5px',textAlign:"end", color: 'gray', fontSize: '16px',color: '#6B7280'  }}  >fundatec@tec.ac.cr <br/>
               https://www.tec.ac.cr/fundatec</body>
-              <button style={{ marginTop: '20px' }} className="btn_naranja" onClick={() => navigate('/')}>Continuar</button>
+              <button style={{ marginTop: '20px' }} className="btn_naranja" onClick={() => navigate('/login')}>Continuar</button>
               <body style={{ marginTop: '20px',textAlign:"end", fontWeight: 'bold', fontSize: '16px',textAlign: 'center'  }}>¿No sabes como usar la plataforma?</body>
               <body style={{color: '#018ABD', fontWeight: 'bold', textAlign:'center'}}>  <Link to="" >Manual de usuario</Link></body>
 

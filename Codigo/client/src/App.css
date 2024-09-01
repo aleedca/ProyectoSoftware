@@ -106,7 +106,6 @@ ul li:hover {
   background-color: var(--color-400);
 }
 
-
 .contenedor {
   border-radius: 15px;
   box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
@@ -132,25 +131,19 @@ ul li:hover {
   justify-content: center;
   align-items: center;
   height: 100%;
-  padding: 20px;
   width: 650px;
   height: auto;
-  padding: 40px;
+  padding: 20px;
 }
 .contenedor-columnas-sin-ancho {
   display: flex;
   justify-content: center;
-  align-items: center;
-  height: 100%;
-  padding: 20px;
-  
+  align-items: center;  
   height: auto;
   padding: 40px;
 }
+
 .contenedor-base-columnas {
- 
-  
-  
   text-align: center;
   justify-content: center;
   font-family: var(--font);
@@ -166,10 +159,12 @@ ul li:hover {
   display: flex;
   flex-direction: column;
 }
+
 .columna {
   flex: 1;
   padding: 20px;
 }
+
 .columna2 {
   flex: 2;
   padding: 20px;
@@ -177,11 +172,12 @@ ul li:hover {
 
 /* Ajuste para la columna que contiene la imagen */
 .columna-imagen {
-  margin-top: 40px;
+  margin-top: 20px;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  width: 400px;
 }
 
 .columna-imagen img {
@@ -195,6 +191,7 @@ ul li:hover {
   display: flex;
   flex-direction: column;
   justify-content: center;
+  margin-right: 40px;
 }
 
 .input-contenedor {
@@ -202,7 +199,7 @@ ul li:hover {
 }
 
 .input-contenedor input[type=text], input[type=number],
-input[type=password], input[type=date], select, p, textarea{
+input[type=password], input[type=date], input[type=select], select, p, textarea{
   font-weight: regular;
   font-size: 12px;
   font-family: var(--font);
@@ -275,4 +272,117 @@ input[type=password], input[type=date], select, p, textarea{
   color: red;
   font-size: 14px;
   margin-bottom: 15px;
+}
+
+
+/* ESTILOS POPUP*/
+
+.popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.6); /* Fondo semi-transparente */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000; /* Asegura que esté por encima de otros elementos */
+  backdrop-filter: blur(8px); /* Desenfoque del fondo */
+}
+
+.popup {
+  background-color: var(--color-200);
+  border-radius: 15px;
+  box-shadow: 0px 0px 10px --color-100;
+  width: 850px; /* Ajusta el tamaño según tus necesidades */
+  height: auto;
+  padding: 40px;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+.contenedor-columnas {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  width: 100%;
+  gap: 10px; /* Espacio entre las columnas */
+}
+
+.close-popup {
+  position: absolute;
+  top: 10px;
+  background: none;
+  border: none;
+  font-size: 24px; /* Tamaño del botón "X" */
+  font-weight: bold;
+  cursor: pointer;
+  color: var(--color-300); /* Color de la "X" */
+  padding: 5px; /* Tamaño del área clickeable */
+  line-height: 1; /* Asegura que la "X" no se estire */
+}
+
+/* Elimina el hover azul predeterminado del botón "X" */
+.close-popup:hover {
+  color: var(--color-400); /* Mantén el color de la "X" sin cambiar */
+  background: none; /* No hay cambio de fondo en hover */
+}
+
+/* Asegura que el label y su contenedor estén alineados a la izquierda */
+.field-container {
+  width: 100%; /* Asegura que el contenedor ocupe todo el ancho disponible */
+  text-align: left; /* Alinea todo el contenido del contenedor a la izquierda */
+  margin-bottom: 10px; /* Añade un margen inferior para separar los campos */
+}
+
+.field-container label {
+  display: block; /* Asegura que el label ocupe una línea completa */
+  margin-bottom: 5px; /* Añade un pequeño margen inferior para separar el label del input */
+}
+
+.fila-juntas {
+  display: flex;
+  justify-content: space-between;
+}
+
+.fila-juntas .input-contenedor {
+  flex: 1;
+  margin-right: 10px; /* Espacio entre los campos */
+}
+
+.fila-juntas .input-contenedor:last-child {
+  margin-right: 0; /* Remueve el margen del último elemento */
+}
+
+input[type="time"] {
+  font-size: 12px;
+  font-family: var(--font);
+  background-color: var(--color-200);
+  text-align: center;
+  color: var(--color-100);
+  width: 100%;
+  padding: 10px;
+  margin: 6.5px 0px;
+  border: 1px solid var(--color-400);
+  border-radius: 6px;
+  box-sizing: border-box;
+}
+
+.checkbox-container {
+  display: flex;
+  flex-direction: row;
+  align-items: center; /* Centra los checkboxes horizontalmente */
+}
+
+.checkbox-container label {
+  display: flex;
+  align-items: center;
+  margin-right: 10px; /* Espaciado entre checkboxes */
+}
+
+.checkbox-container input[type='checkbox'] {
+  margin-right: 5px; /* Espaciado entre el checkbox y el texto */
 }

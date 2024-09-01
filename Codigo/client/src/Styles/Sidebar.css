@@ -1,0 +1,72 @@
+/* Sidebar Styles */
+.sidebar {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    width: 250px;
+    background-color: #f4f4f4; /*Hacer gradientes*/
+    transition: width 0.3s ease;
+}
+
+.sidebar.closed {
+    width: 80px;
+}
+
+.toggle-button {
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    margin-top: 20px;
+    align-self: center;
+}
+
+.user-info {
+    padding: 20px;
+    text-align: center;
+}
+
+nav ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+nav ul li {
+    margin-bottom: 10px;
+}
+
+nav ul li button {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    background-color: transparent;
+    border: none;
+    color: #333;
+    padding: 10px;
+    font-size: 1em;
+    cursor: pointer;
+}
+
+nav ul li button span {
+    margin-left: 10px;
+}
+
+nav ul li button:hover {
+    background-color: #e0e0e0;
+}
+
+/* Responsiveness */
+@media (max-width: 600px) {
+    .sidebar {
+        width: 80px;
+    }
+
+    .sidebar.open {
+        width: 200px;
+    }
+}
+
+@media (max-width: 480px) {
+    .sidebar {
+        width: 60px;
+    }
+}
