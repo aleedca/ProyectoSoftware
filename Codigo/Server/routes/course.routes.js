@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const { getConnection } = require('../connection.js');
-const { getCourses, getCourse, addCourse, editCourse, deleteCourse } = require('../controllers/courses.controller')
+const { getCourses, getCourse, addCourse, editCourse, deleteCourse } = require('../controllers/course.controller.js')
 
 router.get('/getCourses', getCourses);
 
