@@ -9,6 +9,9 @@ app.use(cors());
 const userRoutes = require("./routes/user.routes.js")
 app.use("/", userRoutes);
 
+const coursesRoutes = require("./routes/courses.routes.js")
+app.use("/", coursesRoutes); 
+
 app.listen(3001, () => {
   console.log("Server running on port 3001")
 });
