@@ -18,6 +18,9 @@ app.use("/", groupRoutes);
 const teacherRoutes = require("./routes/teacher.routes.js")
 app.use("/", teacherRoutes);
 
+const scheduleRoutes = require("./routes/schedule.routes.js")
+app.use("/", scheduleRoutes);
+
 app.listen(3001, () => {
   console.log("Server running on port 3001")
 });
