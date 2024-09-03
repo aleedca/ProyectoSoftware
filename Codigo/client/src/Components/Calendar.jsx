@@ -55,7 +55,7 @@ function Calendar() {
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
   };
-
+  console.log(new Date())
   const events = [
     {
       title: 'Evento 1',
@@ -66,7 +66,7 @@ function Calendar() {
     {
       title: 'Evento 2',
       start: new Date(new Date().setDate(new Date().getDate() + 1)),
-      end: new Date(new Date().setDate(new Date().getDate() + 1)),
+      end: new Date(new Date().setDate(new Date().getDate() + 2)),
       color: '#33caff',
     },
   ];
@@ -165,6 +165,7 @@ function Toolbar(props) {
         >
           Mes
         </button>
+        
       </div>
     </div>
   );

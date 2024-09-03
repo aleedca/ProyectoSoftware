@@ -24,6 +24,10 @@ function Popup({ type, closePopup }) {
                                 <div className='input-contenedor'>
                                     <input type='text' placeholder='Nombre del curso' />
                                 </div>
+                                <body>Grupo</body>
+                                <div className='input-contenedor'>
+                                    <input type='select' placeholder='Grupo' />
+                                </div>
                                 <body>Profesor(a) responsable</body>
                                 <div className='input-contenedor'>
                                     <input type='select' placeholder='Profesor o profesora' />
@@ -39,6 +43,10 @@ function Popup({ type, closePopup }) {
                                         <input type='date' placeholder='Fecha fin' />
                                     </div>
                                 </div>
+                                <body>Horario</body>
+                                <div className='input-contenedor'>
+                                    <input type='select' placeholder='Horario' />
+                                </div>
                                 
                                 <div className='fila-juntas'>
                                     <div className='input-contenedor'>
@@ -49,6 +57,10 @@ function Popup({ type, closePopup }) {
                                         <body style={{ textAlign: 'center', marginTop:'10px' }}>Modalidad</body>
                                         <input type='text' placeholder='Seleccione la modalidad' />
                                     </div>
+                                </div>
+                                <body>Notas</body>
+                                <div className='input-contenedor'>
+                                    <input type='text' placeholder='Notas' />
                                 </div>
                                 <button className="btn_naranja" onClick={closePopup}> Agregar curso </button>
                             </div>
@@ -140,6 +152,7 @@ function Popup({ type, closePopup }) {
                                 
                                 <button className="btn_naranja" onClick={closePopup}> Agregar grupo </button>
                                 <button className="btn_azul" onClick={closePopup}> Eliminar grupo </button>
+                                <button className="btn_azul" onClick={closePopup}> Actualizar grupo </button>
                             </div>
                         </div>
                     </div>
@@ -180,7 +193,7 @@ function Popup({ type, closePopup }) {
                                     </div>
                                 </div>
                                 
-                                <button className="btn_naranja" onClick={closePopup}> Agregar curso </button>
+                                <button className="btn_naranja" onClick={closePopup}> Agregar horario </button>
                             </div>
                         </div>
                     </div>
