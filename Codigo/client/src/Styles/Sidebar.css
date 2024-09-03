@@ -4,13 +4,52 @@
     flex-direction: column;
     height: 100vh;
     width: 250px;
-    background-color: #f4f4f4; /*Hacer gradientes*/
+    background: linear-gradient(to bottom, #001B48 0%, #004581 31%,#018ABD 62%,#97CBDC 100%);
+    /*background-color: #f4f4f4; /*Hacer gradientes*/
     transition: width 0.3s ease;
+   
 }
 
 .sidebar.closed {
     width: 80px;
 }
+
+
+.buttons {
+    background-color: #004581; /* Fondo transparente */
+    border: none; /* Sin borde */
+    color: #fff; /* Color del texto */
+    cursor: pointer; /* Cambia el cursor al pasar el mouse */
+    display: flex; /* Alinea el icono y el texto */
+    align-items: center; /* Alinea verticalmente el contenido */
+    gap: 10px; /* Añade espacio entre el icono y el texto */
+    border-radius: 10px; /* Redondea los bordes */
+    box-shadow: 0 0 8px rgba(250, 250, 250, 0.1); /* Añade sombra */
+    height: 48px;
+    width: 100%;
+    
+}
+.buttons:hover {
+    background-color: #33688B; /* Color de fondo personalizado al pasar el mouse */
+  }
+
+.buttons-orange {
+    background-color: #DD3915; /* Fondo transparente */
+    border: none; /* Sin borde */
+    color: #fff; /* Color del texto */
+    cursor: pointer; /* Cambia el cursor al pasar el mouse */
+    display: flex; /* Alinea el icono y el texto */
+    align-items: center; /* Alinea verticalmente el contenido */
+    gap: 10px; /* Añade espacio entre el icono y el texto */
+    border-radius: 10px; /* Redondea los bordes */
+    box-shadow: 0 0 8px rgba(250, 250, 250, 0.1); /* Añade sombra */
+    height: 48px;
+    width: 100%;
+    
+}
+.buttons-orange:hover {
+    background-color: #ca4a2d; /* Color de fondo personalizado al pasar el mouse */
+  }
 
 .toggle-button {
     background-color: transparent;
@@ -18,20 +57,32 @@
     cursor: pointer;
     margin-top: 20px;
     align-self: center;
+    color: white;
 }
 
 .user-info {
     padding: 20px;
-    text-align: center;
+    text-align: left;
 }
 
-nav ul {
+.row {
+    display: flex; /* Flexbox para alinear los elementos en fila */
+    align-items: center; /* Alinea verticalmente los elementos */
+    gap: 15px; /* Espacio entre las columnas */
+  }
+  
+  .col {
+    flex: 1; /* Cada columna toma un espacio igual */
+  }
+
+/*nav ul {
     list-style-type: none;
     padding: 0;
 }
 
 nav ul li {
     margin-bottom: 10px;
+    
 }
 
 nav ul li button {
@@ -52,7 +103,7 @@ nav ul li button span {
 
 nav ul li button:hover {
     background-color: #e0e0e0;
-}
+}*/
 
 /* Responsiveness */
 @media (max-width: 600px) {

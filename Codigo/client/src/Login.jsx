@@ -43,9 +43,9 @@ function Login() {
       }
     })
       .then((response) => {
-        console.log('Usuario autenticado:', response.data);
-        alert('Usuario encontrado');
-        navigate('/')
+        //console.log('Usuario autenticado:', response.data);
+        //alert('Usuario encontrado');
+        navigate('/calendar')
 
       })
       .catch((error) => {

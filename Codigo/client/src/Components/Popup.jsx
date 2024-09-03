@@ -39,26 +39,7 @@ function Popup({ type, closePopup }) {
                                         <input type='date' placeholder='Fecha fin' />
                                     </div>
                                 </div>
-                                <body>Horario curso</body>
-                                <body style={{ textAlign: 'center', margin:'5px' }}>Días de clases</body>
-                                <div className='checkbox-container'>
-                                    <label><input type='checkbox' value='Jueves' />Lunes</label>
-                                    <label><input type='checkbox' value='Jueves' />Martes</label>
-                                    <label><input type='checkbox' value='Jueves' />Miércoles</label>
-                                    <label><input type='checkbox' value='Jueves' />Jueves</label>
-                                    <label><input type='checkbox' value='Jueves' />Viernes</label>
-                                    <label><input type='checkbox' value='Jueves' />Sábado</label>
-                                </div>
-                                <div className='fila-juntas'>
-                                    <div className='input-contenedor'>
-                                        <body style={{ textAlign: 'center', marginTop: '10px' }}>Hora inicio</body>
-                                        <input type='time' placeholder='Hora inicio' />
-                                    </div>
-                                    <div className='input-contenedor'>
-                                        <body style={{ textAlign: 'center', marginTop: '10px' }}>Hora fin</body>
-                                        <input type='time' placeholder='Hora fin' />
-                                    </div>
-                                </div>
+                                
                                 <div className='fila-juntas'>
                                     <div className='input-contenedor'>
                                         <body style={{ textAlign: 'center', marginTop:'10px' }}>Sede</body>
@@ -98,6 +79,8 @@ function Popup({ type, closePopup }) {
                                 </div>
                                 <button className="btn_naranja" onClick={closePopup}> Agregar profesor </button>
                                 <button className="btn_azul" onClick={closePopup}> Actualizar profesor </button>
+                                <button className="btn_azul" onClick={closePopup}> Eliminar profesor </button>
+                            
                             </div>
                         </div>
                     </div>
@@ -160,7 +143,48 @@ function Popup({ type, closePopup }) {
                             </div>
                         </div>
                     </div>
-                );   
+                ); 
+                case 'GestionarHorarios':
+                    return (
+                        <div className='contenedor'>
+                        <div className='contenedor-columnas'>
+                            <div className='columna columna-imagen'>
+                                <img src={curso} alt="Imagen Agregar curso" />
+                            </div>
+                            <div className='columna columna-formulario'>
+                                <button className="close-popup" onClick={closePopup}>X</button>
+                                <h1>Agregar Horario</h1>
+                                <body>Nombre del horario</body>
+                                <div className='input-contenedor'>
+                                    <input type='text' placeholder='Nombre del horario' />
+                                </div>
+                                
+                                
+                                <body style={{ textAlign: 'center', margin:'5px' }}>Días de clases</body>
+                                <div className='checkbox-container'>
+                                    <label><input type='checkbox' value='Jueves' />Lunes</label>
+                                    <label><input type='checkbox' value='Jueves' />Martes</label>
+                                    <label><input type='checkbox' value='Jueves' />Miércoles</label>
+                                    <label><input type='checkbox' value='Jueves' />Jueves</label>
+                                    <label><input type='checkbox' value='Jueves' />Viernes</label>
+                                    <label><input type='checkbox' value='Jueves' />Sábado</label>
+                                </div>
+                                <div className='fila-juntas'>
+                                    <div className='input-contenedor'>
+                                        <body style={{ textAlign: 'center', marginTop: '10px' }}>Hora inicio</body>
+                                        <input type='time' placeholder='Hora inicio' />
+                                    </div>
+                                    <div className='input-contenedor'>
+                                        <body style={{ textAlign: 'center', marginTop: '10px' }}>Hora fin</body>
+                                        <input type='time' placeholder='Hora fin' />
+                                    </div>
+                                </div>
+                                
+                                <button className="btn_naranja" onClick={closePopup}> Agregar curso </button>
+                            </div>
+                        </div>
+                    </div>
+                    );     
             case 'CerrarSesion':
                 return (
                     <div className='contenedor'>

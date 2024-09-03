@@ -9,7 +9,7 @@ app.use(cors());
 const userRoutes = require("./routes/user.routes.js")
 app.use("/", userRoutes);
 
-const coursesRoutes = require("./routes/courses.routes.js")
+const coursesRoutes = require("./routes/course.routes.js")
 app.use("/", coursesRoutes); 
 
 app.listen(3001, () => {

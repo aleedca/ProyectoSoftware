@@ -9,59 +9,81 @@ function Sidebar({ isOpen, toggleSidebar, openPopup }) {
     const navigate = useNavigate();
 
     return (
-        <div className={`sidebar ${isOpen ? "open" : "closed"}`}>
-            <button className="toggle-button" onClick={toggleSidebar}>
+        <div className={`sidebar ${isOpen ? "open" : "closed"}`}  >
+            {!isOpen && (
+                <button className="toggle-button" onClick={toggleSidebar}>
                 <FaBars size={20} />
-            </button>
-            <div className="user-info">
-                {isOpen && (
-                    <>
-                        <FaUser size={40} />
-                        <h2>Puesto: Profesor</h2>
-                        <h3>Nombre Apellido</h3>
-                    </>
-                )}
-            </div>
+                </button>
+            )}
+            {isOpen && (
+                <div className="user-info">
+                    <div className="row">
+                        <div className="col"><FaUser size={40} /></div>
+                        <div className="col">
+                            <span style={{color: 'rgba(255, 255, 255, 0.32)'}}>Puesto:Profesor</span>
+                            <br/>
+                            <span style={{color: '#FFFFFF'}}>NombreApellido</span>
+                        </div>
+                        <div className="col">
+                            <button className="toggle-button" onClick={toggleSidebar}>
+                                <FaBars size={20} />
+                            </button>
+                        </div>
+                        
+                        
+                    </div>
+                
+                </div>
+            )}
+            {isOpen && (
             <nav>
                 <ul>
-                    <li>
-                        <button onClick={() => navigate('/editar')}>
-                            <FaEdit size={20} />
-                            {isOpen && <span>Editar Perfil</span>}
+                    <li style={{backgroundColor: 'transparent'}}>
+                        
+                        <button className="buttons" style={{alignItems: 'center'}} onClick={() => navigate('/editar')} >
+                            {/*<FaEdit  style={{color:"white"}} size={20} />*/}
+                            {isOpen && <span >Editar Perfil</span>}
                         </button>
                     </li>
-                    <li>
-                        <button onClick={() => openPopup('AgregarCurso')}>
+                    <li style={{backgroundColor: 'transparent',height: '48px',marginTop: '70%'}}> 
+                        <button className="buttons-orange" onClick={() => openPopup('AgregarCurso')}>
                             <FaPlus size={20} />
                             {isOpen && <span>Agregar Curso</span>}
                         </button>
                     </li>
-                    <li>
-                        <button onClick={() => openPopup('GestionarProfesor')}>
+                    <li style={{backgroundColor: 'transparent',height: '48px'}}>
+                        <button  className="buttons" onClick={() => openPopup('GestionarProfesor')}>
                             <FaChalkboardTeacher size={20} />
                             {isOpen && <span>Gestionar Profesor</span>}
                         </button>
                     </li>
-                    <li>
-                        <button onClick={() => openPopup('FusionarCursos')}>
+                    <li style={{backgroundColor: 'transparent',height: '48px'}}>
+                        <button className="buttons" onClick={() => openPopup('FusionarCursos')}>
                             <FaObjectGroup size={20} />
                             {isOpen && <span>Fusionar Cursos</span>}
                         </button>
                     </li>
-                    <li>
-                        <button onClick={() => openPopup('GestionarGrupo')}>
+                    <li style={{backgroundColor: 'transparent',height: '48px'}}>
+                        <button className="buttons" onClick={() => openPopup('GestionarGrupo')}>
                             <FaLayerGroup size={20} />
                             {isOpen && <span>Gestionar Grupo</span>}
                         </button>
                     </li>
-                    <li>
-                        <button onClick={() => openPopup('CerrarSesion')}>
+                    <li style={{backgroundColor: 'transparent',height: '48px'}}>
+                        <button className="buttons" onClick={() => openPopup('GestionarHorarios')}>
+                            <FaLayerGroup size={20} />
+                            {isOpen && <span>Gestionar Horarios</span>}
+                        </button>
+                    </li>
+                    <li style={{backgroundColor: 'transparent',height: '48px'}}>
+                        <button className="buttons" onClick={() => openPopup('CerrarSesion')}>
                             <FaSignOutAlt size={20} />
                             {isOpen && <span>Cerrar Sesión</span>}
                         </button>
                     </li>
                 </ul>
             </nav>
+            )}
         </div>
     );
 }
