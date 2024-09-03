@@ -14,7 +14,8 @@ function Popup({ type, closePopup }) {
     const [error, setError] = useState('');
     const [formData, setFormData] = useState({
         nombreProfesor: '',
-        correoProfesor: ''
+        correoProfesor: '',
+        idProfesor: 0 
     });
 
     const [isError, setIsError] = useState({
@@ -28,6 +29,8 @@ function Popup({ type, closePopup }) {
             try {
                 const response = await axios.get('http://localhost:3001/getTeachers');
                 setProfesores(response.data);
+                console.log(response.data)
+                console.log(profesores)
             } catch (error) {
                 console.error('Error al obtener la lista de profesores:', error);
             }
@@ -42,6 +45,31 @@ function Popup({ type, closePopup }) {
             ...prevFormData,
             [name]: value
         }));
+
+    }
+
+
+    const handleSelectChange = (e) => {
+        const {key, value } = e.target;
+        console.log(e.target)
+        if(e.target.value != 0){
+            const profesorConId = profesores.find(profesor => profesor.id === e.target.value);
+            console.log(profesorConId)
+            setFormData((prevFormData) => ({
+                ...prevFormData,
+                ['nombreProfesor']: profesorConId.Name,
+                ['correoProfesor']: profesorConId.email,
+                ['idProfesor']: profesorConId.id
+            }));
+        }else{
+            setFormData((prevFormData) => ({
+                ...prevFormData,
+                ['nombreProfesor']: '',
+                ['correoProfesor']: '',
+                ['idProfesor']: 0
+            }));
+        }
+       
         console.log('Updated formData:', formData);
 
     };
@@ -145,15 +173,16 @@ function Popup({ type, closePopup }) {
                                 <h1>Gestionar Profesor</h1>
                                 <body>Seleccione el profesor a gestionar</body>
                                 <div className='input-contenedor'>
-                                    <select placeholder='Seleccione el profesor'>
-                                        <option value="">Seleccione un profesor</option>
+                                    <select placeholder='Seleccione el profesor' onChange={handleSelectChange}>
+                                        <option value={0}>Seleccione o cree un profesor </option>
                                         {profesores.map((profesor) => (
-                                            <option key={profesor.id} value={profesor.id}>
-                                                {profesor.nombre}
+                                            <option key={profesor.email} value={profesor.id}>
+                                                {profesor.Name}
                                             </option>
                                         ))}
                                     </select>
                                 </div>
+                                
                                 <body>Profesor(a)</body>
                                 <div className='input-contenedor'>
                                     <input type='text' name='nombreProfesor' placeholder='Profesor o profesora' value={formData.nombreProfesor} onChange={handleInputChange} />
@@ -161,10 +190,21 @@ function Popup({ type, closePopup }) {
                                 <body>Correo eléctronico</body>
                                 <div className='input-contenedor'>
                                     <input type='text' name='correoProfesor' placeholder='usuario@dominiotec.com' value={formData.correoProfesor} onChange={handleInputChange} />
-                                    </div>
-                                <button className="btn_naranja" onClick={addTeacher}> Agregar profesor </button>
-                                <button className="btn_azul" onClick={closePopup}> Actualizar profesor </button>
-                                <button className="btn_azul" onClick={closePopup}> Eliminar profesor </button>
+                                </div>
+                                
+                                {formData.idProfesor === 0 && (
+                                    <>
+                                    <button className="btn_naranja" onClick={addTeacher}> Agregar profesor </button>
+                                    </>
+                                )}
+                                {formData.idProfesor != 0 && (
+                                    <>
+                                    <button className="btn_azul" onClick={closePopup}> Actualizar profesor </button>
+                                    <button className="btn_azul" onClick={closePopup}> Eliminar profesor </button>
+                                    </>
+                                )}
+                                
+                                
 
                             </div>
                         </div>
