@@ -37,11 +37,41 @@ const addTeacher = async (req, res) => {
 }
 
 const editTeacher = async (req, res) => {
-    res.send("editando un curso");
+    try {
+        const pool = await getConnection()
+        console.log(req.body)
+
+        let result = await pool.request()
+            .input('IN_oldEmail', sql.NVarChar(128), req.body['correoviejo'])
+            .input('IN_newName', sql.NVarChar(128), req.body['nombre'])
+            .input('IN_newEmail', sql.NVarChar(128), req.body['correo'])
+            .execute('InloTEC_SP_Teachers_Edit'); // Nombre del procedimiento almacenado
+
+        console.log(result); // Muestra el resultado
+        res.status(200).send('Registro editado');
+    } catch (error) {
+        const errorMessage = error.message || 'Error desconocido';
+        console.error('Error al ejecutar el query:', errorMessage);
+        res.status(500).send(errorMessage);
+    }
 }
 
-const deleteTeacher = (req, res) => {
-    res.send("eliminando un curso");
+const deleteTeacher = async(req, res) => {
+    try {
+        const pool = await getConnection()
+        console.log(req.body)
+
+        let result = await pool.request()
+            .input('IN_email', sql.NVarChar(128), req.body['correo'])
+            .execute('InloTEC_SP_Teachers_Delete'); // Nombre del procedimiento almacenado
+
+        console.log(result); // Muestra el resultado
+        res.status(200).send('Registro Eliminado');
+    } catch (error) {
+        const errorMessage = error.message || 'Error desconocido';
+        console.error('Error al ejecutar el query:', errorMessage);
+        res.status(500).send(errorMessage);
+    }
 }
 
 module.exports = { getTeachers, getTeacher, addTeacher, editTeacher, deleteTeacher };
