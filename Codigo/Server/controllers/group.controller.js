@@ -41,8 +41,8 @@ const editGroup = async (req, res) => {
         console.log(req.body)
 
         let result = await pool.request()
-            .input('IN_oldName', sql.NVarChar(64), req.body[nombreviejo])
-            .input('IN_newName', sql.NVarChar(64), req.body[nombrenuevo])
+            .input('IN_oldName', sql.NVarChar(64), req.body['nombreviejo'])
+            .input('IN_newName', sql.NVarChar(64), req.body['nombrenuevo'])
             .execute('InloTEC_SP_Groups_Edit');
 
         console.log(result);
@@ -60,7 +60,7 @@ const deleteGroup = async (req, res) => {
         console.log(req.body)
 
         let result = await pool.request()
-            .input('IN_name', sql.NVarChar(64), req.body[nombre])
+            .input('IN_name', sql.NVarChar(64), req.body['nombre'])
             .execute('InloTEC_SP_Groups_Delete');
 
         console.log(result);

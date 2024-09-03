@@ -11,11 +11,15 @@ import cerrar from '../Assets/cerrar.png';
 
 function Popup({ type, closePopup }) {
     const [profesores, setProfesores] = useState([]);
+    const [grupos, setGrupos] = useState([]);
     const [error, setError] = useState('');
     const [formData, setFormData] = useState({
         nombreProfesor: '',
         correoProfesor: '',
-        idProfesor: 0 
+        idProfesor: 0 ,
+
+        idGrupo: 0,
+        nombreGrupo: ''
     });
 
     const [isError, setIsError] = useState({
@@ -39,6 +43,23 @@ function Popup({ type, closePopup }) {
         fetchProfesores();
     }, []);
 
+    useEffect(() => {
+        // Función para obtener la lista de grupos
+        const fetchGrupos = async () => {
+            try {
+                const response = await axios.get('http://localhost:3001/getGroups');
+                setGrupos(response.data);
+                console.log(response.data)
+                console.log(grupos)
+            } catch (error) {
+                console.error('Error al obtener la lista de grupos:', error);
+            }
+        };
+
+        fetchGrupos();
+    }, []);
+
+
     const handleInputChange = (e) => {
         const { name, value } = e.target;
         setFormData((prevFormData) => ({
@@ -49,7 +70,7 @@ function Popup({ type, closePopup }) {
     }
 
 
-    const handleSelectChange = (e) => {
+    const handleSelectTeacherChange = (e) => {
         const {key, value } = e.target;
         console.log(e.target)
         if(e.target.value != 0){
@@ -67,6 +88,29 @@ function Popup({ type, closePopup }) {
                 ['nombreProfesor']: '',
                 ['correoProfesor']: '',
                 ['idProfesor']: 0
+            }));
+        }
+       
+        console.log('Updated formData:', formData);
+
+    };
+
+    const handleSelectGruopChange = (e) => {
+        const {key, value } = e.target;
+        console.log(e.target)
+        if(e.target.value != 0){
+            const grupoConId = grupos.find(grupo => grupo.id === e.target.value);
+            console.log(grupoConId)
+            setFormData((prevFormData) => ({
+                ...prevFormData,
+                ['nombreGrupo']: grupoConId.Name,
+                ['idGrupo']: grupoConId.id
+            }));
+        }else{
+            setFormData((prevFormData) => ({
+                ...prevFormData,
+                ['nombreGrupo']: '',
+                ['idGrupo']: 0
             }));
         }
        
@@ -169,6 +213,100 @@ function Popup({ type, closePopup }) {
     };
 
 
+    const addGroup = async () => {
+        const errors = {
+            nombreGrupo: !formData.nombreGrupo,
+            
+        };
+
+        setIsError(errors);
+
+        if (Object.values(errors).includes(true)) {
+            setError('Por favor, complete todos los campos correctamente.');
+            console.error('Por favor, complete todos los campos correctamente.');
+            alert('Por favor, complete todos los campos correctamente.');
+            return false; // Detiene la ejecución si hay errores
+        }
+
+        try {
+            const response = await axios.post('http://localhost:3001/addGroup', {
+                nombre: formData.nombreGrupo,
+                
+            });
+            console.log('Grupo creado:', response.data);
+            closePopup();
+            alert('Grupo creado correctamente');
+        } catch (error) {
+            console.error('Error al crear el grupo:', error);
+        }
+    };
+
+    const editGroup = async () => {
+        const errors = {
+            nombreGrupo: !formData.nombreGrupo,
+            
+            idGrupo: !formData.idGrupo
+        };
+
+        setIsError(errors);
+
+        if (Object.values(errors).includes(true)) {
+            setError('Por favor, complete todos los campos correctamente.');
+            console.error('Por favor, complete todos los campos correctamente.');
+            alert('Por favor, complete todos los campos correctamente.');
+            return false; // Detiene la ejecución si hay errores
+        }
+        const grupoConId = grupos.find(grupo => grupo.id === formData.idGrupo);
+        console.log(grupoConId)
+        try {
+            const response = await axios.put('http://localhost:3001/editGroup', {
+                
+                    
+                    nombrenuevo: formData.nombreGrupo,
+                   
+                    nombreviejo: grupoConId.Name,
+                
+            });
+            console.log('Grupo actualizado:', response.data);
+            closePopup();
+            alert('Grupo actualizado correctamente');
+        } catch (error) {
+            console.error('Error al actualizar el Grupo:', error);
+        }
+    };
+
+    const deleteGruop = async () => {
+        const errors = {
+            nombreGrupo: !formData.nombreGrupo,
+            
+            idGrupo: !formData.idGrupo
+        };
+
+        setIsError(errors);
+
+        if (Object.values(errors).includes(true)) {
+            setError('Por favor, Seleccione un grupo.');
+            console.error('Por favor,  Seleccione un grupo.');
+            alert('Por favor,  Seleccione un grupo.');
+            return false; // Detiene la ejecución si hay errores
+        }
+
+        try {
+            const response = await axios.delete('http://localhost:3001/deleteGroup', {
+
+               
+                data: {
+                    nombre: formData.nombreGrupo
+                }
+            });
+            console.log('grupo Eliminado:', response.data);
+            closePopup();
+            alert('grupo eliminado correctamente');
+        } catch (error) {
+            console.error('Error al eliminar el grupo:', error);
+        }
+    };
+
     const renderContent = () => {
         switch (type) {
             case 'AgregarCurso':
@@ -240,7 +378,7 @@ function Popup({ type, closePopup }) {
                                 <h1>Gestionar Profesor</h1>
                                 <body>Seleccione el profesor a gestionar</body>
                                 <div className='input-contenedor'>
-                                    <select placeholder='Seleccione el profesor' onChange={handleSelectChange}>
+                                    <select placeholder='Seleccione el profesor' onChange={handleSelectTeacherChange}>
                                         <option value={0}>Seleccione o cree un profesor </option>
                                         {profesores.map((profesor) => (
                                             <option key={profesor.email} value={profesor.id}>
@@ -323,16 +461,32 @@ function Popup({ type, closePopup }) {
                                 <h1>Gestionar Grupo</h1>
                                 <body>Seleccione el grupo a gestionar</body>
                                 <div className='input-contenedor'>
-                                    <input type='select' placeholder='Seleccione grupo' />
+                                    <select placeholder='Seleccione el grupo' onChange={handleSelectGruopChange}>
+                                        <option value={0}>Seleccione o cree un grupo </option>
+                                        {grupos.map((grupo) => (
+                                            <option key={grupo.id} value={grupo.id}>
+                                                {grupo.Name}
+                                            </option>
+                                        ))}
+                                    </select>
                                 </div>
                                 <body>Nombre del grupo</body>
                                 <div className='input-contenedor'>
-                                    <input type='text' placeholder='Grupo ##' />
+                                    <input type='text' placeholder='Grupo ##' name='nombreGrupo' value={formData.nombreGrupo} onChange={handleInputChange}/>
                                 </div>
-
-                                <button className="btn_naranja" onClick={closePopup}> Agregar grupo </button>
-                                <button className="btn_azul" onClick={closePopup}> Eliminar grupo </button>
-                                <button className="btn_azul" onClick={closePopup}> Actualizar grupo </button>
+                                {formData.idGrupo === 0 && (
+                                    <>
+                                    <button className="btn_naranja" onClick={addGroup}> Agregar grupo </button>
+                                    </>
+                                )}
+                                {formData.idGrupo != 0 && (
+                                    <>
+                                    <button className="btn_azul" onClick={deleteGruop}> Eliminar grupo </button>
+                                    <button className="btn_azul" onClick={editGroup}> Actualizar grupo </button>
+                                    </>
+                                )}
+                                
+                                
                             </div>
                         </div>
                     </div>
