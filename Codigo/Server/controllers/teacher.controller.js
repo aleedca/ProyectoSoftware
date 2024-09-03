@@ -1,8 +1,16 @@
 const { getConnection } = require('../connection.js');
 const sql = require('mssql');
 
-const listTeachers = async (req, res) => {
-    res.send("obteniendo todos los cursos");
+const getTeachers = async (req, res) => {
+    try {
+        const pool = await getConnection();
+        const result = await pool.request().execute('InloTEC_SP_Teachers_List');
+        res.json(result.recordset);
+    } catch (error) {
+        const errorMessage = error.message || 'Error desconocido';
+        console.error('Error al ejecutar el query:', errorMessage);
+        res.status(500).send(errorMessage);
+    }
 }
 
 const getTeacher = async (req, res) => {
