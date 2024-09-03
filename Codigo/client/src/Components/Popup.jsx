@@ -102,6 +102,73 @@ function Popup({ type, closePopup }) {
         }
     };
 
+    const editTeacher = async () => {
+        const errors = {
+            nombreProfesor: !formData.nombreProfesor,
+            correoProfesor: !formData.correoProfesor,
+            idProfesor: !formData.idProfesor
+        };
+
+        setIsError(errors);
+
+        if (Object.values(errors).includes(true)) {
+            setError('Por favor, complete todos los campos correctamente.');
+            console.error('Por favor, complete todos los campos correctamente.');
+            alert('Por favor, complete todos los campos correctamente.');
+            return false; // Detiene la ejecución si hay errores
+        }
+        const profesorConId = profesores.find(profesor => profesor.id === formData.idProfesor);
+        console.log(profesorConId)
+        try {
+            const response = await axios.put('http://localhost:3001/editTeacher', {
+                
+                    
+                    nombre: formData.nombreProfesor,
+                    correo: formData.correoProfesor,
+                    correoviejo: profesorConId.email,
+                
+            });
+            console.log('Profesor actualizado:', response.data);
+            closePopup();
+            alert('Profesor actualizado correctamente');
+        } catch (error) {
+            console.error('Error al actualizar el profesor:', error);
+        }
+    };
+
+    const deleteTeacher = async () => {
+        const errors = {
+            nombreProfesor: !formData.nombreProfesor,
+            correoProfesor: !formData.correoProfesor,
+            idProfesor: !formData.idProfesor
+        };
+
+        setIsError(errors);
+
+        if (Object.values(errors).includes(true)) {
+            setError('Por favor, Seleccione un profesor.');
+            console.error('Por favor,  Seleccione un profesor.');
+            alert('Por favor,  Seleccione un profesor.');
+            return false; // Detiene la ejecución si hay errores
+        }
+
+        try {
+            const response = await axios.delete('http://localhost:3001/deleteTeacher', {
+
+               
+                data: {
+                    correo: formData.correoProfesor
+                }
+            });
+            console.log('Profesor Eliminado:', response.data);
+            closePopup();
+            alert('Profesor eliminado correctamente');
+        } catch (error) {
+            console.error('Error al eliminar el profesor:', error);
+        }
+    };
+
+
     const renderContent = () => {
         switch (type) {
             case 'AgregarCurso':
@@ -199,8 +266,8 @@ function Popup({ type, closePopup }) {
                                 )}
                                 {formData.idProfesor != 0 && (
                                     <>
-                                    <button className="btn_azul" onClick={closePopup}> Actualizar profesor </button>
-                                    <button className="btn_azul" onClick={closePopup}> Eliminar profesor </button>
+                                    <button className="btn_azul" onClick={editTeacher}> Actualizar profesor </button>
+                                    <button className="btn_azul" onClick={deleteTeacher}> Eliminar profesor </button>
                                     </>
                                 )}
                                 
