@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 const { getTeachers, getTeacher, addTeacher, editTeacher, deleteTeacher } = require('../controllers/teacher.controller')
 
-router.get('/getTeachers', listTeachers);
+router.get('/getTeachers', getTeachers);
 
 router.get('/getTeacher', getTeacher);
 

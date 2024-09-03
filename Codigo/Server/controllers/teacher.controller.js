@@ -44,4 +44,4 @@ const deleteTeacher = (req, res) => {
     res.send("eliminando un curso");
 }
 
-module.exports = { listTeachers, getTeacher, addTeacher, editTeacher, deleteTeacher };
+module.exports = { getTeachers, getTeacher, addTeacher, editTeacher, deleteTeacher };
