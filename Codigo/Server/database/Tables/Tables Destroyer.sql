@@ -16,6 +16,7 @@ DROP TABLE IF EXISTS [dbo].[Schedule];
 DROP TABLE IF EXISTS [dbo].[Hours];
 DROP TABLE IF EXISTS [dbo].[Groups];
 DROP TABLE IF EXISTS [dbo].[Days];
+DROP TABLE IF EXISTS [dbo].[Modality];
 
 DROP TABLE IF EXISTS [dbo].[Change_Log];
 DROP TABLE IF EXISTS [dbo].[Errors];
