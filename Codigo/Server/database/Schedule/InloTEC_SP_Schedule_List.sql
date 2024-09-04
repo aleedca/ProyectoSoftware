@@ -30,7 +30,7 @@ BEGIN
         -- VALIDATIONS
 
 		--Response
-		SELECT S.Name, A.Days, A.StartTime, A.EndTime
+		SELECT S.Name, A.Days, CAST(A.StartTime AS TIME(0)) AS 'StartTime', CAST(A.EndTime AS TIME(0)) AS 'EndTime'
 		FROM Schedule S
 		INNER JOIN (SELECT SDS.IdSchedule AS 'IdSchedule', 
 						   STRING_AGG(D.Name,',') AS 'Days', 

@@ -10,6 +10,7 @@ CREATE OR ALTER PROCEDURE [dbo].[InloTEC_SP_Courses_Details_Add]
 	@IN_IdCourses BIGINT,
 	@IN_IdSchedule BIGINT,
 	@IN_IdModality BIGINT,
+	@IN_IdGroup BIGINT,
 	@IN_startDate DATE,
 	@IN_endDate DATE,
 	@IN_notes NVARCHAR(512) = NULL
@@ -26,6 +27,7 @@ BEGIN
 	-- VARIABLE DECLARATION
 	DECLARE @Rolname NVARCHAR(64) = 'Admin';
 	DECLARE @TeacherId INT = NULL;
+	DECLARE @IdCourses_Details INT
 
 	BEGIN TRY
         -- VALIDATIONS
@@ -48,7 +50,7 @@ BEGIN
 		END;
 
 		IF NOT EXISTS (SELECT 1
-					   FROM [dbo].[Location] L
+					   FROM [dbo].[Locations] L
 					   WHERE L.Id = @IN_IdLocation
 					   AND Deleted = 0)
     	BEGIN
@@ -72,6 +74,14 @@ BEGIN
 		END;
 
 		IF NOT EXISTS (SELECT 1
+					   FROM [dbo].[Groups] G
+					   WHERE G.Id = @IN_IdGroup
+					   AND Deleted = 0)
+    	BEGIN
+		RAISERROR('El id del grupo no existe.', 16, 1);
+		END;
+
+		IF NOT EXISTS (SELECT 1
 					   WHERE @IN_startDate < @IN_endDate)
     	BEGIN
 		RAISERROR('La fecha final esta antes que la fecha inicial.', 16, 1);
@@ -89,7 +99,7 @@ BEGIN
 	END;
 
 		-- INSERT Course_Details
-		INSERT INTO [dbo].[Course_Details]
+		INSERT INTO [dbo].[Courses_Details]
 			([IdLocations], 
 			 [IdTeachers], 
 			 [IdCourses], 
@@ -110,6 +120,13 @@ BEGIN
 			   @IN_endDate,
 			   @IN_notes,
 			   0);
+
+		SET @IdCourses_Details = SCOPE_IDENTITY()
+
+		INSERT INTO [dbo].[Courses_Details_Groups] ([IdGroups], [IdCourses_Details], [Deleted])
+		VALUES(@IN_IdGroup, @IdCourses_Details, 0)
+
+			
 
         
         -- COMMIT TRANSACTION

@@ -97,8 +97,8 @@ BEGIN
 		INSERT INTO @TableSchedule_Days (Id)
 		EXEC [dbo].[InloTEC_SP_Schedule_Days_Add] @IdHours, @IN_IdDays;
 
-		INSERT INTO [dbo].[Schedule]([Name])
-		VALUES (@IN_name)
+		INSERT INTO [dbo].[Schedule]([Name], Deleted)
+		VALUES (@IN_name, 0)
 
 		SET @IdSchedule = SCOPE_IDENTITY()
 
