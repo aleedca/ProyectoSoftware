@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { cloneElement } from 'react';
 import axios from "axios";
 import { useEffect, useState } from "react";
 import '../App.css';
@@ -7,8 +7,6 @@ import profesor from '../Assets/gestionar_profesor.png';
 import fusion from '../Assets/fusionar_cursos.png';
 import grupo from '../Assets/gestionar_grupo.png';
 import cerrar from '../Assets/cerrar.png';
-//import { addSchedule } from '../../../Server/controllers/schedule.controller';
-
 
 function Popup({ type, closePopup }) {
     const [profesores, setProfesores] = useState([]);
@@ -16,15 +14,17 @@ function Popup({ type, closePopup }) {
     const [catalogCourses, setCatalogCourses] = useState([]);
     const [locaciones, setLocaciones] = useState([]);
     const [modalidades, setModalidades] = useState([]);
+    const [horarios, setHorarios] = useState([]);
+    const [selectedDays, setSelectedDays] = useState([]);
     const [error, setError] = useState('');
     const [formData, setFormData] = useState({
         nombreProfesor: '',
         correoProfesor: '',
-        idProfesor: 0 ,
+        idProfesor: 0,
 
         idGrupo: 0,
         nombreGrupo: '',
-        
+
         nombreCatalagCourse: '',
         idCatalogCourse: 0,
 
@@ -32,7 +32,10 @@ function Popup({ type, closePopup }) {
         idLocacion: 0,
 
         nombreModalidad: '',
-        idModalidad: 0
+        idModalidad: 0,
+
+        nombreHorario: '',
+        dias: ''
     });
 
     const [isError, setIsError] = useState({
@@ -120,7 +123,21 @@ function Popup({ type, closePopup }) {
         fetchModalidades();
     }, []);
 
+    useEffect(() => {
+        // Función para obtener la lista de horarios
+        const fetchSchedules = async () => {
+            try {
+                const response = await axios.get('http://localhost:3001/getSchedules');
+                setHorarios(response.data);
+                console.log(response.data)
+                console.log(modalidades)
+            } catch (error) {
+                console.error('Error al obtener la lista de horarios:', error);
+            }
+        };
 
+        fetchSchedules();
+    }, []);
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
@@ -133,9 +150,9 @@ function Popup({ type, closePopup }) {
 
 
     const handleSelectTeacherChange = (e) => {
-        const {key, value } = e.target;
+        const { key, value } = e.target;
         console.log(e.target)
-        if(e.target.value != 0){
+        if (e.target.value != 0) {
             const profesorConId = profesores.find(profesor => profesor.id === e.target.value);
             console.log(profesorConId)
             setFormData((prevFormData) => ({
@@ -144,7 +161,7 @@ function Popup({ type, closePopup }) {
                 ['correoProfesor']: profesorConId.email,
                 ['idProfesor']: profesorConId.id
             }));
-        }else{
+        } else {
             setFormData((prevFormData) => ({
                 ...prevFormData,
                 ['nombreProfesor']: '',
@@ -152,15 +169,15 @@ function Popup({ type, closePopup }) {
                 ['idProfesor']: 0
             }));
         }
-       
+
         console.log('Updated formData:', formData);
 
     };
 
-    const handleSelectGruopChange = (e) => {
-        const {key, value } = e.target;
+    const handleSelectGroupChange = (e) => {
+        const { key, value } = e.target;
         console.log(e.target)
-        if(e.target.value != 0){
+        if (e.target.value != 0) {
             const grupoConId = grupos.find(grupo => grupo.id === e.target.value);
             console.log(grupoConId)
             setFormData((prevFormData) => ({
@@ -168,22 +185,22 @@ function Popup({ type, closePopup }) {
                 ['nombreGrupo']: grupoConId.Name,
                 ['idGrupo']: grupoConId.id
             }));
-        }else{
+        } else {
             setFormData((prevFormData) => ({
                 ...prevFormData,
                 ['nombreGrupo']: '',
                 ['idGrupo']: 0
             }));
         }
-       
+
         console.log('Updated formData:', formData);
 
     };
 
     const handleSelectCatalogCourseChange = (e) => {
-        const {key, value } = e.target;
+        const { key, value } = e.target;
         console.log(e.target)
-        if(e.target.value != 0){
+        if (e.target.value != 0) {
             const catalogCourseConId = catalogCourses.find(catalog => catalog.Id === e.target.value);
             console.log(catalogCourseConId)
             setFormData((prevFormData) => ({
@@ -191,22 +208,22 @@ function Popup({ type, closePopup }) {
                 ['nombreCatalagCourse']: catalogCourseConId.Name,
                 ['idCatalagCourse']: catalogCourseConId.Id
             }));
-        }else{
+        } else {
             setFormData((prevFormData) => ({
                 ...prevFormData,
                 ['nombreCatalagCourse']: '',
                 ['idCatalagCourse']: 0
             }));
         }
-       
+
         console.log('Updated formData:', formData);
 
     };
 
     const handleSelectLocacionChange = (e) => {
-        const {key, value } = e.target;
+        const { key, value } = e.target;
         console.log(e.target)
-        if(e.target.value != 0){
+        if (e.target.value != 0) {
             console.log(e.target.value)
             console.log(locaciones)
             const locacionConId = locaciones.find(locacion => locacion.Id === e.target.value);
@@ -216,22 +233,22 @@ function Popup({ type, closePopup }) {
                 ['nombreLocacion']: locacionConId.Name,
                 ['idLocacion']: locacionConId.Id
             }));
-        }else{
+        } else {
             setFormData((prevFormData) => ({
                 ...prevFormData,
                 ['nombreLocacion']: '',
                 ['idLocacion']: 0
             }));
         }
-       
+
         console.log('Updated formData:', formData);
 
     };
 
     const handleSelectModalidadChange = (e) => {
-        const {key, value } = e.target;
+        const { key, value } = e.target;
         console.log(e.target)
-        if(e.target.value != 0){
+        if (e.target.value != 0) {
             console.log(e.target.value)
             console.log(modalidades)
             const modalidadConId = modalidades.find(modalidad => modalidad.id === e.target.value);
@@ -241,19 +258,47 @@ function Popup({ type, closePopup }) {
                 ['nombreModalidad']: modalidadConId.Name,
                 ['idmodalidad']: modalidadConId.id
             }));
-        }else{
+        } else {
             setFormData((prevFormData) => ({
                 ...prevFormData,
                 ['nombreModalidad']: '',
                 ['idmodalidad']: 0
             }));
         }
-       
+
         console.log('Updated formData:', formData);
 
     };
 
-   
+    const handleCheckBoxChange = (e) => {
+        const { value } = e.target;
+        console.log(e.target)
+        if (e.target.checked) {
+            setSelectedDays([...selectedDays, value]);
+        } else {
+            setSelectedDays(selectedDays.filter((day) => day !== value));
+        }
+    };
+
+    const formatTimeForDatabase = (time) => {
+        const [hours, minutes] = time.split(':');
+        return `${hours}:${minutes}:00`;
+    };
+
+    const handleAddHorario = () => {
+        const diasString = selectedDays.join(',');
+        const formattedHoraInicio = formatTimeForDatabase(formData.horaInicio);
+        const formattedHoraFin = formatTimeForDatabase(formData.horaFin);
+
+        setFormData((prevFormData) => ({
+            ...prevFormData,
+            dias: diasString,
+            horaInicio: formattedHoraInicio,
+            horaFin: formattedHoraFin
+        }));
+
+        closePopup();
+    };
 
     const addTeacher = async () => {
         const errors = {
@@ -302,12 +347,12 @@ function Popup({ type, closePopup }) {
         console.log(profesorConId)
         try {
             const response = await axios.put('http://localhost:3001/editTeacher', {
-                
-                    
-                    nombre: formData.nombreProfesor,
-                    correo: formData.correoProfesor,
-                    correoviejo: profesorConId.email,
-                
+
+
+                nombre: formData.nombreProfesor,
+                correo: formData.correoProfesor,
+                correoviejo: profesorConId.email,
+
             });
             console.log('Profesor actualizado:', response.data);
             closePopup();
@@ -336,7 +381,7 @@ function Popup({ type, closePopup }) {
         try {
             const response = await axios.delete('http://localhost:3001/deleteTeacher', {
 
-               
+
                 data: {
                     correo: formData.correoProfesor
                 }
@@ -353,7 +398,7 @@ function Popup({ type, closePopup }) {
     const addGroup = async () => {
         const errors = {
             nombreGrupo: !formData.nombreGrupo,
-            
+
         };
 
         setIsError(errors);
@@ -368,7 +413,7 @@ function Popup({ type, closePopup }) {
         try {
             const response = await axios.post('http://localhost:3001/addGroup', {
                 nombre: formData.nombreGrupo,
-                
+
             });
             console.log('Grupo creado:', response.data);
             closePopup();
@@ -381,7 +426,7 @@ function Popup({ type, closePopup }) {
     const editGroup = async () => {
         const errors = {
             nombreGrupo: !formData.nombreGrupo,
-            
+
             idGrupo: !formData.idGrupo
         };
 
@@ -397,12 +442,12 @@ function Popup({ type, closePopup }) {
         console.log(grupoConId)
         try {
             const response = await axios.put('http://localhost:3001/editGroup', {
-                
-                    
-                    nombrenuevo: formData.nombreGrupo,
-                   
-                    nombreviejo: grupoConId.Name,
-                
+
+
+                nombrenuevo: formData.nombreGrupo,
+
+                nombreviejo: grupoConId.Name,
+
             });
             console.log('Grupo actualizado:', response.data);
             closePopup();
@@ -412,10 +457,10 @@ function Popup({ type, closePopup }) {
         }
     };
 
-    const deleteGruop = async () => {
+    const deleteGroup = async () => {
         const errors = {
             nombreGrupo: !formData.nombreGrupo,
-            
+
             idGrupo: !formData.idGrupo
         };
 
@@ -430,8 +475,6 @@ function Popup({ type, closePopup }) {
 
         try {
             const response = await axios.delete('http://localhost:3001/deleteGroup', {
-
-               
                 data: {
                     nombre: formData.nombreGrupo
                 }
@@ -442,6 +485,40 @@ function Popup({ type, closePopup }) {
         } catch (error) {
             console.error('Error al eliminar el grupo:', error);
         }
+    };
+
+    const addHorario = async () => {
+        const errors = {
+            nombreHorario: !formData.nombreHorario,
+            //dias: !formData.dias,
+            horaInicio: !formData.horaInicio,
+            horaFin: !formData.horaFin
+        };
+
+        setIsError(errors);
+
+        if (Object.values(errors).includes(true)) {
+            setError('Por favor, complete todos los campos correctamente.');
+            console.error('Por favor, complete todos los campos correctamente.');
+            alert('Por favor, complete todos los campos correctamente.');
+            return false;
+        }
+
+        console.log('formData:', formData);
+
+        /* try {
+            const response = await axios.post('http://localhost:3001/addSchedule', {
+                nombre: formData.nombreHorario,
+                dias: formData.dias,
+                horaInicio: new Date(formattedTime(formData.horaInicio)),
+                horaFin: new Date(formattedTime(formData.horaFin))
+            });
+            console.log('Horario creado:', response.data);
+            closePopup();
+            alert('Horario creado correctamente');
+        } catch (error) {
+            console.error('Error al crear el horario:', error);
+        } */
     };
 
     const renderContent = () => {
@@ -469,7 +546,7 @@ function Popup({ type, closePopup }) {
                                 </div>
                                 <body>Grupo</body>
                                 <div className='input-contenedor'>
-                                    <select placeholder='Seleccione el grupo' onChange={handleSelectGruopChange}>
+                                    <select placeholder='Seleccione el grupo' onChange={handleSelectGroupChange}>
                                         <option value={0}>Seleccione un grupo </option>
                                         {grupos.map((grupo) => (
                                             <option key={grupo.id} value={grupo.id}>
@@ -503,6 +580,12 @@ function Popup({ type, closePopup }) {
                                 <body>Horario</body>
                                 <div className='input-contenedor'>
                                     <input type='select' placeholder='Horario' />
+                                    <option value={0}>Seleccione un horario </option>
+                                    {horarios.map((horario) => (
+                                        <option key={horario.Id} value={horario.Id}>
+                                            {horario.Name}
+                                        </option>
+                                    ))}
                                 </div>
 
                                 <div className='fila-juntas'>
@@ -559,29 +642,29 @@ function Popup({ type, closePopup }) {
                                         ))}
                                     </select>
                                 </div>
-                                
+
                                 <body>Profesor(a)</body>
                                 <div className='input-contenedor'>
                                     <input type='text' name='nombreProfesor' placeholder='Profesor o profesora' value={formData.nombreProfesor} onChange={handleInputChange} />
-                                    </div>
+                                </div>
                                 <body>Correo eléctronico</body>
                                 <div className='input-contenedor'>
                                     <input type='text' name='correoProfesor' placeholder='usuario@dominiotec.com' value={formData.correoProfesor} onChange={handleInputChange} />
                                 </div>
-                                
+
                                 {formData.idProfesor === 0 && (
                                     <>
-                                    <button className="btn_naranja" onClick={addTeacher}> Agregar profesor </button>
+                                        <button className="btn_naranja" onClick={addTeacher}> Agregar profesor </button>
                                     </>
                                 )}
                                 {formData.idProfesor != 0 && (
                                     <>
-                                    <button className="btn_azul" onClick={editTeacher}> Actualizar profesor </button>
-                                    <button className="btn_azul" onClick={deleteTeacher}> Eliminar profesor </button>
+                                        <button className="btn_azul" onClick={editTeacher}> Actualizar profesor </button>
+                                        <button className="btn_azul" onClick={deleteTeacher}> Eliminar profesor </button>
                                     </>
                                 )}
-                                
-                                
+
+
 
                             </div>
                         </div>
@@ -633,7 +716,7 @@ function Popup({ type, closePopup }) {
                                 <h1>Gestionar Grupo</h1>
                                 <body>Seleccione el grupo a gestionar</body>
                                 <div className='input-contenedor'>
-                                    <select placeholder='Seleccione el grupo' onChange={handleSelectGruopChange}>
+                                    <select placeholder='Seleccione el grupo' onChange={handleSelectGroupChange}>
                                         <option value={0}>Seleccione o cree un grupo </option>
                                         {grupos.map((grupo) => (
                                             <option key={grupo.id} value={grupo.id}>
@@ -644,21 +727,21 @@ function Popup({ type, closePopup }) {
                                 </div>
                                 <body>Nombre del grupo</body>
                                 <div className='input-contenedor'>
-                                    <input type='text' placeholder='Grupo ##' name='nombreGrupo' value={formData.nombreGrupo} onChange={handleInputChange}/>
+                                    <input type='text' placeholder='Grupo ##' name='nombreGrupo' value={formData.nombreGrupo} onChange={handleInputChange} />
                                 </div>
                                 {formData.idGrupo === 0 && (
                                     <>
-                                    <button className="btn_naranja" onClick={addGroup}> Agregar grupo </button>
+                                        <button className="btn_naranja" onClick={addGroup}> Agregar grupo </button>
                                     </>
                                 )}
                                 {formData.idGrupo != 0 && (
                                     <>
-                                    <button className="btn_azul" onClick={deleteGruop}> Eliminar grupo </button>
-                                    <button className="btn_azul" onClick={editGroup}> Actualizar grupo </button>
+                                        <button className="btn_azul" onClick={deleteGroup}> Eliminar grupo </button>
+                                        <button className="btn_azul" onClick={editGroup}> Actualizar grupo </button>
                                     </>
                                 )}
-                                
-                                
+
+
                             </div>
                         </div>
                     </div>
@@ -675,31 +758,31 @@ function Popup({ type, closePopup }) {
                                 <h1>Agregar Horario</h1>
                                 <body>Nombre del horario</body>
                                 <div className='input-contenedor'>
-                                <input type='text' name='nombreHorario' placeholder='Nombre del horario' value={formData.nombreHorario} onChange={handleInputChange} />
+                                    <input type='text' name='nombreHorario' placeholder='Nombre del horario' value={formData.nombreHorario} onChange={handleInputChange} />
                                 </div>
 
 
                                 <div style={{ textAlign: 'center', margin: '5px' }}>Días de clases</div>
                                 <div className='checkbox-container'>
-                                    <label><input type='checkbox' value='1' />Lunes</label>
-                                    <label><input type='checkbox' value='2' />Martes</label>
-                                    <label><input type='checkbox' value='3' />Miércoles</label>
-                                    <label><input type='checkbox' value='4' />Jueves</label>
-                                    <label><input type='checkbox' value='5' />Viernes</label>
-                                    <label><input type='checkbox' value='6' />Sábado</label>
+                                    <label><input type='checkbox' value='1' onChange={handleCheckBoxChange} />Lunes</label>
+                                    <label><input type='checkbox' value='2' onChange={handleCheckBoxChange} />Martes</label>
+                                    <label><input type='checkbox' value='3' onChange={handleCheckBoxChange} />Miércoles</label>
+                                    <label><input type='checkbox' value='4' onChange={handleCheckBoxChange} />Jueves</label>
+                                    <label><input type='checkbox' value='5' onChange={handleCheckBoxChange} />Viernes</label>
+                                    <label><input type='checkbox' value='6' onChange={handleCheckBoxChange} />Sábado</label>
                                 </div>
                                 <div className='fila-juntas'>
                                     <div className='input-contenedor'>
                                         <body style={{ textAlign: 'center', marginTop: '10px' }}>Hora inicio</body>
-                                        <input type='time' placeholder='Hora inicio' />
+                                        <input type='time' name='horaInicio' placeholder='Hora inicio' onChange={handleInputChange} />
                                     </div>
                                     <div className='input-contenedor'>
                                         <body style={{ textAlign: 'center', marginTop: '10px' }}>Hora fin</body>
-                                        <input type='time' placeholder='Hora fin' />
+                                        <input type='time' name='horaFin' placeholder='Hora fin' onChange={handleInputChange} />
                                     </div>
                                 </div>
 
-                                <button className="btn_naranja" onClick={closePopup}> Agregar horario </button>
+                                <button className="btn_naranja" onClick={addHorario} onChange={handleAddHorario}> Agregar horario </button>
                             </div>
                         </div>
                     </div>

@@ -2,15 +2,15 @@ const { getConnection } = require('../connection.js');
 const sql = require('mssql');
 
 const getSchedules = async (req, res) => {
-    /*try {
+    try {
         const pool = await getConnection();
-        const result = await pool.request().execute('InloTEC_SP_Schedules_List');
+        const result = await pool.request().execute('InloTEC_SP_Schedule_List');
         res.json(result.recordset);
     } catch (error) {
         const errorMessage = error.message || 'Error desconocido';
         console.error('Error al ejecutar el query:', errorMessage);
         res.status(500).send(errorMessage);
-    }*/
+    }
 }
 
 const getSchedule = async (req, res) => {
