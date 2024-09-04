@@ -25,7 +25,7 @@ BEGIN
 					   WHERE T.Id = @IN_IdTeachers
 					   AND Deleted = 0)
     	BEGIN
-		RAISERROR('El curso indicado no existe. Por favor, utilice otro identificador.', 16, 1);
+		RAISERROR('El profesor indicado no existe. Por favor, utilice otro identificador.', 16, 1);
 		END;
 
 		SELECT T.id, T.Name, T.email

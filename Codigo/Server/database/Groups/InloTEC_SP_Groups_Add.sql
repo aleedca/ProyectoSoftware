@@ -1,7 +1,7 @@
 -- Autor:       Luis Molina
 -- Fecha:       2024-09-1
 -- Descripci�n: Procedure to add a group
--- 				 the name of the group is case insensitive when comparing to groups already existing
+-- 				 the name of the group is case insensitive when comparing to already existing groups
 --------------------------------------------------------------------------
 
 CREATE OR ALTER PROCEDURE [dbo].[InloTEC_SP_Groups_Add]
@@ -26,13 +26,13 @@ BEGIN
 		-- check for wrong input data type
         IF ISNUMERIC(@IN_name) = 1
         BEGIN
-		RAISERROR('Todos los campos deben ser texto. Por favor, complete cambie la informaci�n.', 16, 1);
+		RAISERROR('Todos los campos deben ser texto. Por favor, complete cambie la información.', 16, 1);
 	END;
 
 		-- check for empty input data
         IF LTRIM(RTRIM(@IN_name)) = ''
         BEGIN
-		RAISERROR('Todos los campos son obligatorios. Por favor, complete la informaci�n.', 16, 1);
+		RAISERROR('Todos los campos son obligatorios. Por favor, complete la información.', 16, 1);
 	END;
 
         -- Check if the group name is already registered and active
@@ -41,7 +41,7 @@ BEGIN
 		WHERE LOWER([Name]) = LOWER(LTRIM(RTRIM(@IN_name)))
 		AND Deleted = 0 )
         BEGIN
-		RAISERROR('El nombre del grupo ya est� registrado. Por favor, utilice otro.', 16, 1);
+		RAISERROR('El nombre del grupo ya está registrado. Por favor, utilice otro.', 16, 1);
 	END;
 
 		--validation of user rol

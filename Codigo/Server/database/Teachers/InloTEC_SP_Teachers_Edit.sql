@@ -42,6 +42,12 @@ BEGIN
             RAISERROR('Todos los campos son obligatorios. Por favor, complete la información.', 16, 1);
         END;
 
+        -- check for email format
+        IF NOT (LTRIM(RTRIM(@IN_newEmail)) LIKE '%@%._%')
+        BEGIN
+		RAISERROR('El nuevo correo no es formato " *@*.* " .Por favor, complete la información.', 16, 1);
+	    END;
+
         -- Check if the teacher is already registered and active
         IF NOT EXISTS (SELECT 1 
 				   FROM [dbo].[Teachers] 
@@ -55,6 +61,7 @@ BEGIN
         IF EXISTS (SELECT 1 
 				   FROM [dbo].[Teachers] 
 				   WHERE Email = LTRIM(RTRIM(@IN_newEmail))
+                   AND NOT (Email = LTRIM(RTRIM(@IN_oldEmail)))
 				   AND Deleted = 0 )
         BEGIN
             RAISERROR('El nuevo correo electrónico ya está registrado. Por favor, utilice otro correo.', 16, 1);

@@ -40,7 +40,7 @@ BEGIN
 					   WHERE LOWER([Name]) = LOWER(LTRIM(RTRIM(@IN_name)))
 					   AND Deleted = 0 )
     	BEGIN
-		RAISERROR('El correo electr�nico no est� registrado. Por favor, utilice otro correo.', 16, 1);
+		RAISERROR('El correo electrónico no está registrado. Por favor, utilice otro correo.', 16, 1);
 		END;
 
 
