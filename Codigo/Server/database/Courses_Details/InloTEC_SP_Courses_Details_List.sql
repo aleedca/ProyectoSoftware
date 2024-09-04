@@ -29,12 +29,13 @@ BEGIN
 		SELECT CD.Id, 
 			   L.Name AS 'Location', 
 			   T.Name AS 'Teacher', 
-			   C.Name AS 'Course', 
+			   C.Name AS 'Course',
+			   A.Name AS 'Group',
 			   CD.IdSchedule, 
 			   S.Name AS 'Schedule', 
 			   M.Name AS 'Modality', 
-			   CD.StartDate, 
-			   CD.EndDate, 
+			   CAST(CD.StartDate AS DATE) AS 'StartDate', 
+			   CAST(CD.EndDate AS DATE) AS 'EndDate', 
 			   CD.Notes
 		FROM Courses_Details CD
 		INNER JOIN Locations L ON L.Id = CD.IdLocations
@@ -42,7 +43,7 @@ BEGIN
 		INNER JOIN Courses C ON C.Id = CD.IdCourses
 		INNER JOIN Programs P ON P.Id = CD.IdPrograms
 		INNER JOIN Modality M ON M.Id = CD.IdModality
-		INNER JOIN (SELECT CDG.IdCourses_Details AS 'IdCourses_Details' ,  STRING_AGG(G.Name, ', ') AS 'Name'
+		INNER JOIN (SELECT CDG.IdCourses_Details AS 'IdCourses_Details' ,  STRING_AGG(G.Name, ',') AS 'Name'
 					FROM Courses_Details CD
 					INNER JOIN Courses_Details_Groups CDG ON CDG.IdCourses_Details = CD.Id
 					INNER JOIN Groups G ON G.Id = CDG.IdGroups

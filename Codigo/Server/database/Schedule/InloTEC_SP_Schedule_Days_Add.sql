@@ -56,10 +56,10 @@ BEGIN
 	INNER JOIN [Days] D ON D.Id = SD.IdDays
 	INNER JOIN [Hours] H ON H.Id = SD.IdHours
 	RIGHT JOIN @TableDays TD ON TD.Id = SD.IdDays
-	WHERE SD.IdHours = @IN_IdHours
-	AND H.Deleted = 0
-	AND SD.Deleted = 0
-	AND D.Deleted = 0
+	WHERE (SD.IdHours = @IN_IdHours OR SD.IdHours IS NULL)
+	AND (H.Deleted = 0 OR H.Deleted IS NULL)
+	AND (SD.Deleted = 0 OR SD.Deleted IS NULL)
+	AND (D.Deleted = 0 OR D.Deleted IS NULL)
 	AND SD.Id IS NULL
 
 	--validation of user rol
