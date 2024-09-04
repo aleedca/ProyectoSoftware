@@ -21,6 +21,15 @@ app.use("/", teacherRoutes);
 const scheduleRoutes = require("./routes/schedule.routes.js")
 app.use("/", scheduleRoutes);
 
+const catalogCourseRoutes = require("./routes/catalog.course.routes.js")
+app.use("/", catalogCourseRoutes);
+
+const locationRoutes = require("./routes/location.routes.js")
+app.use("/", locationRoutes);
+
+const modalityRoutes = require("./routes/modality.routes.js")
+app.use("/", modalityRoutes);
+
 app.listen(3001, () => {
   console.log("Server running on port 3001")
 });

@@ -2,7 +2,7 @@ const { getConnection } = require('../connection.js');
 const sql = require('mssql');
 
 const getSchedules = async (req, res) => {
-    try {
+    /*try {
         const pool = await getConnection();
         const result = await pool.request().execute('InloTEC_SP_Schedules_List');
         res.json(result.recordset);
@@ -10,15 +10,15 @@ const getSchedules = async (req, res) => {
         const errorMessage = error.message || 'Error desconocido';
         console.error('Error al ejecutar el query:', errorMessage);
         res.status(500).send(errorMessage);
-    }
+    }*/
 }
 
 const getSchedule = async (req, res) => {
-    res.send("obteniendo un grupo");
+    /*res.send("obteniendo un grupo");*/
 }
 
 const addSchedule = async (req, res) => {
-    try {
+    /*try {
         const pool = await getConnection()
         console.log(req.body)
 
@@ -32,11 +32,11 @@ const addSchedule = async (req, res) => {
         const errorMessage = error.message || 'Error desconocido';
         console.error('Error al ejecutar el query:', errorMessage);
         res.status(500).send(errorMessage);
-    }
+    }*/
 }       
 
 const editSchedule = async (req, res) => {
-    try {
+    /*try {
         const pool = await getConnection();
         console.log(req.body)
 
@@ -51,11 +51,11 @@ const editSchedule = async (req, res) => {
         const errorMessage = error.message || 'Error desconocido';
         console.error('Error al ejecutar el query:', errorMessage);
         res.status(500).send(errorMessage);
-    }
+    }*/
 }
 
 const deleteSchedule = async (req, res) => {
-    try {
+    /*try {
         const pool = await getConnection();
         console.log(req.body)
 
@@ -69,7 +69,7 @@ const deleteSchedule = async (req, res) => {
         const errorMessage = error.message || 'Error desconocido';
         console.error('Error al ejecutar el query:', errorMessage);
         res.status(500).send(errorMessage);
-    }
+    }*/
 }
 
 module.exports = { getSchedules, getSchedule, addSchedule, editSchedule, deleteSchedule };

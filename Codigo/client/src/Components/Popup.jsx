@@ -12,6 +12,9 @@ import cerrar from '../Assets/cerrar.png';
 function Popup({ type, closePopup }) {
     const [profesores, setProfesores] = useState([]);
     const [grupos, setGrupos] = useState([]);
+    const [catalogCourses, setCatalogCourses] = useState([]);
+    const [locaciones, setLocaciones] = useState([]);
+    const [modalidades, setModalidades] = useState([]);
     const [error, setError] = useState('');
     const [formData, setFormData] = useState({
         nombreProfesor: '',
@@ -19,7 +22,16 @@ function Popup({ type, closePopup }) {
         idProfesor: 0 ,
 
         idGrupo: 0,
-        nombreGrupo: ''
+        nombreGrupo: '',
+        
+        nombreCatalagCourse: '',
+        idCatalogCourse: 0,
+
+        nombreLocacion: '',
+        idLocacion: 0,
+
+        nombreModalidad: '',
+        idModalidad: 0
     });
 
     const [isError, setIsError] = useState({
@@ -58,6 +70,55 @@ function Popup({ type, closePopup }) {
 
         fetchGrupos();
     }, []);
+
+    useEffect(() => {
+        // Función para obtener la lista de grupos
+        const fetchCatalogCourse = async () => {
+            try {
+                const response = await axios.get('http://localhost:3001/getCatalogCourses');
+                setCatalogCourses(response.data);
+                console.log(response.data)
+                console.log(catalogCourses)
+            } catch (error) {
+                console.error('Error al obtener la lista de catalogo de coursos:', error);
+            }
+        };
+
+        fetchCatalogCourse();
+    }, []);
+
+    useEffect(() => {
+        // Función para obtener la lista de locaciones
+        const fetchLocaciones = async () => {
+            try {
+                const response = await axios.get('http://localhost:3001/getLocations');
+                setLocaciones(response.data);
+                console.log(response.data)
+                console.log(locaciones)
+            } catch (error) {
+                console.error('Error al obtener la lista de locaciones:', error);
+            }
+        };
+
+        fetchLocaciones();
+    }, []);
+
+    useEffect(() => {
+        // Función para obtener la lista de locaciones
+        const fetchModalidades = async () => {
+            try {
+                const response = await axios.get('http://localhost:3001/getModalitys');
+                setModalidades(response.data);
+                console.log(response.data)
+                console.log(modalidades)
+            } catch (error) {
+                console.error('Error al obtener la lista de modalidades:', error);
+            }
+        };
+
+        fetchModalidades();
+    }, []);
+
 
 
     const handleInputChange = (e) => {
@@ -117,6 +178,80 @@ function Popup({ type, closePopup }) {
         console.log('Updated formData:', formData);
 
     };
+
+    const handleSelectCatalogCourseChange = (e) => {
+        const {key, value } = e.target;
+        console.log(e.target)
+        if(e.target.value != 0){
+            const catalogCourseConId = catalogCourses.find(catalog => catalog.Id === e.target.value);
+            console.log(catalogCourseConId)
+            setFormData((prevFormData) => ({
+                ...prevFormData,
+                ['nombreCatalagCourse']: catalogCourseConId.Name,
+                ['idCatalagCourse']: catalogCourseConId.Id
+            }));
+        }else{
+            setFormData((prevFormData) => ({
+                ...prevFormData,
+                ['nombreCatalagCourse']: '',
+                ['idCatalagCourse']: 0
+            }));
+        }
+       
+        console.log('Updated formData:', formData);
+
+    };
+
+    const handleSelectLocacionChange = (e) => {
+        const {key, value } = e.target;
+        console.log(e.target)
+        if(e.target.value != 0){
+            console.log(e.target.value)
+            console.log(locaciones)
+            const locacionConId = locaciones.find(locacion => locacion.Id === e.target.value);
+            console.log(locacionConId)
+            setFormData((prevFormData) => ({
+                ...prevFormData,
+                ['nombreLocacion']: locacionConId.Name,
+                ['idLocacion']: locacionConId.Id
+            }));
+        }else{
+            setFormData((prevFormData) => ({
+                ...prevFormData,
+                ['nombreLocacion']: '',
+                ['idLocacion']: 0
+            }));
+        }
+       
+        console.log('Updated formData:', formData);
+
+    };
+
+    const handleSelectModalidadChange = (e) => {
+        const {key, value } = e.target;
+        console.log(e.target)
+        if(e.target.value != 0){
+            console.log(e.target.value)
+            console.log(modalidades)
+            const modalidadConId = modalidades.find(modalidad => modalidad.id === e.target.value);
+            console.log(modalidadConId)
+            setFormData((prevFormData) => ({
+                ...prevFormData,
+                ['nombreModalidad']: modalidadConId.Name,
+                ['idmodalidad']: modalidadConId.id
+            }));
+        }else{
+            setFormData((prevFormData) => ({
+                ...prevFormData,
+                ['nombreModalidad']: '',
+                ['idmodalidad']: 0
+            }));
+        }
+       
+        console.log('Updated formData:', formData);
+
+    };
+
 
     const addTeacher = async () => {
         const errors = {
@@ -321,15 +456,36 @@ function Popup({ type, closePopup }) {
                                 <h1>Agregar Curso</h1>
                                 <body>Nombre del curso</body>
                                 <div className='input-contenedor'>
-                                    <input type='text' placeholder='Nombre del curso' />
+                                    <select placeholder='Seleccione el grupo' onChange={handleSelectCatalogCourseChange}>
+                                        <option value={0}>Seleccione un curso </option>
+                                        {catalogCourses.map((catalog) => (
+                                            <option key={catalog.Id} value={catalog.Id}>
+                                                {catalog.Name}
+                                            </option>
+                                        ))}
+                                    </select>
                                 </div>
                                 <body>Grupo</body>
                                 <div className='input-contenedor'>
-                                    <input type='select' placeholder='Grupo' />
+                                    <select placeholder='Seleccione el grupo' onChange={handleSelectGruopChange}>
+                                        <option value={0}>Seleccione un grupo </option>
+                                        {grupos.map((grupo) => (
+                                            <option key={grupo.id} value={grupo.id}>
+                                                {grupo.Name}
+                                            </option>
+                                        ))}
+                                    </select>
                                 </div>
                                 <body>Profesor(a) responsable</body>
                                 <div className='input-contenedor'>
-                                    <input type='select' placeholder='Profesor o profesora' />
+                                    <select placeholder='Seleccione el profesor' onChange={handleSelectTeacherChange}>
+                                        <option value={0}>Seleccione un profesor </option>
+                                        {profesores.map((profesor) => (
+                                            <option key={profesor.email} value={profesor.id}>
+                                                {profesor.Name}
+                                            </option>
+                                        ))}
+                                    </select>
                                 </div>
                                 <body>Periodo lectivo</body>
                                 <div className='fila-juntas'>
@@ -350,11 +506,25 @@ function Popup({ type, closePopup }) {
                                 <div className='fila-juntas'>
                                     <div className='input-contenedor'>
                                         <body style={{ textAlign: 'center', marginTop: '10px' }}>Sede</body>
-                                        <input type='select' placeholder='Seleccionar Sede' />
+                                        <select placeholder='Seleccione la locacion' onChange={handleSelectLocacionChange}>
+                                            <option value={0}>Seleccione una locacion </option>
+                                            {locaciones.map((locacion) => (
+                                                <option key={locacion.Id} value={locacion.Id}>
+                                                    {locacion.Name}
+                                                </option>
+                                            ))}
+                                        </select>
                                     </div>
                                     <div className='input-contenedor'>
                                         <body style={{ textAlign: 'center', marginTop: '10px' }}>Modalidad</body>
-                                        <input type='text' placeholder='Seleccione la modalidad' />
+                                        <select placeholder='Seleccione la modalidad' onChange={handleSelectModalidadChange}>
+                                            <option value={0}>Seleccione una modalidad </option>
+                                            {modalidades.map((modalidad) => (
+                                                <option key={modalidad.id} value={modalidad.id}>
+                                                    {modalidad.Name}
+                                                </option>
+                                            ))}
+                                        </select>
                                     </div>
                                 </div>
                                 <body>Notas</body>
