@@ -24,7 +24,7 @@ const addSchedule = async (req, res) => {
 
         let result = await pool.request()
             .input('IN_name', sql.NVarChar(128), req.body['nombre'])
-            .input('IN_IdDays', sql.NVarChar(128), req.body['dia'])
+            .input('IN_IdDays', sql.NVarChar(128), req.body['dias'])
             .input('IN_StartTime', sql.Time, req.body['horaInicio'])
             .input('IN_EndTime', sql.Time, req.body['horaFinal'])
             .execute('InloTEC_SP_Schedules_Add'); // Nombre del procedimiento almacenado
