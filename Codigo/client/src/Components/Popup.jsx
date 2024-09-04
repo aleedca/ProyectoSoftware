@@ -37,7 +37,10 @@ function Popup({ type, closePopup }) {
 
         nombreHorario: '',
         idHorario:'',
-        dias: ''
+        dias: '',
+
+        fechaInicio: '',
+        fechaFin: ''
     });
 
     const [isError, setIsError] = useState({
@@ -498,8 +501,8 @@ function Popup({ type, closePopup }) {
                 idHorario:formData.idHorario,
                 idModalidad:formData.idModalidad,
                 idGrupo:formData.idGrupo,
-                fechaInicio: '01-09-2024',
-                fechaFinal:'02-08-2024',
+                fechaInicio: formData.fechaInicio,
+                fechaFinal:formData.fechaFin,
                 notes: '',
 
             });
@@ -627,11 +630,11 @@ function Popup({ type, closePopup }) {
                                 <div className='fila-juntas'>
                                     <div className='input-contenedor'>
                                         <body style={{ textAlign: 'center', marginTop: '10px' }}>Fecha inicio</body>
-                                        <input type='date' placeholder='Fecha inicio' />
+                                        <input type='date' placeholder='Fecha inicio' name='fechaInicio' value={formData.fechaInicio} onChange={handleInputChange}/>
                                     </div>
                                     <div className='input-contenedor'>
                                         <body style={{ textAlign: 'center', marginTop: '10px' }}>Fecha fin</body>
-                                        <input type='date' placeholder='Fecha fin' />
+                                        <input type='date' placeholder='Fecha fin' name='fechaFin' value={formData.fechaFin} onChange={handleInputChange} />
                                     </div>
                                 </div>
                                 <body>Horario</body>
