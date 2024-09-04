@@ -286,11 +286,12 @@ function Popup({ type, closePopup }) {
             ...prevFormData,
             dias: newSelectedDays,
         }));
-    
+        /*
         console.log('Updated formData:', {
             ...formData,
             dias: newSelectedDays,
         });
+        */
     };
     
     
@@ -300,26 +301,25 @@ function Popup({ type, closePopup }) {
         return `${hours}:${minutes}:00`;
     };
 
-    const handleAddHorario = () => {
+    const handleAddHorario = async () => {
         // Convierte los días seleccionados a un string separado por comas
-        const diasString = selectedDays.join(',');
-    
-        // Formatea las horas para la base de datos
         const formattedHoraInicio = formatTimeForDatabase(formData.horaInicio);
         const formattedHoraFin = formatTimeForDatabase(formData.horaFin);
     
-        // Actualiza formData con los valores formateados
-        setFormData((prevFormData) => {
-            const updatedFormData = {
-                ...prevFormData,
-                dias: diasString,
+       
+        try {
+            const response = await axios.post('http://localhost:3001/addSchedule', {
+                nombreHorario: formData.nombreHorario,
+                dias: formData.dias,
                 horaInicio: formattedHoraInicio,
-                horaFin: formattedHoraFin,
-            };
-    
-    
-            return updatedFormData;
-        });
+                horaFin: formattedHoraFin
+            });
+            console.log('Horario creado:', response.data);
+            closePopup();
+            alert('Horario creado correctamente');
+        } catch (error) {
+            console.error('Error al crear el horario:', error);
+        }
     
         // Cierra el popup
         closePopup();
@@ -512,39 +512,7 @@ function Popup({ type, closePopup }) {
         }
     };
 
-    const addHorario = async () => {
-        const errors = {
-            nombreHorario: !formData.nombreHorario,
-            //dias: !formData.dias,
-            horaInicio: !formData.horaInicio,
-            horaFin: !formData.horaFin
-        };
-
-        setIsError(errors);
-
-        if (Object.values(errors).includes(true)) {
-            setError('Por favor, complete todos los campos correctamente.');
-            console.error('Por favor, complete todos los campos correctamente.');
-            alert('Por favor, complete todos los campos correctamente.');
-            return false;
-        }
-
-        console.log('formData:', formData);
-
-        /* try {
-            const response = await axios.post('http://localhost:3001/addSchedule', {
-                nombre: formData.nombreHorario,
-                dias: formData.dias,
-                horaInicio: new Date(formattedTime(formData.horaInicio)),
-                horaFin: new Date(formattedTime(formData.horaFin))
-            });
-            console.log('Horario creado:', response.data);
-            closePopup();
-            alert('Horario creado correctamente');
-        } catch (error) {
-            console.error('Error al crear el horario:', error);
-        } */
-    };
+    
 
     const renderContent = () => {
         switch (type) {
@@ -808,7 +776,7 @@ function Popup({ type, closePopup }) {
                                     </div>
                                 </div>
 
-                                <button className="btn_naranja" onClick={addHorario} onChange={handleAddHorario}> Agregar horario </button>
+                                <button className="btn_naranja" onClick={handleAddHorario} onChange={handleAddHorario}> Agregar horario </button>
                             </div>
                         </div>
                     </div>
