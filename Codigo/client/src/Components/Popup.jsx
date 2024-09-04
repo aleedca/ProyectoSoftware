@@ -33,9 +33,14 @@ function Popup({ type, closePopup }) {
 
         nombreModalidad: '',
         idModalidad: 0,
+        
 
         nombreHorario: '',
-        dias: ''
+        idHorario:'',
+        dias: '',
+
+        fechaInicio: '',
+        fechaFin: ''
     });
 
     const [isError, setIsError] = useState({
@@ -205,14 +210,14 @@ function Popup({ type, closePopup }) {
             console.log(catalogCourseConId)
             setFormData((prevFormData) => ({
                 ...prevFormData,
-                ['nombreCatalagCourse']: catalogCourseConId.Name,
-                ['idCatalagCourse']: catalogCourseConId.Id
+                ['nombreCatalogCourse']: catalogCourseConId.Name,
+                ['idCatalogCourse']: catalogCourseConId.Id
             }));
         } else {
             setFormData((prevFormData) => ({
                 ...prevFormData,
-                ['nombreCatalagCourse']: '',
-                ['idCatalagCourse']: 0
+                ['nombreCatalogCourse']: '',
+                ['idCatalogCourse']: 0
             }));
         }
 
@@ -256,47 +261,96 @@ function Popup({ type, closePopup }) {
             setFormData((prevFormData) => ({
                 ...prevFormData,
                 ['nombreModalidad']: modalidadConId.Name,
-                ['idmodalidad']: modalidadConId.id
+                ['idModalidad']: modalidadConId.id
             }));
         } else {
             setFormData((prevFormData) => ({
                 ...prevFormData,
                 ['nombreModalidad']: '',
-                ['idmodalidad']: 0
+                ['idModalidad']: 0
             }));
         }
 
         console.log('Updated formData:', formData);
 
     };
+    
+    const handleSelectScheduleChange = (e) => {
+        const { key, value } = e.target;
+        console.log(e.target)
+        if (e.target.value != 0) {
+            console.log(e.target.value)
+            console.log(horarios)
+            const horarioConId = horarios.find(horario => horario.Id === e.target.value);
+            console.log(horarioConId)
+            setFormData((prevFormData) => ({
+                ...prevFormData,
+                ['nombreHorario']: horarioConId.Name,
+                ['idHorario']: horarioConId.Id
+            }));
+        } else {
+            setFormData((prevFormData) => ({
+                ...prevFormData,
+                ['nombreHorario']: '',
+                ['idHorario']: 0
+            }));
+        }
 
+        console.log('Updated formData:', formData);
+
+    };
     const handleCheckBoxChange = (e) => {
         const { value } = e.target;
-        console.log(e.target)
-        if (e.target.checked) {
-            setSelectedDays([...selectedDays, value]);
-        } else {
-            setSelectedDays(selectedDays.filter((day) => day !== value));
-        }
+        
+        // Calcula la nueva lista de días seleccionados
+        const newSelectedDays = e.target.checked
+            ? [...selectedDays, value]
+            : selectedDays.filter((day) => day !== value);
+    
+        // Actualiza el estado de selectedDays y formData juntos usando newSelectedDays
+        setSelectedDays(newSelectedDays);
+        
+        // Usa el valor actualizado de newSelectedDays para actualizar formData
+        setFormData((prevFormData) => ({
+            ...prevFormData,
+            dias: newSelectedDays,
+        }));
+        /*
+        console.log('Updated formData:', {
+            ...formData,
+            dias: newSelectedDays,
+        });
+        */
     };
+    
+    
 
     const formatTimeForDatabase = (time) => {
         const [hours, minutes] = time.split(':');
         return `${hours}:${minutes}:00`;
     };
 
-    const handleAddHorario = () => {
-        const diasString = selectedDays.join(',');
+    const handleAddHorario = async () => {
+        // Convierte los días seleccionados a un string separado por comas
         const formattedHoraInicio = formatTimeForDatabase(formData.horaInicio);
         const formattedHoraFin = formatTimeForDatabase(formData.horaFin);
-
-        setFormData((prevFormData) => ({
-            ...prevFormData,
-            dias: diasString,
-            horaInicio: formattedHoraInicio,
-            horaFin: formattedHoraFin
-        }));
-
+    
+       
+        try {
+            const response = await axios.post('http://localhost:3001/addSchedule', {
+                nombreHorario: formData.nombreHorario,
+                dias: formData.dias,
+                horaInicio: formattedHoraInicio,
+                horaFin: formattedHoraFin
+            });
+            console.log('Horario creado:', response.data);
+            closePopup();
+            alert('Horario creado correctamente');
+        } catch (error) {
+            console.error('Error al crear el horario:', error);
+        }
+    
+        // Cierra el popup
         closePopup();
     };
 
@@ -423,6 +477,44 @@ function Popup({ type, closePopup }) {
         }
     };
 
+    const addCourse = async () => {
+        const errors = {
+            
+        };
+
+        setIsError(errors);
+
+        if (Object.values(errors).includes(true)) {
+            setError('Por favor, complete todos los campos correctamente.');
+            console.error('Por favor, complete todos los campos correctamente.');
+            alert('Por favor, complete todos los campos correctamente.');
+            return false; // Detiene la ejecución si hay errores
+        }
+
+        try {
+            const response = await axios.post('http://localhost:3001/addCourse', {
+               
+                
+                idUbicacion:formData.idLocacion,
+                idProfesores:formData.idProfesor,
+                idCursos:formData.idCatalogCourse,
+                idHorario:formData.idHorario,
+                idModalidad:formData.idModalidad,
+                idGrupo:formData.idGrupo,
+                fechaInicio: formData.fechaInicio,
+                fechaFinal:formData.fechaFin,
+                notes: '',
+
+            });
+            console.log('Curso creado:', response.data);
+            closePopup();
+            alert('Curso creado correctamente');
+        } catch (error) {
+            console.error('Error al crear el Curso:', error);
+        }
+    };
+
+
     const editGroup = async () => {
         const errors = {
             nombreGrupo: !formData.nombreGrupo,
@@ -487,39 +579,7 @@ function Popup({ type, closePopup }) {
         }
     };
 
-    const addHorario = async () => {
-        const errors = {
-            nombreHorario: !formData.nombreHorario,
-            //dias: !formData.dias,
-            horaInicio: !formData.horaInicio,
-            horaFin: !formData.horaFin
-        };
-
-        setIsError(errors);
-
-        if (Object.values(errors).includes(true)) {
-            setError('Por favor, complete todos los campos correctamente.');
-            console.error('Por favor, complete todos los campos correctamente.');
-            alert('Por favor, complete todos los campos correctamente.');
-            return false;
-        }
-
-        console.log('formData:', formData);
-
-        /* try {
-            const response = await axios.post('http://localhost:3001/addSchedule', {
-                nombre: formData.nombreHorario,
-                dias: formData.dias,
-                horaInicio: new Date(formattedTime(formData.horaInicio)),
-                horaFin: new Date(formattedTime(formData.horaFin))
-            });
-            console.log('Horario creado:', response.data);
-            closePopup();
-            alert('Horario creado correctamente');
-        } catch (error) {
-            console.error('Error al crear el horario:', error);
-        } */
-    };
+    
 
     const renderContent = () => {
         switch (type) {
@@ -570,16 +630,16 @@ function Popup({ type, closePopup }) {
                                 <div className='fila-juntas'>
                                     <div className='input-contenedor'>
                                         <body style={{ textAlign: 'center', marginTop: '10px' }}>Fecha inicio</body>
-                                        <input type='date' placeholder='Fecha inicio' />
+                                        <input type='date' placeholder='Fecha inicio' name='fechaInicio' value={formData.fechaInicio} onChange={handleInputChange}/>
                                     </div>
                                     <div className='input-contenedor'>
                                         <body style={{ textAlign: 'center', marginTop: '10px' }}>Fecha fin</body>
-                                        <input type='date' placeholder='Fecha fin' />
+                                        <input type='date' placeholder='Fecha fin' name='fechaFin' value={formData.fechaFin} onChange={handleInputChange} />
                                     </div>
                                 </div>
                                 <body>Horario</body>
                                 <div className='input-contenedor'>
-                                    <select> 
+                                    <select onChange={handleSelectScheduleChange}> 
                                         <option value={0}>Seleccione un horario </option>
                                         {horarios.map((horario) => (
                                             <option key={horario.Id} value={horario.Id}>
@@ -617,7 +677,7 @@ function Popup({ type, closePopup }) {
                                 <div className='input-contenedor'>
                                     <input type='text' placeholder='Notas' />
                                 </div>
-                                <button className="btn_naranja" onClick={closePopup}> Agregar curso </button>
+                                <button className="btn_naranja" onClick={addCourse}> Agregar curso </button>
                             </div>
                         </div>
                     </div>
@@ -783,7 +843,7 @@ function Popup({ type, closePopup }) {
                                     </div>
                                 </div>
 
-                                <button className="btn_naranja" onClick={addHorario} onChange={handleAddHorario}> Agregar horario </button>
+                                <button className="btn_naranja" onClick={handleAddHorario} onChange={handleAddHorario}> Agregar horario </button>
                             </div>
                         </div>
                     </div>

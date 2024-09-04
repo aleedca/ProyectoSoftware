@@ -19,14 +19,25 @@ const getSchedule = async (req, res) => {
 
 const addSchedule = async (req, res) => {
     try {
-        const pool = await getConnection()
-        console.log(req.body)
+        const pool = await getConnection();
+        console.log(req.body);
+
+        // Convierte el array de días a un string separado por comas
+        const diasString = req.body['dias'].join(',');
+        console.log(diasString);
+
+        // Convierte las horas a un formato correcto de SQL Time (HH:mm:ss)
+        const formattedHoraInicio = new Date(`1970-01-01T${req.body['horaInicio']}`).toTimeString().split(' ')[0];
+        const formattedHoraFin = new Date(`1970-01-01T${req.body['horaFin']}`).toTimeString().split(' ')[0];
+
+        console.log('Hora Inicio:', formattedHoraInicio);
+        console.log('Hora Fin:', formattedHoraFin);
 
         let result = await pool.request()
-            .input('IN_name', sql.NVarChar(128), req.body['nombre'])
-            .input('IN_IdDays', sql.NVarChar(128), req.body['dias'])
-            .input('IN_startTime', sql.Time, req.body['horaInicio'])
-            .input('IN_endTime', sql.Time, req.body['horaFinal'])
+            .input('IN_name', sql.NVarChar(128), req.body['nombreHorario'])
+            .input('IN_IdDays', sql.NVarChar(128), diasString) // Utiliza el string convertido
+            .input('IN_startTime', sql.Time, formattedHoraInicio) // Pasa la hora con el formato correcto
+            .input('IN_endTime', sql.Time, formattedHoraFin) // Pasa la hora con el formato correcto
             .execute('InloTEC_SP_Schedule_Add'); // Nombre del procedimiento almacenado
 
         console.log(result); // Muestra el resultado
@@ -36,7 +47,9 @@ const addSchedule = async (req, res) => {
         console.error('Error al ejecutar el query:', errorMessage);
         res.status(500).send(errorMessage);
     }
-}       
+};
+
+     
 
 const editSchedule = async (req, res) => {
     /*try {

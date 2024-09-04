@@ -52,7 +52,7 @@ BEGIN
 					   WHERE LOWER([Name]) = LOWER(LTRIM(RTRIM(@IN_newName)))
 					   AND Deleted = 0 )
     	BEGIN
-		RAISERROR('El nombre ya est� registrado. Por favor, utilice otro.', 16, 1);
+		RAISERROR('El nombre ya está registrado. Por favor, utilice otro.', 16, 1);
 		END;
 
 
@@ -67,7 +67,7 @@ BEGIN
 		BEGIN TRANSACTION;
 	END;
 
-		--the group is edit it
+		--the group is edited
 		UPDATE [dbo].[Groups]
 		SET  
 		    [Name] = LTRIM(RTRIM(@IN_newName))
