@@ -272,22 +272,28 @@ function Popup({ type, closePopup }) {
 
     const handleCheckBoxChange = (e) => {
         const { value } = e.target;
-        console.log(e.target.checked)
         
-        if (e.target.checked) {
-            setSelectedDays([...selectedDays, value]);
-            
-        } else {
-            setSelectedDays(selectedDays.filter((day) => day !== value));
-        }
+        // Calcula la nueva lista de días seleccionados
+        const newSelectedDays = e.target.checked
+            ? [...selectedDays, value]
+            : selectedDays.filter((day) => day !== value);
+    
+        // Actualiza el estado de selectedDays y formData juntos usando newSelectedDays
+        setSelectedDays(newSelectedDays);
+        
+        // Usa el valor actualizado de newSelectedDays para actualizar formData
         setFormData((prevFormData) => ({
             ...prevFormData,
-            ['dias']: selectedDays,
-            
+            dias: newSelectedDays,
         }));
-        
-        console.log('Updated formData:', formData);
+    
+        console.log('Updated formData:', {
+            ...formData,
+            dias: newSelectedDays,
+        });
     };
+    
+    
 
     const formatTimeForDatabase = (time) => {
         const [hours, minutes] = time.split(':');
@@ -295,17 +301,27 @@ function Popup({ type, closePopup }) {
     };
 
     const handleAddHorario = () => {
+        // Convierte los días seleccionados a un string separado por comas
         const diasString = selectedDays.join(',');
+    
+        // Formatea las horas para la base de datos
         const formattedHoraInicio = formatTimeForDatabase(formData.horaInicio);
         const formattedHoraFin = formatTimeForDatabase(formData.horaFin);
-
-        setFormData((prevFormData) => ({
-            ...prevFormData,
-            dias: diasString,
-            horaInicio: formattedHoraInicio,
-            horaFin: formattedHoraFin
-        }));
-
+    
+        // Actualiza formData con los valores formateados
+        setFormData((prevFormData) => {
+            const updatedFormData = {
+                ...prevFormData,
+                dias: diasString,
+                horaInicio: formattedHoraInicio,
+                horaFin: formattedHoraFin,
+            };
+    
+    
+            return updatedFormData;
+        });
+    
+        // Cierra el popup
         closePopup();
     };
 
