@@ -89,10 +89,6 @@ BEGIN
             RAISERROR('El nuevo correo electrónico ya está registrado. Por favor, utilice otro correo.', 16, 1);
         END;
 
-		SELECT @previosEmaiId = Id 
-		FROM [dbo].[Users] 
-				   WHERE email = LTRIM(RTRIM(@IN_newEmail))
-				   AND Deleted = 1
 
 		--get the user id of the email
 		SELECT @UserId = U.id
@@ -133,15 +129,6 @@ BEGIN
 			[Passwordhash] = LTRIM(RTRIM(@newPasswordhash)), 
 			[Email] = LTRIM(RTRIM(@newEmail))
 		WHERE Id = @UserId;
-
-		--switch the email value of the discarted email
-		--happens if a previosly deleted user email
-		--becomes the email of a new entry.
-		UPDATE [dbo].[Users]
-		SET 
-			[Email] = LTRIM(RTRIM(@IN_oldEmail))
-		WHERE Id = @previosEmaiId;
-
         
         -- COMMIT TRANSACTION
         IF @transactionBegun = 1

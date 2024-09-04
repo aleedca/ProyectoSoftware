@@ -2,7 +2,6 @@
 -- Fecha:       2024-08-17
 -- Descripci�n: Procedure to add a user with duplicated email validation.
 --				It assign the basic rol as a default
---				Reactives a deleted user  
 --------------------------------------------------------------------------
 
 CREATE OR ALTER PROCEDURE [dbo].[InloTEC_SP_Users_Add]
@@ -23,10 +22,10 @@ BEGIN
 	DECLARE @transactionBegun BIT = 0;
 
 	-- VARIABLE DECLARATION
-	DECLARE @createdId INT = NULL;
-	DECLARE @basicRolId INT = NULL;
+	DECLARE @CreatedId INT = NULL;
+	DECLARE @BasicRolId INT = NULL;
 	DECLARE @UserId INT = NULL;
-	DECLARE @rolname NVARCHAR(64) = 'Normal_User';
+	DECLARE @Rolname NVARCHAR(64) = 'Normal_User';
 
 	BEGIN TRY
         -- VALIDATIONS
@@ -60,16 +59,11 @@ BEGIN
 		RAISERROR('El correo electr�nico ya est� registrado. Por favor, utilice otro correo.', 16, 1);
 	END;
 
-		--get the user id if the email is currently deleted
-		SELECT @UserId = U.id
-	FROM [dbo].[Users] U
-	WHERE email = LTRIM(RTRIM(@IN_email))
-		AND Deleted = 1
 
 		--get the role Id
-		SELECT @basicRolId = Id
-	FROM Roles
-	WHERE Name = @rolname
+		SELECT @BasicRolId = Id
+		FROM Roles
+		WHERE Name = @Rolname
 
         -- TRANSACTION BEGUN
         IF @@TRANCOUNT = 0
@@ -78,9 +72,6 @@ BEGIN
 		BEGIN TRANSACTION;
 	END;
 
-		--the user is a completly new user
-		IF @UserID IS NULL
-			BEGIN
 		-- INSERT USER
 		INSERT INTO [dbo].[Users]
 			([Name], [LastName1], [LastName2], [Passwordhash], [Email], [Deleted])
@@ -94,40 +85,16 @@ BEGIN
 				0
 				);
 
-		SET @createdId = SCOPE_IDENTITY();
+		SET @CreatedId = SCOPE_IDENTITY();
 
 		-- Assigne default rol to user
 		INSERT INTO [dbo].[Users_Roles]
 			([IdUsers], [IdRoles], [Deleted])
-		VALUES
-			(
-				@createdId,
-				@basicRolId,
+		VALUES(
+				@CreatedId,
+				@BasicRolId,
 				0
 				);
-	END
-		
-		-- The user existed previously and is reactivated
-		ELSE
-			BEGIN
-		UPDATE [dbo].[Users]
-				SET 
-					Name = @IN_name,
-					LastName1 = @IN_lastName1,
-					LastName2 = @IN_lastName2,
-					Passwordhash = @IN_passwordhash, 
-					Email = @IN_email, 
-					Deleted = 0
-				WHERE Id = @UserId;
-
-		UPDATE UR
-				SET UR.Deleted = 0
-				FROM [dbo].[Users_Roles] UR
-			INNER JOIN [dbo].[Roles] R ON R.Id = UR.IdRoles
-				WHERE [IdUsers] = @UserId
-			AND R.Name = @rolname;
-
-	END
 
         
         -- COMMIT TRANSACTION
