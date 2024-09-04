@@ -37,7 +37,7 @@ function Sidebar({ isOpen, toggleSidebar, openPopup }) {
             )}
             {isOpen && (
             <nav>
-                <ul>
+                <ul style={{ height: '100%', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', justifyContent: 'space-evenly' }}>
                     <li style={{backgroundColor: 'transparent'}}>
                         
                         <button className="buttons" style={{alignItems: 'center'}} onClick={() => navigate('/editar')} >

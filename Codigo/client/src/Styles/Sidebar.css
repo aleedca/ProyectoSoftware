@@ -1,21 +1,30 @@
 /* Sidebar Styles */
+.sidebar-container {
+    height: 100vh;
+    overflow: hidden; /* Oculta el scrollbar */
+    position: relative; /* Necesario para el contenedor del scroll */
+}
+
 .sidebar {
     display: flex;
     flex-direction: column;
-    height: 100vh;
+    height: 100%;
     width: 250px;
     background: linear-gradient(to bottom, #001B48 0%, #004581 31%,#018ABD 62%,#97CBDC 100%);
-    /*background-color: #f4f4f4; /*Hacer gradientes*/
     transition: width 0.3s ease;
-   
+    overflow-y: scroll; /* Permite el desplazamiento */
+    scrollbar-width: none; /* Oculta el scrollbar en Firefox */
+}
+
+.sidebar::-webkit-scrollbar {
+    display: none; /* Oculta el scrollbar en Chrome, Safari y Edge */
 }
 
 .sidebar.closed {
     width: 80px;
 }
 
-
-.buttons {
+.buttons, .buttons-orange {
     background-color: #004581; /* Fondo transparente */
     border: none; /* Sin borde */
     color: #fff; /* Color del texto */
@@ -27,29 +36,19 @@
     box-shadow: 0 0 8px rgba(250, 250, 250, 0.1); /* Añade sombra */
     height: 48px;
     width: 100%;
-    
 }
+
 .buttons:hover {
     background-color: #33688B; /* Color de fondo personalizado al pasar el mouse */
-  }
+}
 
 .buttons-orange {
     background-color: #DD3915; /* Fondo transparente */
-    border: none; /* Sin borde */
-    color: #fff; /* Color del texto */
-    cursor: pointer; /* Cambia el cursor al pasar el mouse */
-    display: flex; /* Alinea el icono y el texto */
-    align-items: center; /* Alinea verticalmente el contenido */
-    gap: 10px; /* Añade espacio entre el icono y el texto */
-    border-radius: 10px; /* Redondea los bordes */
-    box-shadow: 0 0 8px rgba(250, 250, 250, 0.1); /* Añade sombra */
-    height: 48px;
-    width: 100%;
-    
 }
+
 .buttons-orange:hover {
     background-color: #ca4a2d; /* Color de fondo personalizado al pasar el mouse */
-  }
+}
 
 .toggle-button {
     background-color: transparent;
@@ -69,41 +68,52 @@
     display: flex; /* Flexbox para alinear los elementos en fila */
     align-items: center; /* Alinea verticalmente los elementos */
     gap: 15px; /* Espacio entre las columnas */
-  }
-  
-  .col {
-    flex: 1; /* Cada columna toma un espacio igual */
-  }
+}
 
-/*nav ul {
-    list-style-type: none;
+.col {
+    flex: 1; /* Cada columna toma un espacio igual */
+}
+
+/* Asegúrate de que la barra lateral use flexbox */
+nav {
+    display: flex;
+    flex-direction: column;
+    height: 100%; /* Ocupar toda la altura de la barra lateral */
+}
+
+/* Ajusta la lista de botones */
+nav ul {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between; /* Distribuir equitativamente los botones */
+    padding: 0;
+    margin: 0;
+    height: 100%; /* Asegura que la lista ocupe toda la altura disponible */
+}
+
+/* Ajusta los botones */
+li {
+    list-style: none;
+    margin: 0;
     padding: 0;
 }
 
-nav ul li {
-    margin-bottom: 10px;
-    
-}
-
-nav ul li button {
+.buttons, .buttons-orange {
     display: flex;
     align-items: center;
-    width: 100%;
-    background-color: transparent;
-    border: none;
-    color: #333;
+    justify-content: center;
     padding: 10px;
-    font-size: 1em;
-    cursor: pointer;
+    font-size: 14px;
+    flex-shrink: 0; /* Evita que los botones se encojan demasiado */
 }
 
-nav ul li button span {
-    margin-left: 10px;
+/* Reduce el tamaño de los botones en pantallas pequeñas */
+@media (max-width: 768px) {
+    .buttons, .buttons-orange {
+        font-size: 12px; /* Ajusta el tamaño del texto */
+        height: 40px; /* Ajusta la altura del botón */
+    }
 }
-
-nav ul li button:hover {
-    background-color: #e0e0e0;
-}*/
 
 /* Responsiveness */
 @media (max-width: 600px) {
@@ -114,10 +124,23 @@ nav ul li button:hover {
     .sidebar.open {
         width: 200px;
     }
+
+    nav ul {
+        padding: 0;
+    }
 }
 
 @media (max-width: 480px) {
     .sidebar {
         width: 60px;
+    }
+
+    .sidebar.open {
+        width: 180px;
+    }
+
+    .buttons, .buttons-orange {
+        font-size: 10px; /* Ajusta aún más el tamaño del texto */
+        height: 36px; /* Ajusta aún más la altura del botón */
     }
 }
