@@ -1,6 +1,6 @@
 -- Autor:       Luis Molina
 -- Fecha:       2024-08-17
--- Descripción: Procedure to delete a user.
+-- Descripciï¿½n: Procedure to delete a user.
 --------------------------------------------------------------------------
 
 CREATE OR ALTER PROCEDURE [dbo].[InloTEC_SP_Users_Delete]
@@ -27,15 +27,21 @@ BEGIN
         IF ISNUMERIC(@IN_passwordhash) = 1 OR
            ISNUMERIC(@IN_email) = 1
         BEGIN
-            RAISERROR('Todos los campos deben ser texto. Por favor, complete cambie la información.', 16, 1);
+            RAISERROR('Todos los campos deben ser texto. Por favor, complete cambie la informaciï¿½n.', 16, 1);
         END;
 
 		-- check for empty input data
         IF LTRIM(RTRIM(@IN_passwordhash)) = '' OR
            LTRIM(RTRIM(@IN_email)) = ''
         BEGIN
-            RAISERROR('Todos los campos son obligatorios. Por favor, complete la información.', 16, 1);
+            RAISERROR('Todos los campos son obligatorios. Por favor, complete la informaciï¿½n.', 16, 1);
         END;
+
+        -- check for email format
+        IF NOT (LTRIM(RTRIM(@IN_email)) LIKE '%@%._%')
+        BEGIN
+		RAISERROR('El correo no es formato " *@*.* " .Por favor, complete la informaciÃ³n.', 16, 1);
+	    END;
 
         -- Check if the email is already registered and active
         IF NOT EXISTS (SELECT 1 
@@ -43,7 +49,7 @@ BEGIN
 				   WHERE email = LTRIM(RTRIM(@IN_email))
 				   AND Deleted = 0 )
         BEGIN
-            RAISERROR('El correo electrónico no está registrado. Por favor, utilice otro correo.', 16, 1);
+            RAISERROR('El correo electrï¿½nico no estï¿½ registrado. Por favor, utilice otro correo.', 16, 1);
         END;
 
 		--get the user id of the email
@@ -52,6 +58,11 @@ BEGIN
 		WHERE email = LTRIM(RTRIM(@IN_email))
 		AND LTRIM(RTRIM(@IN_passwordhash)) = U.Passwordhash 
 		AND Deleted = 0
+
+        IF @UserId IS NULL
+        BEGIN
+            RAISERROR('No se pudo borrar al usuario. Revise el correo y contraseÃ±a.', 16, 1);
+        END;
 
 
         -- TRANSACTION BEGUN

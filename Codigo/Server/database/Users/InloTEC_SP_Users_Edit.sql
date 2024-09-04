@@ -70,6 +70,12 @@ BEGIN
             RAISERROR('Todos los campos son obligatorios. Por favor, complete la información.', 16, 1);
         END;
 
+        -- check for email format
+        IF NOT (LTRIM(RTRIM(@newEmail)) LIKE '%@%._%')
+        BEGIN
+		RAISERROR('El correo no es formato " *@*.* " .Por favor, complete la información.', 16, 1);
+	    END;
+
         -- Check if the user is already registered and active
         IF NOT EXISTS (SELECT 1 
 				   FROM [dbo].[Users] 

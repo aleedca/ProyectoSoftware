@@ -37,7 +37,7 @@ BEGIN
 		ISNUMERIC(@IN_passwordhash) = 1 OR
 		ISNUMERIC(@IN_email) = 1
         BEGIN
-		RAISERROR('Todos los campos deben ser texto. Por favor, complete cambie la informaci�n.', 16, 1);
+		RAISERROR('Todos los campos deben ser texto. Por favor, complete cambie la información.', 16, 1);
 	END;
 
 		-- check for empty input data
@@ -47,7 +47,14 @@ BEGIN
 		LTRIM(RTRIM(@IN_passwordhash)) = '' OR
 		LTRIM(RTRIM(@IN_email)) = ''
         BEGIN
-		RAISERROR('Todos los campos son obligatorios. Por favor, complete la informaci�n.', 16, 1);
+		RAISERROR('Todos los campos son obligatorios. Por favor, complete la información.', 16, 1);
+	END;
+
+
+		-- check for email format
+        IF NOT (LTRIM(RTRIM(@IN_email)) LIKE '%@%._%')
+        BEGIN
+		RAISERROR('El correo no es formato " *@*.* " .Por favor, complete la información.', 16, 1);
 	END;
 
         -- Check if the email is already registered and active
@@ -56,7 +63,7 @@ BEGIN
 	WHERE email = LTRIM(RTRIM(@IN_email))
 		AND Deleted = 0 )
         BEGIN
-		RAISERROR('El correo electr�nico ya est� registrado. Por favor, utilice otro correo.', 16, 1);
+		RAISERROR('El correo electrónico ya está registrado. Por favor, utilice otro correo.', 16, 1);
 	END;
 
 
