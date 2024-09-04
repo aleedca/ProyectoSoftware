@@ -33,8 +33,10 @@ function Popup({ type, closePopup }) {
 
         nombreModalidad: '',
         idModalidad: 0,
+        
 
         nombreHorario: '',
+        idHorario:'',
         dias: ''
     });
 
@@ -205,14 +207,14 @@ function Popup({ type, closePopup }) {
             console.log(catalogCourseConId)
             setFormData((prevFormData) => ({
                 ...prevFormData,
-                ['nombreCatalagCourse']: catalogCourseConId.Name,
-                ['idCatalagCourse']: catalogCourseConId.Id
+                ['nombreCatalogCourse']: catalogCourseConId.Name,
+                ['idCatalogCourse']: catalogCourseConId.Id
             }));
         } else {
             setFormData((prevFormData) => ({
                 ...prevFormData,
-                ['nombreCatalagCourse']: '',
-                ['idCatalagCourse']: 0
+                ['nombreCatalogCourse']: '',
+                ['idCatalogCourse']: 0
             }));
         }
 
@@ -256,20 +258,44 @@ function Popup({ type, closePopup }) {
             setFormData((prevFormData) => ({
                 ...prevFormData,
                 ['nombreModalidad']: modalidadConId.Name,
-                ['idmodalidad']: modalidadConId.id
+                ['idModalidad']: modalidadConId.id
             }));
         } else {
             setFormData((prevFormData) => ({
                 ...prevFormData,
                 ['nombreModalidad']: '',
-                ['idmodalidad']: 0
+                ['idModalidad']: 0
             }));
         }
 
         console.log('Updated formData:', formData);
 
     };
+    
+    const handleSelectScheduleChange = (e) => {
+        const { key, value } = e.target;
+        console.log(e.target)
+        if (e.target.value != 0) {
+            console.log(e.target.value)
+            console.log(horarios)
+            const horarioConId = horarios.find(horario => horario.Id === e.target.value);
+            console.log(horarioConId)
+            setFormData((prevFormData) => ({
+                ...prevFormData,
+                ['nombreHorario']: horarioConId.Name,
+                ['idHorario']: horarioConId.Id
+            }));
+        } else {
+            setFormData((prevFormData) => ({
+                ...prevFormData,
+                ['nombreHorario']: '',
+                ['idHorario']: 0
+            }));
+        }
 
+        console.log('Updated formData:', formData);
+
+    };
     const handleCheckBoxChange = (e) => {
         const { value } = e.target;
         
@@ -448,6 +474,44 @@ function Popup({ type, closePopup }) {
         }
     };
 
+    const addCourse = async () => {
+        const errors = {
+            
+        };
+
+        setIsError(errors);
+
+        if (Object.values(errors).includes(true)) {
+            setError('Por favor, complete todos los campos correctamente.');
+            console.error('Por favor, complete todos los campos correctamente.');
+            alert('Por favor, complete todos los campos correctamente.');
+            return false; // Detiene la ejecución si hay errores
+        }
+
+        try {
+            const response = await axios.post('http://localhost:3001/addCourse', {
+               
+                
+                idUbicacion:formData.idLocacion,
+                idProfesores:formData.idProfesor,
+                idCursos:formData.idCatalogCourse,
+                idHorario:formData.idHorario,
+                idModalidad:formData.idModalidad,
+                idGrupo:formData.idGrupo,
+                fechaInicio: '01-09-2024',
+                fechaFinal:'02-08-2024',
+                notes: '',
+
+            });
+            console.log('Curso creado:', response.data);
+            closePopup();
+            alert('Curso creado correctamente');
+        } catch (error) {
+            console.error('Error al crear el Curso:', error);
+        }
+    };
+
+
     const editGroup = async () => {
         const errors = {
             nombreGrupo: !formData.nombreGrupo,
@@ -572,7 +636,7 @@ function Popup({ type, closePopup }) {
                                 </div>
                                 <body>Horario</body>
                                 <div className='input-contenedor'>
-                                    <select> 
+                                    <select onChange={handleSelectScheduleChange}> 
                                         <option value={0}>Seleccione un horario </option>
                                         {horarios.map((horario) => (
                                             <option key={horario.Id} value={horario.Id}>
@@ -610,7 +674,7 @@ function Popup({ type, closePopup }) {
                                 <div className='input-contenedor'>
                                     <input type='text' placeholder='Notas' />
                                 </div>
-                                <button className="btn_naranja" onClick={closePopup}> Agregar curso </button>
+                                <button className="btn_naranja" onClick={addCourse}> Agregar curso </button>
                             </div>
                         </div>
                     </div>
