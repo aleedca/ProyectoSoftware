@@ -7,6 +7,7 @@ import profesor from '../Assets/gestionar_profesor.png';
 import fusion from '../Assets/fusionar_cursos.png';
 import grupo from '../Assets/gestionar_grupo.png';
 import cerrar from '../Assets/cerrar.png';
+//import { addSchedule } from '../../../Server/controllers/schedule.controller';
 
 
 function Popup({ type, closePopup }) {
@@ -252,6 +253,7 @@ function Popup({ type, closePopup }) {
 
     };
 
+   
 
     const addTeacher = async () => {
         const errors = {
@@ -673,18 +675,18 @@ function Popup({ type, closePopup }) {
                                 <h1>Agregar Horario</h1>
                                 <body>Nombre del horario</body>
                                 <div className='input-contenedor'>
-                                    <input type='text' placeholder='Nombre del horario' />
+                                <input type='text' name='nombreHorario' placeholder='Nombre del horario' value={formData.nombreHorario} onChange={handleInputChange} />
                                 </div>
 
 
-                                <body style={{ textAlign: 'center', margin: '5px' }}>Días de clases</body>
+                                <div style={{ textAlign: 'center', margin: '5px' }}>Días de clases</div>
                                 <div className='checkbox-container'>
-                                    <label><input type='checkbox' value='Jueves' />Lunes</label>
-                                    <label><input type='checkbox' value='Jueves' />Martes</label>
-                                    <label><input type='checkbox' value='Jueves' />Miércoles</label>
-                                    <label><input type='checkbox' value='Jueves' />Jueves</label>
-                                    <label><input type='checkbox' value='Jueves' />Viernes</label>
-                                    <label><input type='checkbox' value='Jueves' />Sábado</label>
+                                    <label><input type='checkbox' value='1' />Lunes</label>
+                                    <label><input type='checkbox' value='2' />Martes</label>
+                                    <label><input type='checkbox' value='3' />Miércoles</label>
+                                    <label><input type='checkbox' value='4' />Jueves</label>
+                                    <label><input type='checkbox' value='5' />Viernes</label>
+                                    <label><input type='checkbox' value='6' />Sábado</label>
                                 </div>
                                 <div className='fila-juntas'>
                                     <div className='input-contenedor'>
