@@ -272,12 +272,21 @@ function Popup({ type, closePopup }) {
 
     const handleCheckBoxChange = (e) => {
         const { value } = e.target;
-        console.log(e.target)
+        console.log(e.target.checked)
+        
         if (e.target.checked) {
             setSelectedDays([...selectedDays, value]);
+            
         } else {
             setSelectedDays(selectedDays.filter((day) => day !== value));
         }
+        setFormData((prevFormData) => ({
+            ...prevFormData,
+            ['dias']: selectedDays,
+            
+        }));
+        
+        console.log('Updated formData:', formData);
     };
 
     const formatTimeForDatabase = (time) => {
