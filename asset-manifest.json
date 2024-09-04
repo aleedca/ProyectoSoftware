@@ -1,0 +1,27 @@
+{
+  "files": {
+    "main.css": "/ProyectoSoftware/static/css/main.cac8f7fb.css",
+    "main.js": "/ProyectoSoftware/static/js/main.59c180b8.js",
+    "static/js/453.258b012d.chunk.js": "/ProyectoSoftware/static/js/453.258b012d.chunk.js",
+    "static/media/Background_02.png": "/ProyectoSoftware/static/media/Background_02.ad3f946aa6e0e4ee8890.png",
+    "static/media/Background_04.png": "/ProyectoSoftware/static/media/Background_04.c5f72257cde0539ac45c.png",
+    "static/media/Background_03.png": "/ProyectoSoftware/static/media/Background_03.01013fa0eb1f0ce37f54.png",
+    "static/media/Background_01.png": "/ProyectoSoftware/static/media/Background_01.36d46cc9e38d59b97b12.png",
+    "static/media/cerrar.png": "/ProyectoSoftware/static/media/cerrar.409c4bd21363d988d092.png",
+    "static/media/inicio.png": "/ProyectoSoftware/static/media/inicio.f3b9bd529138d062ed9a.png",
+    "static/media/login.png": "/ProyectoSoftware/static/media/login.f7e3c718542839ff9703.png",
+    "static/media/register.png": "/ProyectoSoftware/static/media/register.38540c65fa9c09b28a06.png",
+    "static/media/changepassword.png": "/ProyectoSoftware/static/media/changepassword.ae8b3deb336205a77c9b.png",
+    "static/media/fusionar_cursos.png": "/ProyectoSoftware/static/media/fusionar_cursos.1bdccd6bba0116ab52f1.png",
+    "static/media/gestionar_grupo.png": "/ProyectoSoftware/static/media/gestionar_grupo.99e47cf5114ce283ac39.png",
+    "static/media/gestionar_profesor.png": "/ProyectoSoftware/static/media/gestionar_profesor.a0237037ad9760e2fd8e.png",
+    "index.html": "/ProyectoSoftware/index.html",
+    "main.cac8f7fb.css.map": "/ProyectoSoftware/static/css/main.cac8f7fb.css.map",
+    "main.59c180b8.js.map": "/ProyectoSoftware/static/js/main.59c180b8.js.map",
+    "453.258b012d.chunk.js.map": "/ProyectoSoftware/static/js/453.258b012d.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.cac8f7fb.css",
+    "static/js/main.59c180b8.js"
+  ]
+}
