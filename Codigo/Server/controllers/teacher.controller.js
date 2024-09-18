@@ -21,10 +21,12 @@ const addTeacher = async (req, res) => {
     try {
         const pool = await getConnection()
         console.log(req.body)
+        console.log(req.body['identificacion'])
 
         let result = await pool.request()
             .input('IN_name', sql.NVarChar(128), req.body['nombre'])
             .input('IN_email', sql.NVarChar(128), req.body['correo'])
+            .input('IN_identityNumber',sql.NVarChar(64), req.body['identificacion'])
             .execute('InloTEC_SP_Teachers_Add'); // Nombre del procedimiento almacenado
 
         console.log(result); // Muestra el resultado

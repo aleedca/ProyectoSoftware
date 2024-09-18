@@ -21,6 +21,7 @@ function Popup({ type, closePopup }) {
     const [formData, setFormData] = useState({
         nombreProfesor: '',
         correoProfesor: '',
+        identificacionProfesor: '',
         idProfesor: 0,
 
         idGrupo: 0,
@@ -457,8 +458,10 @@ function Popup({ type, closePopup }) {
     const addTeacher = async () => {
         const errors = {
             nombreProfesor: !formData.nombreProfesor,
-            correoProfesor: !formData.correoProfesor
+            correoProfesor: !formData.correoProfesor,
+            identificacionProfesor: !formData.identificacionProfesor
         };
+        console.log(formData.identificacionProfesor)
 
         setIsError(errors);
 
@@ -470,9 +473,11 @@ function Popup({ type, closePopup }) {
         }
 
         try {
+            
             const response = await axios.post('http://localhost:3001/addTeacher', {
                 nombre: formData.nombreProfesor,
-                correo: formData.correoProfesor
+                correo: formData.correoProfesor,
+                identificacion: formData.identificacionProfesor
             });
             console.log('Profesor creado:', response.data);
             closePopup();
@@ -486,7 +491,8 @@ function Popup({ type, closePopup }) {
         const errors = {
             nombreProfesor: !formData.nombreProfesor,
             correoProfesor: !formData.correoProfesor,
-            idProfesor: !formData.idProfesor
+            idProfesor: !formData.idProfesor,
+            identificacionProfesor: !formData.identificacionProfesor
         };
 
         setIsError(errors);
@@ -506,7 +512,7 @@ function Popup({ type, closePopup }) {
                 nombre: formData.nombreProfesor,
                 correo: formData.correoProfesor,
                 correoviejo: profesorConId.email,
-
+                identificacion: formData.identificacion
             });
             console.log('Profesor actualizado:', response.data);
             closePopup();
@@ -806,6 +812,16 @@ function Popup({ type, closePopup }) {
                               name='nombreProfesor'
                               placeholder='Profesor o profesora'
                               value={formData.nombreProfesor}
+                              onChange={handleInputChange}
+                            />
+                          </div>
+                          <body>Identificacion</body>
+                          <div className='input-contenedor'>
+                            <input
+                              type='text'
+                              name='identificacionProfesor'
+                              placeholder='Identificacion'
+                              value={formData.identificacionProfesor}
                               onChange={handleInputChange}
                             />
                           </div>
