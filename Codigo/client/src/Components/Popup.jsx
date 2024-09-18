@@ -115,6 +115,7 @@ function Popup({ type, closePopup }) {
         fetchLocaciones();
     }, []);
 
+
     useEffect(() => {
         // Función para obtener la lista de locaciones
         const fetchModalidades = async () => {
@@ -292,15 +293,26 @@ function Popup({ type, closePopup }) {
         const selectedId = e.target.value;
         const selectedSchedule = horarios.find(horario => horario.Id === selectedId);
     
+        // Actualiza el estado de formData
         if (selectedSchedule) {
-            setFormData(prevFormData => ({
-                ...prevFormData,
-                nombreHorario: selectedSchedule.Name,
-                idHorario: selectedSchedule.Id,
-                dias: selectedSchedule.Days,
-                horaInicio: selectedSchedule.StartTime.split('T')[1], // Extrae solo la hora
-                horaFin: selectedSchedule.EndTime.split('T')[1]    // Extrae solo la hora
-            }));
+            setFormData(prevFormData => {
+                // Actualiza el formData con los datos del horario seleccionado
+                const updatedFormData = {
+                    ...prevFormData,
+                    nombreHorario: selectedSchedule.Name,
+                    idHorario: selectedSchedule.Id,
+                    dias: selectedSchedule.Days,
+                    horaInicio: selectedSchedule.StartTime.split('T')[1], // Extrae solo la hora
+                    horaFin: selectedSchedule.EndTime.split('T')[1]    // Extrae solo la hora
+                };
+    
+                // Para mantener el comportamiento similar a los checkboxes, puedes usar un efecto
+                // para actualizar inmediatamente el estado o trabajar con el estado más reciente
+    
+                console.log('FormData actualizado:', updatedFormData); // Para verificar los datos actualizados
+    
+                return updatedFormData;
+            });
         } else {
             // Limpiar el estado si no se selecciona un horario válido
             setFormData(prevFormData => ({
@@ -313,6 +325,7 @@ function Popup({ type, closePopup }) {
             }));
         }
     };
+    
     
     const handleCheckBoxChange = (e) => {
         const { value } = e.target;
@@ -373,31 +386,49 @@ function Popup({ type, closePopup }) {
         // Convierte los días seleccionados a un string separado por comas
         const formattedHoraInicio = formatTimeForDatabase(formData.horaInicio);
         const formattedHoraFin = formatTimeForDatabase(formData.horaFin);
-       
+
+        const errors = {
+            nombreHorario: !formData.nombreHorario,
+            dias: !formData.dias,
+            idHorario: !formData.idHorario,
+            horaInicio: !formData.horaInicio,
+            horaFin: !formData.horaFin
+        };
+
+        setIsError(errors);
+
+        if (Object.values(errors).includes(true)) {
+            setError('Por favor, complete todos los campos correctamente.');
+            console.error('Por favor, complete todos los campos correctamente.');
+            alert('Por favor, complete todos los campos correctamente.');
+            return false; // Detiene la ejecución si hay errores
+        }
+        const horarioConId = profesores.find(horario => horario.id === formData.idHorario);
+        console.log(horarioConId)
         try {
-            const response = await axios.post('http://localhost:3001/EditSchedule', {
+            const response = await axios.put('http://localhost:3001/editSchedule', {
                 idHorario: formData.idHorario,
                 nombreHorario: formData.nombreHorario,
                 dias: formData.dias,
                 horaInicio: formattedHoraInicio,
                 horaFin: formattedHoraFin
+
             });
-            console.log('Horario creado:', response.data);
+            console.log('Horario actualizado:', response.data);
             closePopup();
-            alert('Horario creado correctamente');
+            alert('Horario actualizado correctamente');
         } catch (error) {
-            console.error('Error al crear el horario:', error);
+            console.error('Error al actualizar el horario:', error);
         }
-    
-        // Cierra el popup
-        closePopup();
     };
 
     const handleDeleteHorario = async () => {
         const errors = {
             nombreHorario: !formData.nombreHorario,
             idHorario: !formData.idHorario,
-            dias: !formData.dias
+            dias: !formData.dias,
+            horaInicio: !formData.horaInicio,
+            horaFin: !formData.horaFin
         };
 
         setIsError(errors);

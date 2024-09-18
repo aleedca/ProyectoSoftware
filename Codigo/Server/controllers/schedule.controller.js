@@ -60,17 +60,25 @@ const editSchedule = async (req, res) => {
         // Convierte el array de días a un string separado por comas
         const diasString = req.body['dias'].join(',');
         // Convierte las horas a un formato correcto de SQL Time (HH:mm:ss)
-        const formattedHoraInicio = new Date(`1970-01-01T${req.body['horaInicio']}`).toTimeString().split(' ')[0];
-        const formattedHoraFin = new Date(`1970-01-01T${req.body['horaFin']}`).toTimeString().split(' ')[0];
+        console.log(req.body['horaInicio']);
+        console.log(req.body['horaFin']);
+
+        const baseDate = '1970-01-01'; // Fecha ficticia
+        const completar = '.000'; // Fecha ficticia
+        const formattedHoraInicio = `${baseDate} ${req.body['horaInicio']}${completar}`;
+        const formattedHoraFin = `${baseDate} ${req.body['horaFin']}${completar}`;
+
+        console.log(formattedHoraInicio);
+        console.log(formattedHoraFin);
 
 
         let result = await pool.request()
             .input('IN_IdSchedule', sql.BigInt, req.body['idHorario'])
-            .input('IN_name', sql.NVarChar(64), req.body['nombre'])
-            .input('IN_IdDays', sql.NVarChar(128), diasString)
-            .input('IN_startTime', sql.DateTime, formattedHoraInicio) // Pasa la hora con el formato correcto
-            .input('IN_endTime', sql.DateTime, formattedHoraFin) // Pasa la hora con el formato correcto
-            .execute('InloTEC_SP_Schedules_Edit');
+            .input('IN_newName', sql.NVarChar(64), req.body['nombre'])
+            .input('IN_newIdDays', sql.NVarChar(128), diasString)
+            .input('IN_newStartTime', sql.DateTime, formattedHoraInicio) // Pasa la hora con el formato correcto
+            .input('IN_newEndTime', sql.DateTime, formattedHoraFin) // Pasa la hora con el formato correcto
+            .execute('InloTEC_SP_Schedule_Edit');
 
         console.log(result);
         res.status(200).send('Grupo eliminado')
@@ -88,7 +96,7 @@ const deleteSchedule = async (req, res) => {
 
         let result = await pool.request()
             .input('IN_IdSchedule', sql.BigInt, req.body['idHorario'])
-            .execute('InloTEC_SP_Schedules_Delete');
+            .execute('InloTEC_SP_Schedule_Delete');
 
         console.log(result);
         res.status(200).send('Grupo eliminado')
