@@ -2,7 +2,85 @@ const { getConnection } = require('../connection.js');
 const sql = require('mssql');
 
 const getCourses = async (req, res) => {
-    res.send("obteniendo todos los cursos");
+    try {
+        const pool = await getConnection();
+        const result = await pool.request().execute('InloTEC_SP_Courses_Details_List');
+        res.json(result.recordset);
+    } catch (error) {
+        const errorMessage = error.message || 'Error desconocido';
+        console.error('Error al ejecutar el query:', errorMessage);
+        res.status(500).send(errorMessage);
+    }
+}
+
+const getCoursesCalendar = async (req, res) => {
+    try {
+        const pool = await getConnection();
+        const result1 = await pool.request().execute('InloTEC_SP_Courses_Details_List');
+
+        
+        
+
+        let result = [];
+
+        for (const resultBD of result1.recordset) {
+            
+        
+
+            let currentDate = new Date(resultBD['StartDate']);
+
+            dicDias = {
+                'Domingo':0,
+                'Lunes': 1,
+                'Martes': 2,
+                'Miercoles':3,
+                'Jueves':4,
+                'Viernes':5,
+                'Sabado':6
+            }
+            console.log(resultBD['Days'])
+            // Asegurarse de que la fecha de inicio no sea posterior a la fecha de fin
+            while (currentDate <= new Date(resultBD['EndDate'])) {
+                let dayOfWeek = currentDate.getDay(); // 0: domingo, 1: lunes, 2: martes, etc.
+
+                if (dayOfWeek === dicDias[resultBD['Days']] ) { // 2: martes, 4: jueves
+                    let StartTime = new Date(resultBD['StartTime']); 
+                    let EndTime = new Date(resultBD['EndTime']); 
+                    let date1 = new Date(currentDate); 
+                    let date2 = new Date(currentDate);
+
+                    date1.setHours(StartTime.getHours());
+                    date1.setMinutes(StartTime.getMinutes());
+                    date1.setSeconds(StartTime.getSeconds());
+                    date1.setMilliseconds(StartTime.getMilliseconds());
+
+                    date2.setHours(EndTime.getHours());
+                    date2.setMinutes(EndTime.getMinutes());
+                    date2.setSeconds(EndTime.getSeconds());
+                    date2.setMilliseconds(EndTime.getMilliseconds());
+
+                    result.push({
+                        title: resultBD['Course'],
+                        start: date1,
+                        end: date2,
+                        color: '#'+resultBD['Color'],
+                      });
+                }
+
+                // Avanzar al siguiente día
+                currentDate.setDate(currentDate.getDate() + 1);
+            }
+        }
+            
+
+    
+
+        res.json(result);
+    } catch (error) {
+        const errorMessage = error.message || 'Error desconocido';
+        console.error('Error al ejecutar el query:', errorMessage);
+        res.status(500).send(errorMessage);
+    }
 }
 
 const getCourse = async (req, res) => {
@@ -44,4 +122,4 @@ const deleteCourse = (req, res) => {
     res.send("eliminando un curso");
 }
 
-module.exports = { getCourses, getCourse, addCourse, editCourse, deleteCourse };
+module.exports = { getCourses, getCourse, addCourse, editCourse, deleteCourse,getCoursesCalendar };

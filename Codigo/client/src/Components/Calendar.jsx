@@ -9,6 +9,8 @@ import { format, startOfWeek } from 'date-fns';
 import { es } from 'date-fns/locale';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import '../Styles/Styles.css';
+import axios from "axios";
+import { useEffect } from "react";
 
 const localizer = momentLocalizer(moment);
 
@@ -36,10 +38,28 @@ const customLocalizer = {
 };
 
 function Calendar() {
+  const [Courses, setCourses] = useState([]);
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [view, setView] = useState('month');
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [popupType, setPopupType] = useState('');
+
+  useEffect(() => {
+    // Función para obtener la lista de profesores
+    const fetchCoursesCalendar = async () => {
+        try {
+            const response = await axios.get('http://localhost:3001/getCoursesCalendar');
+            setCourses(response.data);
+            console.log("******************")
+            console.log(Courses)
+            
+        } catch (error) {
+            console.error('Error al obtener la lista de cursos del calendario:', error);
+        }
+    };
+
+    fetchCoursesCalendar();
+}, []);
 
   const openPopup = (type) => {
     console.log("Opening popup:", type); // Verificar el tipo de popup al abrir
@@ -56,20 +76,7 @@ function Calendar() {
     setIsSidebarOpen(!isSidebarOpen);
   };
   console.log(new Date())
-  const events = [
-    {
-      title: 'Evento 1',
-      start: new Date(),
-      end: new Date(),
-      color: '#ff5733',
-    },
-    {
-      title: 'Evento 2',
-      start: new Date(new Date().setDate(new Date().getDate() + 1)),
-      end: new Date(new Date().setDate(new Date().getDate() + 2)),
-      color: '#33caff',
-    },
-  ];
+  const events = Courses;
 
   return (
     <div style={{ display: 'flex', height: '100vh' }}>
