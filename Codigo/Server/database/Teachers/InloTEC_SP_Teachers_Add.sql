@@ -8,7 +8,7 @@ CREATE OR ALTER PROCEDURE [dbo].[InloTEC_SP_Teachers_Add]
 	-- Parameters
 	@IN_name NVARCHAR(128),
 	@IN_email NVARCHAR(128),
-	@IN_identityNumber NVARCHAR(128)
+	@IN_identityNumber NVARCHAR(64)
 
 AS
 BEGIN
@@ -42,7 +42,7 @@ BEGIN
 		END;
 
 		-- check for email format
-        IF NOT (LTRIM(RTRIM(@IN_name)) LIKE '%@%._%')
+        IF NOT (LTRIM(RTRIM(@IN_email)) LIKE '%@%._%')
         BEGIN
 		RAISERROR('El correo no es formato " *@*.* " .Por favor, cambie la información.', 16, 1);
 	    END;

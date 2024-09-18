@@ -8,7 +8,7 @@ CREATE OR ALTER PROCEDURE [dbo].[InloTEC_SP_Teachers_Edit]
 	@IN_IdTeachers BIGINT,
 	@IN_newName NVARCHAR(128) = NULL,
 	@IN_newEmail NVARCHAR(128) = NULL,
-	@IN_newIdentityNumber NVARCHAR(128) = NULL
+	@IN_newIdentityNumber NVARCHAR(64) = NULL
     
 
 AS
@@ -31,16 +31,16 @@ BEGIN
 	IF NOT EXISTS (SELECT 1 
 				   FROM [dbo].[Teachers]
 				   WHERE Id = @IN_IdTeachers
-                   AND Deleted = 0
+                   AND Deleted = 0)
         BEGIN
             RAISERROR('El profesor indicado para modificación no fue encontrado.', 16, 1);
         END;
 
 	-- getting old information if input was NULL
-	SELECT @IN_newName = CASE WHEN @IN_newName IS NULL THEN T.Name ELSE @IN_newName END;,
-	@IN_newEmail = CASE WHEN @IN_newEmail IS NULL THEN T.Email ELSE @IN_newEmail END;,
-	@IN_newIdentityNumber = CASE WHEN @IN_newIdentityNumber IS NULL THEN T.IdentityNumber ELSE @IN_newIdentityNumber END;
-	FROM [dbo].[Teachers]
+	SELECT @IN_newName = CASE WHEN @IN_newName IS NULL THEN T.Name ELSE @IN_newName END,
+	@IN_newEmail = CASE WHEN @IN_newEmail IS NULL THEN T.Email ELSE @IN_newEmail END,
+	@IN_newIdentityNumber = CASE WHEN @IN_newIdentityNumber IS NULL THEN T.IdentityNumber ELSE @IN_newIdentityNumber END
+	FROM [dbo].[Teachers] T
 	WHERE Id = @IN_IdTeachers
         AND Deleted = 0
 
@@ -70,11 +70,20 @@ BEGIN
         IF EXISTS (SELECT 1 
 				   FROM [dbo].[Teachers] 
 				   WHERE Email = LTRIM(RTRIM(@IN_newEmail))
-                   AND NOT (Email = LTRIM(RTRIM(@IN_oldEmail)))
+                   AND NOT (Id = @IN_IdTeachers)
 				   AND Deleted = 0 )
         BEGIN
             RAISERROR('El nuevo correo electrónico ya está registrado. Por favor, utilice otro correo.', 16, 1);
         END;
+
+        -- Check if the identityNumber is already registered and active
+        IF EXISTS (SELECT 1
+				   FROM [dbo].[Teachers]
+				   WHERE IdentityNumber = LTRIM(RTRIM(@IN_newIdentityNumber))
+				   AND Deleted = 0 )
+        BEGIN
+		RAISERROR('El identificador ya está registrado. Por favor, utilice otro.', 16, 1);
+		END;
 
 
 		--validation of user rol
