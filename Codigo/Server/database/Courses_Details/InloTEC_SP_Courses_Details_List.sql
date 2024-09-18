@@ -17,6 +17,12 @@ BEGIN
 
 	-- VARIABLE DECLARATION
 	DECLARE @Rolname NVARCHAR(64) = 'Admin';
+	DECLARE @ScheduleListTable TABLE (
+    [Id] BIGINT NOT NULL, 
+	[Name] NVARCHAR(128) NOT NULL, 
+	[Days] NVARCHAR(64) NOT NULL, 
+	[StartTime] TIME(0) NOT NULL,
+	[EndTime] TIME(0) NOT NULL);
 
 	BEGIN TRY
         -- VALIDATIONS
@@ -24,32 +30,43 @@ BEGIN
 
 		--validation of user rol
 
+		INSERT INTO @ScheduleListTable 
+		EXEC InloTEC_SP_Schedule_List 
 
 		--Response
-		SELECT CD.Id, 
-			   L.Name AS 'Location', 
-			   T.Name AS 'Teacher', 
-			   C.Name AS 'Course',
-			   A.Name AS 'Group',
-			   CD.IdSchedule, 
-			   S.Name AS 'Schedule', 
-			   M.Name AS 'Modality', 
-			   CAST(CD.StartDate AS DATE) AS 'StartDate', 
-			   CAST(CD.EndDate AS DATE) AS 'EndDate', 
-			   CD.Notes
-		FROM Courses_Details CD
-		INNER JOIN Locations L ON L.Id = CD.IdLocations
-		INNER JOIN Teachers T ON T.Id = CD.IdTeachers
-		INNER JOIN Courses C ON C.Id = CD.IdCourses
-		INNER JOIN Programs P ON P.Id = CD.IdPrograms
-		INNER JOIN Modality M ON M.Id = CD.IdModality
-		INNER JOIN (SELECT CDG.IdCourses_Details AS 'IdCourses_Details' ,  STRING_AGG(G.Name, ',') AS 'Name'
-					FROM Courses_Details CD
-					INNER JOIN Courses_Details_Groups CDG ON CDG.IdCourses_Details = CD.Id
-					INNER JOIN Groups G ON G.Id = CDG.IdGroups
-					GROUP BY CDG.IdCourses_Details) AS A ON A.IdCourses_Details = CD.Id
-		INNER JOIN Schedule S ON S.Id = CD.IdSchedule
-		WHERE CD.Deleted = 0
+		
+
+	SELECT CD.Id, 
+		   L.Name AS 'Location',
+		   M.Name AS 'Modality',
+		   T.Name AS 'Teacher',
+		   T.IdentityNumber AS 'IdentityNumber', 
+		   T.Email AS 'Email', 
+		   C.Name AS 'Course',
+		   C.ColorValue AS 'Color',
+		   A.Name AS 'Group',
+		   CD.IdSchedule, 
+		   S.Name AS 'Schedule',
+		   SLT.Days AS 'Days',
+		   SLT.StartTime AS 'StartTime',
+		   SLT.EndTime AS 'EndTime',
+		   CAST(CD.StartDate AS DATE) AS 'StartDate', 
+		   CAST(CD.EndDate AS DATE) AS 'EndDate',
+		   CD.Notes
+	FROM Courses_Details CD
+	INNER JOIN Locations L ON L.Id = CD.IdLocations
+	INNER JOIN Teachers T ON T.Id = CD.IdTeachers
+	INNER JOIN Courses C ON C.Id = CD.IdCourses
+	INNER JOIN Programs P ON P.Id = CD.IdPrograms
+	INNER JOIN Modality M ON M.Id = CD.IdModality
+	INNER JOIN (SELECT CDG.IdCourses_Details AS 'IdCourses_Details' ,  STRING_AGG(G.Name, ',') AS 'Name'
+				FROM Courses_Details CD
+				INNER JOIN Courses_Details_Groups CDG ON CDG.IdCourses_Details = CD.Id
+				INNER JOIN Groups G ON G.Id = CDG.IdGroups
+				GROUP BY CDG.IdCourses_Details) AS A ON A.IdCourses_Details = CD.Id
+	INNER JOIN Schedule S ON S.Id = CD.IdSchedule
+	INNER JOIN @ScheduleListTable SLT ON SLT.Id = S.Id
+	AND CD.Deleted = 0
 
 
 
