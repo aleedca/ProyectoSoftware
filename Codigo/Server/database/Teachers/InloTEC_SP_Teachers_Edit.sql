@@ -5,10 +5,10 @@
 
 CREATE OR ALTER PROCEDURE [dbo].[InloTEC_SP_Teachers_Edit]
     -- Parameters
-
-	@IN_oldEmail NVARCHAR(128),
-	@IN_newName NVARCHAR(128),
-    @IN_newEmail NVARCHAR(128)
+	@IN_IdTeachers BIGINT,
+	@IN_newName NVARCHAR(128) = NULL,
+	@IN_newEmail NVARCHAR(128) = NULL,
+	@IN_newIdentityNumber NVARCHAR(128) = NULL
     
 
 AS
@@ -25,19 +25,37 @@ BEGIN
 
     BEGIN TRY
         -- VALIDATIONS
-		
+
+
+	-- Check if the teacher is already registered and active
+	IF NOT EXISTS (SELECT 1 
+				   FROM [dbo].[Teachers]
+				   WHERE Id = @IN_IdTeachers
+                   AND Deleted = 0
+        BEGIN
+            RAISERROR('El profesor indicado para modificación no fue encontrado.', 16, 1);
+        END;
+
+	-- getting old information if input was NULL
+	SELECT @IN_newName = CASE WHEN @IN_newName IS NULL THEN T.Name ELSE @IN_newName END;,
+	@IN_newEmail = CASE WHEN @IN_newEmail IS NULL THEN T.Email ELSE @IN_newEmail END;,
+	@IN_newIdentityNumber = CASE WHEN @IN_newIdentityNumber IS NULL THEN T.IdentityNumber ELSE @IN_newIdentityNumber END;
+	FROM [dbo].[Teachers]
+	WHERE Id = @IN_IdTeachers
+        AND Deleted = 0
+
+
 		-- check for wrong input data type
-        IF ISNUMERIC(@IN_oldEmail) = 1 OR
-		   ISNUMERIC(@IN_newName) = 1 OR
+        IF ISNUMERIC(@IN_newName) = 1 OR
 		   ISNUMERIC(@IN_newEmail) = 1
         BEGIN
             RAISERROR('Todos los campos deben ser texto. Por favor, cambie la información.', 16, 1);
         END;
 
 		-- check for empty input data
-        IF LTRIM(RTRIM(@IN_oldEmail)) = '' OR
+        IF LTRIM(RTRIM(@IN_newEmail)) = '' OR
            LTRIM(RTRIM(@IN_newName)) = '' OR
-		   LTRIM(RTRIM(@IN_newEmail)) = ''
+		   LTRIM(RTRIM(@IN_newIdentityNumber)) = ''
         BEGIN
             RAISERROR('Todos los campos son obligatorios. Por favor, complete la información.', 16, 1);
         END;
@@ -47,15 +65,6 @@ BEGIN
         BEGIN
 		RAISERROR('El nuevo correo no es formato " *@*.* " .Por favor, complete la información.', 16, 1);
 	    END;
-
-        -- Check if the teacher is already registered and active
-        IF NOT EXISTS (SELECT 1 
-				   FROM [dbo].[Teachers] 
-				   WHERE Email = LTRIM(RTRIM(@IN_oldEmail))
-				   AND Deleted = 0 )
-        BEGIN
-            RAISERROR('El usuario a editar no fue encontrado.', 16, 1);
-        END;
 
         -- Check if the email is already registered and active
         IF EXISTS (SELECT 1 
@@ -82,8 +91,9 @@ BEGIN
 		UPDATE [dbo].[Teachers]
 		SET 
 			[Name] = LTRIM(RTRIM(@IN_newName)),
-			[Email] = LTRIM(RTRIM(@IN_newEmail))
-		WHERE Email = LTRIM(RTRIM(@IN_oldEmail))
+			[Email] = LTRIM(RTRIM(@IN_newEmail)),
+			[IdentityNumber] = LTRIM(RTRIM(@IN_newIdentityNumber))
+		WHERE Id = @IN_IdTeachers
 		AND Deleted = 0
 
         

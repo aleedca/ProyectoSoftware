@@ -7,7 +7,8 @@
 CREATE OR ALTER PROCEDURE [dbo].[InloTEC_SP_Teachers_Add]
 	-- Parameters
 	@IN_name NVARCHAR(128),
-	@IN_email NVARCHAR(128)
+	@IN_email NVARCHAR(128),
+	@IN_identityNumber NVARCHAR(128)
 
 AS
 BEGIN
@@ -34,7 +35,8 @@ BEGIN
 
 		-- check for empty input data
         IF LTRIM(RTRIM(@IN_name)) = '' OR
-		LTRIM(RTRIM(@IN_email)) = ''
+		LTRIM(RTRIM(@IN_email)) = '' OR
+		LTRIM(RTRIM(@IN_identityNumber)) = ''
         BEGIN
 		RAISERROR('Todos los campos son obligatorios. Por favor, complete la información.', 16, 1);
 		END;
@@ -42,7 +44,7 @@ BEGIN
 		-- check for email format
         IF NOT (LTRIM(RTRIM(@IN_name)) LIKE '%@%._%')
         BEGIN
-		RAISERROR('El correo no es formato " *@*.* " .Por favor, complete la información.', 16, 1);
+		RAISERROR('El correo no es formato " *@*.* " .Por favor, cambie la información.', 16, 1);
 	    END;
 
         -- Check if the email is already registered and active
@@ -52,6 +54,15 @@ BEGIN
 				   AND Deleted = 0 )
         BEGIN
 		RAISERROR('El correo electrónico ya está registrado. Por favor, utilice otro correo.', 16, 1);
+		END;
+
+        -- Check if the identityNumber is already registered and active
+        IF EXISTS (SELECT 1
+				   FROM [dbo].[Teachers]
+				   WHERE IdentityNumber = LTRIM(RTRIM(@IN_identityNumber))
+				   AND Deleted = 0 )
+        BEGIN
+		RAISERROR('El identificador ya está registrado. Por favor, utilice otro.', 16, 1);
 		END;
 
 		--validation of user rol
@@ -66,11 +77,12 @@ BEGIN
 
 		-- INSERT teacher
 		INSERT INTO [dbo].[Teachers]
-			([Name], [Email], [Deleted])
+			([Name], [Email],[IdentityNumber], [Deleted])
 		VALUES
 			(
 				LTRIM(RTRIM(@IN_name)),
 				LTRIM(RTRIM(@IN_email)),
+				LTRIM(RTRIM(@IN_IdentityNumber)),
 				0
 				);
 
