@@ -14,7 +14,7 @@ const getTeachers = async (req, res) => {
 }
 
 const getTeacher = async (req, res) => {
-    res.send("obteniendo un curso");
+    res.send("obteniendo un profesor");
 }
 
 const addTeacher = async (req, res) => {
