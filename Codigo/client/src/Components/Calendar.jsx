@@ -78,6 +78,13 @@ function Calendar() {
   console.log(new Date())
   const events = Courses;
 
+  const handleEventClick = (event) => {
+    console.log('Evento seleccionado:', event);
+    // Aquí puedes agregar la acción que desees cuando se haga clic en un evento
+    openPopup('AgregarCurso')
+    
+  };
+
   return (
     <div style={{ display: 'flex', height: '100vh' }}>
       <div
@@ -100,6 +107,7 @@ function Calendar() {
           views={['month', 'week', 'day', 'agenda']}
           defaultView="month"
           messages={customLocalizer.messages}
+          onSelectEvent={handleEventClick}
           components={{
             toolbar: (props) => <Toolbar {...props} view={view} setView={setView} />,
             event: EventComponent,
