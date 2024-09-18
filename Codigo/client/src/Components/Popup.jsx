@@ -37,8 +37,10 @@ function Popup({ type, closePopup }) {
         
 
         nombreHorario: '',
-        idHorario:'',
+        idHorario: 0,
         dias: '',
+        horaInicio: '',
+        horaFin: '',
 
         fechaInicio: '',
         fechaFin: ''
@@ -285,30 +287,33 @@ function Popup({ type, closePopup }) {
 
     };
     
+    // Función para manejar la selección del horario
     const handleSelectScheduleChange = (e) => {
-        const { key, value } = e.target;
-        console.log(e.target)
-        if (e.target.value != 0) {
-            console.log(e.target.value)
-            console.log(horarios)
-            const horarioConId = horarios.find(horario => horario.Id === e.target.value);
-            console.log(horarioConId)
-            setFormData((prevFormData) => ({
+        const selectedId = e.target.value;
+        const selectedSchedule = horarios.find(horario => horario.Id === selectedId);
+    
+        if (selectedSchedule) {
+            setFormData(prevFormData => ({
                 ...prevFormData,
-                ['nombreHorario']: horarioConId.Name,
-                ['idHorario']: horarioConId.Id
+                nombreHorario: selectedSchedule.Name,
+                idHorario: selectedSchedule.Id,
+                dias: selectedSchedule.Days,
+                horaInicio: selectedSchedule.StartTime.split('T')[1], // Extrae solo la hora
+                horaFin: selectedSchedule.EndTime.split('T')[1]    // Extrae solo la hora
             }));
         } else {
-            setFormData((prevFormData) => ({
+            // Limpiar el estado si no se selecciona un horario válido
+            setFormData(prevFormData => ({
                 ...prevFormData,
-                ['nombreHorario']: '',
-                ['idHorario']: 0
+                nombreHorario: '',
+                idHorario: 0,
+                dias: '',
+                horaInicio: '',
+                horaFin: ''
             }));
         }
-
-        console.log('Updated formData:', formData);
-
     };
+    
     const handleCheckBoxChange = (e) => {
         const { value } = e.target;
         
@@ -368,10 +373,10 @@ function Popup({ type, closePopup }) {
         // Convierte los días seleccionados a un string separado por comas
         const formattedHoraInicio = formatTimeForDatabase(formData.horaInicio);
         const formattedHoraFin = formatTimeForDatabase(formData.horaFin);
-    
        
         try {
-            const response = await axios.post('http://localhost:3001/addSchedule', {
+            const response = await axios.post('http://localhost:3001/EditSchedule', {
+                idHorario: formData.idHorario,
                 nombreHorario: formData.nombreHorario,
                 dias: formData.dias,
                 horaInicio: formattedHoraInicio,
@@ -389,27 +394,33 @@ function Popup({ type, closePopup }) {
     };
 
     const handleDeleteHorario = async () => {
-        // Convierte los días seleccionados a un string separado por comas
-        const formattedHoraInicio = formatTimeForDatabase(formData.horaInicio);
-        const formattedHoraFin = formatTimeForDatabase(formData.horaFin);
-    
-       
-        try {
-            const response = await axios.post('http://localhost:3001/addSchedule', {
-                nombreHorario: formData.nombreHorario,
-                dias: formData.dias,
-                horaInicio: formattedHoraInicio,
-                horaFin: formattedHoraFin
-            });
-            console.log('Horario creado:', response.data);
-            closePopup();
-            alert('Horario creado correctamente');
-        } catch (error) {
-            console.error('Error al crear el horario:', error);
+        const errors = {
+            nombreHorario: !formData.nombreHorario,
+            idHorario: !formData.idHorario,
+            dias: !formData.dias
+        };
+
+        setIsError(errors);
+
+        if (Object.values(errors).includes(true)) {
+            setError('Por favor, Seleccione un horario.');
+            console.error('Por favor,  Seleccione un horario.');
+            alert('Por favor,  Seleccione un horario.');
+            return false; // Detiene la ejecución si hay errores
         }
-    
-        // Cierra el popup
-        closePopup();
+
+        try {
+            const response = await axios.delete('http://localhost:3001/deleteSchedule', {
+                data: {
+                    idHorario: formData.idHorario
+                }
+            });
+            console.log('Horario Eliminado:', response.data);
+            closePopup();
+            alert('Horario eliminado correctamente');
+        } catch (error) {
+            console.error('Error al eliminar el horario:', error);
+        }
     };
 
     const addTeacher = async () => {
@@ -867,86 +878,88 @@ function Popup({ type, closePopup }) {
                     </div>
                 );
                 case 'GestionarHorarios':
-    return (
-        <div className='contenedor'>
-            <div className='contenedor-columnas'>
-                <div className='columna columna-imagen'>
-                    <img src={curso} alt="Imagen Agregar curso" />
-                </div>
-                <div className='columna columna-formulario'>
-                    <button className="close-popup" onClick={closePopup}>X</button>
-                    <h1>Gestionar Horario</h1>
-                    <body>Seleccione el horario a gestionar</body>
-                    <div className='input-contenedor'>
-                        <select 
-                            value={formData.idHorario} // Inicializamos el valor del select
-                            onChange={handleSelectScheduleChange}
-                        > 
-                            <option value={0}>Seleccione un horario</option>
-                            {horarios.map((horario) => (
-                                <option key={horario.Id} value={horario.Id}>
-                                    {horario.Name}
-                                </option>
-                            ))}
-                        </select>
-                    </div>
-                    <body>Nombre del horario</body>
-                    <div className='input-contenedor'>
-                        <input 
-                            type='text' 
-                            name='nombreHorario' 
-                            placeholder='Nombre del horario' 
-                            value={formData.nombreHorario} 
-                            onChange={handleInputChange} 
-                        />
-                    </div>
+                    return (
+                        <div className='contenedor'>
+                            <div className='contenedor-columnas'>
+                                <div className='columna columna-imagen'>
+                                    <img src={curso} alt="Imagen Agregar curso" />
+                                </div>
+                                <div className='columna columna-formulario'>
+                                    <button className="close-popup" onClick={closePopup}>X</button>
+                                    <h1>Gestionar Horario</h1>
+                                    <body>Seleccione el horario a gestionar</body>
+                                    <div className='input-contenedor'>
+                                    <select 
+                                        value={formData.idHorario} // Asegúrate de que el valor esté sincronizado con el estado
+                                        onChange={handleSelectScheduleChange} // Manejador de eventos
+                                    >
+                                        <option value={0}>Seleccione un horario</option>
+                                        {horarios.map(horario => (
+                                            <option key={horario.Id} value={horario.Id}>
+                                                {horario.Name}
+                                            </option>
+                                        ))}
+                                    </select>
 
-                    <div style={{ textAlign: 'center', margin: '5px' }}>Días de clases</div>
-                    <div className='checkbox-container'>
-                        <label><input type='checkbox' value='1' onChange={handleCheckBoxChange} />Lunes</label>
-                        <label><input type='checkbox' value='2' onChange={handleCheckBoxChange} />Martes</label>
-                        <label><input type='checkbox' value='3' onChange={handleCheckBoxChange} />Miércoles</label>
-                        <label><input type='checkbox' value='4' onChange={handleCheckBoxChange} />Jueves</label>
-                        <label><input type='checkbox' value='5' onChange={handleCheckBoxChange} />Viernes</label>
-                        <label><input type='checkbox' value='6' onChange={handleCheckBoxChange} />Sábado</label>
-                    </div>
-                    
-                    <div className='fila-juntas'>
-                        <div className='input-contenedor'>
-                            <body style={{ textAlign: 'center', marginTop: '10px' }}>Hora inicio</body>
-                            <input 
-                                type='time' 
-                                name='horaInicio' 
-                                placeholder='Hora inicio' 
-                                onChange={handleInputChange} 
-                                value={formData.horaInicio}
-                            />
+                                    </div>
+                                    <body>Nombre del horario</body>
+                                    <div className='input-contenedor'>
+                                        <input 
+                                            type='text' 
+                                            name='nombreHorario' 
+                                            placeholder='Nombre del horario' 
+                                            value={formData.nombreHorario} 
+                                            onChange={handleInputChange} 
+                                        />
+                                    </div>
+                
+                                    <div style={{ textAlign: 'center', margin: '5px' }}>Días de clases</div>
+                                    <div className='checkbox-container'>
+                                        <label><input type='checkbox' value='1' onChange={handleCheckBoxChange} />Lunes</label>
+                                        <label><input type='checkbox' value='2' onChange={handleCheckBoxChange} />Martes</label>
+                                        <label><input type='checkbox' value='3' onChange={handleCheckBoxChange} />Miércoles</label>
+                                        <label><input type='checkbox' value='4' onChange={handleCheckBoxChange} />Jueves</label>
+                                        <label><input type='checkbox' value='5' onChange={handleCheckBoxChange} />Viernes</label>
+                                        <label><input type='checkbox' value='6' onChange={handleCheckBoxChange} />Sábado</label>
+                                    </div>
+                                    
+                                    <div className='fila-juntas'>
+                                        <div className='input-contenedor'>
+                                            <body style={{ textAlign: 'center', marginTop: '10px' }}>Hora inicio</body>
+                                            <input 
+                                                type='time' 
+                                                name='horaInicio' 
+                                                placeholder='Hora inicio' 
+                                                onChange={handleInputChange} 
+                                                value={formData.horaInicio}
+                                            />
+                                        </div>
+                                        <div className='input-contenedor'>
+                                            <body style={{ textAlign: 'center', marginTop: '10px' }}>Hora fin</body>
+                                            <input 
+                                                type='time' 
+                                                name='horaFin' 
+                                                placeholder='Hora fin' 
+                                                onChange={handleInputChange} 
+                                                value={formData.horaFin}
+                                            />
+                                        </div>
+                                    </div>
+                
+                                    {formData.idHorario === 0 || !formData.idHorario ? (
+                                        <button className="btn_naranja" onClick={handleAddHorario}>Agregar horario</button>
+                                    ) : (
+                                        <>
+                                            <button className="btn_azul" onClick={handleEditHorario}>Actualizar horario</button>
+                                            <button className="btn_azul" onClick={handleDeleteHorario}>Eliminar horario</button>
+                                        </>
+                                    )}
+                                </div>
+                            </div>
                         </div>
-                        <div className='input-contenedor'>
-                            <body style={{ textAlign: 'center', marginTop: '10px' }}>Hora fin</body>
-                            <input 
-                                type='time' 
-                                name='horaFin' 
-                                placeholder='Hora fin' 
-                                onChange={handleInputChange} 
-                                value={formData.horaFin}
-                            />
-                        </div>
-                    </div>
+                    );
 
-                    {formData.idHorario === 0 || !formData.idHorario ? (
-                        <button className="btn_naranja" onClick={handleAddHorario}>Agregar horario</button>
-                    ) : (
-                        <>
-                            <button className="btn_azul" onClick={handleEditHorario}>Actualizar horario</button>
-                            <button className="btn_azul" onClick={handleDeleteHorario}>Eliminar horario</button>
-                        </>
-                    )}
-                </div>
-            </div>
-        </div>
-    );
-        
+  
             case 'CerrarSesion':
                 return (
                     <div className='contenedor'>
