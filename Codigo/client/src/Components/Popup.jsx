@@ -2,6 +2,7 @@ import React, { cloneElement } from 'react';
 import axios from "axios";
 import { useEffect, useState } from "react";
 import '../App.css';
+import Dropdown from './Dropdown.jsx'; // Asegúrate de importar el componente Dropdown
 import curso from '../Assets/inicio.png';
 import profesor from '../Assets/gestionar_profesor.png';
 import fusion from '../Assets/fusionar_cursos.png';
@@ -153,6 +154,15 @@ function Popup({ type, closePopup }) {
 
     }
 
+    const handleSelectTeacher = (option) => {
+        const selectedProfesor = profesores.find(profesor => profesor.Name === option);
+        setFormData(prevFormData => ({
+            ...prevFormData,
+            nombreProfesor: selectedProfesor ? selectedProfesor.Name : '',
+            correoProfesor: selectedProfesor ? selectedProfesor.email : '',
+            idProfesor: selectedProfesor ? selectedProfesor.id : 0
+        }));
+    };
 
     const handleSelectTeacherChange = (e) => {
         const { key, value } = e.target;
@@ -685,52 +695,53 @@ function Popup({ type, closePopup }) {
             case 'GestionarProfesor':
                 return (
                     <div className='contenedor'>
-                        <div className='contenedor-columnas'>
-                            <div className='columna columna-imagen'>
-                                <img src={profesor} alt="Imagen Gestionar profesor" />
-                            </div>
-                            <div className='columna columna-formulario' style={{ width: '400px' }}>
-                                <button className="close-popup" onClick={closePopup}>X</button>
-                                <h1>Gestionar Profesor</h1>
-                                <body>Seleccione el profesor a gestionar</body>
-                                <div className='input-contenedor'>
-                                    <select placeholder='Seleccione el profesor' onChange={handleSelectTeacherChange}>
-                                        <option value={0}>Seleccione o cree un profesor </option>
-                                        {profesores.map((profesor) => (
-                                            <option key={profesor.email} value={profesor.id}>
-                                                {profesor.Name}
-                                            </option>
-                                        ))}
-                                    </select>
-                                </div>
-
-                                <body>Profesor(a)</body>
-                                <div className='input-contenedor'>
-                                    <input type='text' name='nombreProfesor' placeholder='Profesor o profesora' value={formData.nombreProfesor} onChange={handleInputChange} />
-                                </div>
-                                <body>Correo eléctronico</body>
-                                <div className='input-contenedor'>
-                                    <input type='text' name='correoProfesor' placeholder='usuario@dominiotec.com' value={formData.correoProfesor} onChange={handleInputChange} />
-                                </div>
-
-                                {formData.idProfesor === 0 && (
-                                    <>
-                                        <button className="btn_naranja" onClick={addTeacher}> Agregar profesor </button>
-                                    </>
-                                )}
-                                {formData.idProfesor != 0 && (
-                                    <>
-                                        <button className="btn_azul" onClick={editTeacher}> Actualizar profesor </button>
-                                        <button className="btn_azul" onClick={deleteTeacher}> Eliminar profesor </button>
-                                    </>
-                                )}
-
-
-
-                            </div>
+                      <div className='contenedor-columnas'>
+                        <div className='columna columna-imagen'>
+                          <img src={profesor} alt="Imagen Gestionar profesor" />
                         </div>
+                        <div className='columna columna-formulario' style={{ width: '400px' }}>
+                          <button className="close-popup" onClick={closePopup}>X</button>
+                          <h1>Gestionar Profesor</h1>
+                          <body>Seleccione el profesor a gestionar</body>
+                          <div className='input-contenedor'>
+                            <Dropdown type='dropdown'
+                              options={profesores.map(profesor => profesor.Name)}
+                              onSelect={handleSelectTeacher}
+                            />
+                          </div>
+                          <body>Profesor(a)</body>
+                          <div className='input-contenedor'>
+                            <input
+                              type='text'
+                              name='nombreProfesor'
+                              placeholder='Profesor o profesora'
+                              value={formData.nombreProfesor}
+                              onChange={handleInputChange}
+                            />
+                          </div>
+                          <body>Correo electrónico</body>
+                          <div className='input-contenedor'>
+                            <input
+                              type='text'
+                              name='correoProfesor'
+                              placeholder='usuario@dominiotec.com'
+                              value={formData.correoProfesor}
+                              onChange={handleInputChange}
+                            />
+                          </div>
+                          {formData.idProfesor === 0 ? (
+                            <button className="btn_naranja" onClick={addTeacher}>Agregar profesor</button>
+                          ) : (
+                            <>
+                              <button className="btn_azul" onClick={editTeacher}>Actualizar profesor</button>
+                              <button className="btn_azul" onClick={deleteTeacher}>Eliminar profesor</button>
+                            </>
+                          )}
+                        </div>
+                      </div>
                     </div>
-                );
+                  );
+                
             case 'FusionarCursos':
                 return (
                     <div className='contenedor'>

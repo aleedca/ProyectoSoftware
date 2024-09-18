@@ -46,7 +46,7 @@ function Sidebar({ isOpen, toggleSidebar, openPopup }) {
                         </button>
                     </li>
                     <li style={{backgroundColor: 'transparent',height: '48px',marginTop: '70%'}}> 
-                        <button className="buttons-orange" onClick={() => openPopup('AgregarCurso')}>
+                        <button className="buttons" onClick={() => openPopup('AgregarCurso')}>
                             <FaPlus size={20} />
                             {isOpen && <span>Agregar Curso</span>}
                         </button>

@@ -39,7 +39,7 @@
 }
 
 .buttons:hover {
-    background-color: #33688B; /* Color de fondo personalizado al pasar el mouse */
+    background-color: #DD3915; /* Color de fondo personalizado al pasar el mouse */
 }
 
 .buttons-orange {
@@ -47,7 +47,7 @@
 }
 
 .buttons-orange:hover {
-    background-color: #ca4a2d; /* Color de fondo personalizado al pasar el mouse */
+    background-color: #004581; /* Color de fondo personalizado al pasar el mouse */
 }
 
 .toggle-button {

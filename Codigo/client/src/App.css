@@ -198,7 +198,7 @@ ul li:hover {
   position: relative;
 }
 
-.input-contenedor input[type=text], input[type=number],
+.input-contenedor input[type=text], input[type=number], input[type=dropdown],
 input[type=password], input[type=date], input[type=select], select, p, textarea{
   font-weight: regular;
   font-size: 12px;
@@ -214,6 +214,7 @@ input[type=password], input[type=date], input[type=select], select, p, textarea{
   border-radius: 6px;
   box-sizing: border-box;
 }
+
 .text-izquierda {
   text-align: start;
 }
@@ -385,4 +386,51 @@ input[type="time"] {
 
 .checkbox-container input[type='checkbox'] {
   margin-right: 5px; /* Espaciado entre el checkbox y el texto */
+}
+
+.dropdown {
+  position: relative;
+  width: 100%;
+}
+
+.dropdown input {
+  font-weight: regular;
+  font-size: 12px;
+  font-family: var(--font);
+  background-color: var(--color-200);
+  text-align: center;
+  color: var(--color-100);
+  width: 100%;
+  padding: 10px;
+  margin: 6.5px 0px;
+  border: 1px solid var(--color-400);
+  border-radius: 6px;
+  box-sizing: border-box;
+}
+
+.dropdown-menu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  max-height: 200px; /* Ajusta el tamaño máximo según sea necesario */
+  overflow-y: auto;
+  background-color: var(--color-200);
+  border: 1px solid var(--color-400);
+  border-radius: 6px;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+  z-index: 1000;
+  font-family: var(--font);
+}
+
+.dropdown-menu .dropdown-item {
+  padding: 10px;
+  background-color: var(--color-700);
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+}
+
+.dropdown-menu .dropdown-item:hover {
+  background-color: var(--color-600);
+  color: #EEEEEE;
 }
