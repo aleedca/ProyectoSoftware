@@ -155,6 +155,7 @@ function Popup({ type, closePopup }) {
             ...prevFormData,
             [name]: value
         }));
+        console.log('FormData actualizado:', formData);
 
     }
 
@@ -293,18 +294,35 @@ function Popup({ type, closePopup }) {
     const handleSelectScheduleChange = (e) => {
         const selectedId = e.target.value;
         const selectedSchedule = horarios.find(horario => horario.Id === selectedId);
+
+        const dicDias = {
+            'Domingo':0,
+            'Lunes': 1,
+            'Martes': 2,
+            'Miércoles':3,
+            'Jueves':4,
+            'Viernes':5,
+            'Sabado':6
+        }
+        
     
         // Actualiza el estado de formData
         if (selectedSchedule) {
+            var listadias = []
+            for (var dia in selectedSchedule['Days'].split(",")){
+                
+                listadias.push(dicDias[selectedSchedule['Days'].split(",")[dia]].toString())
+            }
+            console.log(listadias)
             setFormData(prevFormData => {
                 // Actualiza el formData con los datos del horario seleccionado
                 const updatedFormData = {
                     ...prevFormData,
                     nombreHorario: selectedSchedule.Name,
                     idHorario: selectedSchedule.Id,
-                    dias: selectedSchedule.Days,
-                    horaInicio: selectedSchedule.StartTime.split('T')[1], // Extrae solo la hora
-                    horaFin: selectedSchedule.EndTime.split('T')[1]    // Extrae solo la hora
+                    dias: listadias,
+                    horaInicio: selectedSchedule.StartTime.split('T')[1].split(':')[0] + ':' + selectedSchedule.StartTime.split('T')[1].split(':')[1], // Extrae solo la hora
+                    horaFin: selectedSchedule.StartTime.split('T')[1].split(':')[0] + ':' + selectedSchedule.StartTime.split('T')[1].split(':')[1]    // Extrae solo la hora
                 };
     
                 // Para mantener el comportamiento similar a los checkboxes, puedes usar un efecto
@@ -344,12 +362,12 @@ function Popup({ type, closePopup }) {
             ...prevFormData,
             dias: newSelectedDays,
         }));
-        /*
+        
         console.log('Updated formData:', {
             ...formData,
             dias: newSelectedDays,
         });
-        */
+        
     };
     
     
@@ -924,7 +942,7 @@ function Popup({ type, closePopup }) {
                         </div>
                     </div>
                 );
-                case 'GestionarHorarios':
+            case 'GestionarHorarios':
                     return (
                         <div className='contenedor'>
                             <div className='contenedor-columnas'>
@@ -962,12 +980,13 @@ function Popup({ type, closePopup }) {
                 
                                     <div style={{ textAlign: 'center', margin: '5px' }}>Días de clases</div>
                                     <div className='checkbox-container'>
-                                        <label><input type='checkbox' value='1' onChange={handleCheckBoxChange} />Lunes</label>
-                                        <label><input type='checkbox' value='2' onChange={handleCheckBoxChange} />Martes</label>
-                                        <label><input type='checkbox' value='3' onChange={handleCheckBoxChange} />Miércoles</label>
-                                        <label><input type='checkbox' value='4' onChange={handleCheckBoxChange} />Jueves</label>
-                                        <label><input type='checkbox' value='5' onChange={handleCheckBoxChange} />Viernes</label>
-                                        <label><input type='checkbox' value='6' onChange={handleCheckBoxChange} />Sábado</label>
+                                    
+                                        <label><input type='checkbox' value='1'  checked={formData.dias.includes('1')} onChange={handleCheckBoxChange} />Lunes</label>
+                                        <label><input type='checkbox' value='2'  checked={formData.dias.includes('2')}  onChange={handleCheckBoxChange} />Martes</label>
+                                        <label><input type='checkbox' value='3'  checked={formData.dias.includes('3')}  onChange={handleCheckBoxChange} />Miércoles</label>
+                                        <label><input type='checkbox' value='4'  checked={formData.dias.includes('4')}  onChange={handleCheckBoxChange} />Jueves</label>
+                                        <label><input type='checkbox' value='5'  checked={formData.dias.includes('5')}  onChange={handleCheckBoxChange} />Viernes</label>
+                                        <label><input type='checkbox' value='6'  checked={formData.dias.includes('6')}  onChange={handleCheckBoxChange} />Sábado</label>
                                     </div>
                                     
                                     <div className='fila-juntas'>
