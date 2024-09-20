@@ -19,7 +19,7 @@ BEGIN
     BEGIN TRY
         -- VALIDATIONS
 		
-		SELECT T.id, T.Name, T.email
+		SELECT T.Id, T.Name,T.IdentityNumber , T.Email
         FROM Teachers T
         WHERE T.Deleted = 0
 		

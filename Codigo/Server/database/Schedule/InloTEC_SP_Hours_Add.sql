@@ -34,6 +34,9 @@ BEGIN
 		RAISERROR('Todos los campos son obligatorios. Por favor, complete la informaci�n.', 16, 1);
 	END;
 
+	SELECT @IN_startTime = CAST(DATEADD(HOUR, -6, CAST(@IN_startTime AS DATETIME)) AS TIME)
+	SELECT @IN_endTime = CAST(DATEADD(HOUR, -6, CAST(@IN_endTime AS DATETIME)) AS TIME)
+
 		IF NOT EXISTS (SELECT 1
 					   WHERE @IN_startTime < @IN_endTime)
     	BEGIN

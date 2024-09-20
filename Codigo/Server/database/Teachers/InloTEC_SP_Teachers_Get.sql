@@ -28,7 +28,7 @@ BEGIN
 		RAISERROR('El profesor indicado no existe. Por favor, utilice otro identificador.', 16, 1);
 		END;
 
-		SELECT T.id, T.Name, T.email
+		SELECT T.Id, T.Name,T.IdentityNumber , T.Email
         FROM Teachers T
         WHERE T.Deleted = 0
         AND T.Id = @IN_IdTeachers

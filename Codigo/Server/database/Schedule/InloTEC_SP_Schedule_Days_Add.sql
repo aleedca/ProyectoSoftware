@@ -55,7 +55,7 @@ BEGIN
 	FROM Schedule_Days SD
 	INNER JOIN [Days] D ON D.Id = SD.IdDays
 	INNER JOIN [Hours] H ON H.Id = SD.IdHours
-	RIGHT JOIN @TableDays TD ON TD.Id = SD.IdDays
+	RIGHT JOIN @TableDays TD ON TD.Id = SD.IdDays AND SD.IdHours = @IN_IdHours
 	WHERE (SD.IdHours = @IN_IdHours OR SD.IdHours IS NULL)
 	AND (H.Deleted = 0 OR H.Deleted IS NULL)
 	AND (SD.Deleted = 0 OR SD.Deleted IS NULL)

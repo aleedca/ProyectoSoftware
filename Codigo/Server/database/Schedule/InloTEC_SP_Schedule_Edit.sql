@@ -1,6 +1,6 @@
 -- Autor:       Luis Molina
 -- Fecha:       2024-09-1
--- Descripci�n: Procedure to add a Schedule
+-- Descripci�n: Procedure to edit a Schedule
 --------------------------------------------------------------------------
 
 CREATE OR ALTER PROCEDURE [dbo].[InloTEC_SP_Schedule_Edit]
@@ -50,10 +50,10 @@ BEGIN
 								    ELSE @IN_newIdDays END,
 			   @IN_newStartTime = CASE WHEN @IN_newStartTime IS NULL 
 								       THEN CAST(A.StartTime AS TIME(0)) 
-								       ELSE @IN_newStartTime END , 
+								       ELSE CAST(DATEADD(HOUR, -6, CAST(@IN_newStartTime AS DATETIME)) AS TIME) END , 
 			   @IN_newEndTime = CASE WHEN @IN_newEndTime IS NULL 
 								     THEN CAST(A.EndTime AS TIME(0)) 
-								     ELSE @IN_newEndTime END 
+								     ELSE CAST(DATEADD(HOUR, -6, CAST(@IN_newEndTime AS DATETIME)) AS TIME) END 
 		FROM Schedule S
 		INNER JOIN (SELECT SDS.IdSchedule AS 'IdSchedule', 
 						   STRING_AGG(D.Id,',') AS 'Days', 
@@ -68,6 +68,7 @@ BEGIN
 					AND SD.Deleted = 0
 					AND SDS.Deleted = 0
 					GROUP BY SDS.IdSchedule, H.StartTime, H.EndTime) AS A ON A.IdSchedule = S.Id
+		WHERE S.Id = @IN_IdSchedule
     	
 		-- check for wrong input data type
         IF ISNUMERIC(@IN_newName) = 1
@@ -102,10 +103,10 @@ BEGIN
 	END CATCH
 	
 	-- Check if the schedule name is already registered and active
-    IF EXISTS (SELECT 1
+    IF NOT EXISTS (SELECT 1
 			   FROM [dbo].[Schedule] S
 			   WHERE S.[Name] = LTRIM(RTRIM(@IN_newName))
-			   AND NOT (S.id = @IN_IdSchedule)
+			   AND S.id <> @IN_IdSchedule
 			   AND Deleted = 0 )
         BEGIN
 		RAISERROR('El nombre ya está registrado. Por favor, utilice otro.', 16, 1);
