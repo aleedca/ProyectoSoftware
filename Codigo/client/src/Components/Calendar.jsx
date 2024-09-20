@@ -1,41 +1,16 @@
 // Calendar.jsx
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Sidebar from './Sidebar';
 import Popup from './Popup';
 import { Calendar as BigCalendar, momentLocalizer } from 'react-big-calendar';
 import moment from 'moment';
-import { format, startOfWeek } from 'date-fns';
-import { es } from 'date-fns/locale';
+import 'moment/locale/es';  // Asegurarse de que el locale esté correctamente importado
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import '../Styles/Styles.css';
-import axios from "axios";
-import { useEffect } from "react";
+import axios from 'axios';
 
-const localizer = momentLocalizer(moment);
-
-const customLocalizer = {
-  formats: {
-    dateFormat: 'dd',
-    dayFormat: 'd',
-    weekdayFormat: 'dddd',
-    dayRangeHeaderFormat: ({ start, end }, culture, local) => `${format(start, 'd MMM', { locale: es })} - ${format(end, 'd MMM', { locale: es })}`,
-    monthHeaderFormat: (date, culture, local) => format(date, 'MMMM yyyy', { locale: es }),
-    dayHeaderFormat: (date, culture, local) => format(date, 'dddd, MMMM d', { locale: es }),
-    agendaHeaderFormat: (date, culture, local) => format(date, 'dddd, MMMM d', { locale: es }),
-    timeGutterFormat: (date, culture, local) => format(date, 'H:mm', { locale: es }),
-  },
-  startOfWeek: () => startOfWeek(new Date(), { locale: es }),
-  messages: {
-    next: 'Siguiente',
-    previous: 'Anterior',
-    today: 'Hoy',
-    month: 'Mes',
-    week: 'Semana',
-    day: 'Día',
-    agenda: 'Lista',
-  },
-};
+const localizer = momentLocalizer(moment);  // Usa momentLocalizer directamente
 
 function Calendar() {
   const [Courses, setCourses] = useState([]);
@@ -45,38 +20,41 @@ function Calendar() {
   const [popupType, setPopupType] = useState('');
 
   useEffect(() => {
-    // Función para obtener la lista de profesores
+    // Función para obtener la lista de cursos
     const fetchCoursesCalendar = async () => {
-        try {
-            const response = await axios.get('http://localhost:3001/getCoursesCalendar');
-            setCourses(response.data);
-            console.log("******************")
-            console.log(Courses)
-            
-        } catch (error) {
-            console.error('Error al obtener la lista de cursos del calendario:', error);
-        }
+      try {
+        const response = await axios.get('http://localhost:3001/getCoursesCalendar');
+        setCourses(response.data);
+      } catch (error) {
+        console.error('Error al obtener la lista de cursos del calendario:', error);
+      }
     };
 
     fetchCoursesCalendar();
-}, []);
+  }, []);
 
   const openPopup = (type) => {
-    console.log("Opening popup:", type); // Verificar el tipo de popup al abrir
     setPopupType(type);
     setIsPopupOpen(true);
   };
 
   const closePopup = () => {
-    console.log("Closing popup"); // Verificar cuando se cierra el popup
     setIsPopupOpen(false);
   };
 
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
   };
-  console.log(new Date())
-  const events = Courses;
+
+  const events = Courses.map((course) => ({
+    ...course,
+    start: new Date(course.start),  // Asegúrate de que estas fechas estén en formato Date
+    end: new Date(course.end),
+  }));
+
+  const handleEventClick = (event) => {
+    openPopup('AgregarCurso');
+  };
 
   return (
     <div style={{ display: 'flex', height: '100vh' }}>
@@ -92,14 +70,23 @@ function Calendar() {
       </div>
       <div style={{ flex: 1, padding: '20px', position: 'relative' }}>
         <BigCalendar
-          localizer={localizer}
+          localizer={localizer}  // Usa el localizer directamente aquí
           events={events}
           startAccessor="start"
           endAccessor="end"
           style={{ height: '80vh' }}
           views={['month', 'week', 'day', 'agenda']}
           defaultView="month"
-          messages={customLocalizer.messages}
+          messages={{
+            next: 'Siguiente',
+            previous: 'Anterior',
+            today: 'Hoy',
+            month: 'Mes',
+            week: 'Semana',
+            day: 'Día',
+            agenda: 'Lista',
+          }}
+          onSelectEvent={handleEventClick}
           components={{
             toolbar: (props) => <Toolbar {...props} view={view} setView={setView} />,
             event: EventComponent,
@@ -172,7 +159,6 @@ function Toolbar(props) {
         >
           Mes
         </button>
-        
       </div>
     </div>
   );

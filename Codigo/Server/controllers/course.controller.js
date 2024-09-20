@@ -33,17 +33,29 @@ const getCoursesCalendar = async (req, res) => {
                 'Domingo':0,
                 'Lunes': 1,
                 'Martes': 2,
-                'Miercoles':3,
+                'Miércoles':3,
                 'Jueves':4,
                 'Viernes':5,
                 'Sabado':6
             }
+            var listadias = []
+            for (dia in resultBD['Days'].split(",")){
+                console.log(resultBD['Days'][dia])
+                listadias.push(dicDias[resultBD['Days'].split(",")[dia]])
+            }
+            console.log("///////")
             console.log(resultBD['Days'])
+            console.log(listadias)
+            console.log(resultBD['StartTime'])
+            console.log(resultBD['EndTime'])
             // Asegurarse de que la fecha de inicio no sea posterior a la fecha de fin
             while (currentDate <= new Date(resultBD['EndDate'])) {
                 let dayOfWeek = currentDate.getDay(); // 0: domingo, 1: lunes, 2: martes, etc.
 
-                if (dayOfWeek === dicDias[resultBD['Days']] ) { // 2: martes, 4: jueves
+                if (listadias.includes(dayOfWeek)) { // 2: martes, 4: jueves
+                    console.log('dsd')
+                    console.log(dayOfWeek)
+                    console.log(listadias)
                     let StartTime = new Date(resultBD['StartTime']); 
                     let EndTime = new Date(resultBD['EndTime']); 
                     let date1 = new Date(currentDate); 
