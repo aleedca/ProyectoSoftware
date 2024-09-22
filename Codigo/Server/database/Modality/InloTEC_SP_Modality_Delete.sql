@@ -21,12 +21,6 @@ BEGIN
 
     BEGIN TRY
         -- VALIDATIONS
-		
-		-- check for empty input data
-        IF LTRIM(RTRIM(@IN_IdModality)) = ''
-        BEGIN
-            RAISERROR('Todos los campos son obligatorios. Por favor, complete la informaci�n.', 16, 1);
-        END;
 
         -- Check if the id exists
         IF NOT EXISTS (SELECT 1 
