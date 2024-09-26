@@ -105,7 +105,7 @@ BEGIN
 	-- Check if the schedule name is already registered and active
     IF NOT EXISTS (SELECT 1
 			   FROM [dbo].[Schedule] S
-			   WHERE S.[Name] = LTRIM(RTRIM(@IN_newName))
+			   WHERE LOWER(S.[Name]) = LOWER(LTRIM(RTRIM(@IN_newName)))
 			   AND S.id <> @IN_IdSchedule
 			   AND Deleted = 0 )
         BEGIN
