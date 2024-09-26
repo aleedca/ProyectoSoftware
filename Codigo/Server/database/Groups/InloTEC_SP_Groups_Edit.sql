@@ -37,7 +37,7 @@ BEGIN
 		RAISERROR('Todos los campos son obligatorios. Por favor, complete la información.', 16, 1);
 		END;
 
-    	-- Check if the new name is already registered and active
+    	-- Check if the old name is already registered and active
     	IF NOT EXISTS (SELECT 1
 					   FROM [dbo].[Groups]
 					   WHERE LOWER([Name]) = LOWER(LTRIM(RTRIM(@IN_oldName)))
