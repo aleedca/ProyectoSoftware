@@ -322,7 +322,7 @@ function Popup({ type, closePopup }) {
                     idHorario: selectedSchedule.Id,
                     dias: listadias,
                     horaInicio: selectedSchedule.StartTime.split('T')[1].split(':')[0] + ':' + selectedSchedule.StartTime.split('T')[1].split(':')[1], // Extrae solo la hora
-                    horaFin: selectedSchedule.StartTime.split('T')[1].split(':')[0] + ':' + selectedSchedule.StartTime.split('T')[1].split(':')[1]    // Extrae solo la hora
+                    horaFin: selectedSchedule.EndTime.split('T')[1].split(':')[0] + ':' + selectedSchedule.StartTime.split('T')[1].split(':')[1]    // Extrae solo la hora
                 };
     
                 // Para mantener el comportamiento similar a los checkboxes, puedes usar un efecto
