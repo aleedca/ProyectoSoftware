@@ -763,9 +763,12 @@ function Popup({ type, closePopup }) {
                                 </div>
                                 <body>Horario</body>
                                 <div className='input-contenedor'>
-                                    <select onChange={handleSelectScheduleChange}> 
-                                        <option value={0}>Seleccione un horario </option>
-                                        {horarios.map((horario) => (
+                                <select 
+                                        value={formData.idHorario} // Asegúrate de que el valor esté sincronizado con el estado
+                                        onChange={handleSelectScheduleChange} // Manejador de eventos
+                                    >
+                                        <option value={0}>Seleccione un horario</option>
+                                        {horarios.map(horario => (
                                             <option key={horario.Id} value={horario.Id}>
                                                 {horario.Name}
                                             </option>
