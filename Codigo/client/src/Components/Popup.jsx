@@ -322,7 +322,7 @@ function Popup({ type, closePopup }) {
                     idHorario: selectedSchedule.Id,
                     dias: listadias,
                     horaInicio: selectedSchedule.StartTime.split('T')[1].split(':')[0] + ':' + selectedSchedule.StartTime.split('T')[1].split(':')[1], // Extrae solo la hora
-                    horaFin: selectedSchedule.StartTime.split('T')[1].split(':')[0] + ':' + selectedSchedule.StartTime.split('T')[1].split(':')[1]    // Extrae solo la hora
+                    horaFin: selectedSchedule.EndTime.split('T')[1].split(':')[0] + ':' + selectedSchedule.StartTime.split('T')[1].split(':')[1]    // Extrae solo la hora
                 };
     
                 // Para mantener el comportamiento similar a los checkboxes, puedes usar un efecto
@@ -407,9 +407,9 @@ function Popup({ type, closePopup }) {
         const formattedHoraFin = formatTimeForDatabase(formData.horaFin);
 
         const errors = {
+            idHorario: !formData.idHorario,
             nombreHorario: !formData.nombreHorario,
             dias: !formData.dias,
-            idHorario: !formData.idHorario,
             horaInicio: !formData.horaInicio,
             horaFin: !formData.horaFin
         };
@@ -763,9 +763,12 @@ function Popup({ type, closePopup }) {
                                 </div>
                                 <body>Horario</body>
                                 <div className='input-contenedor'>
-                                    <select onChange={handleSelectScheduleChange}> 
-                                        <option value={0}>Seleccione un horario </option>
-                                        {horarios.map((horario) => (
+                                <select 
+                                        value={formData.idHorario} // Asegúrate de que el valor esté sincronizado con el estado
+                                        onChange={handleSelectScheduleChange} // Manejador de eventos
+                                    >
+                                        <option value={0}>Seleccione un horario</option>
+                                        {horarios.map(horario => (
                                             <option key={horario.Id} value={horario.Id}>
                                                 {horario.Name}
                                             </option>

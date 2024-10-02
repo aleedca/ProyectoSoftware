@@ -70,11 +70,11 @@ const editSchedule = async (req, res) => {
 
         console.log(formattedHoraInicio);
         console.log(formattedHoraFin);
-
+        console.log(req.body['nombreHorario']);
 
         let result = await pool.request()
             .input('IN_IdSchedule', sql.BigInt, req.body['idHorario'])
-            .input('IN_newName', sql.NVarChar(64), req.body['nombre'])
+            .input('IN_newName', sql.NVarChar(128), req.body['nombreHorario'])
             .input('IN_newIdDays', sql.NVarChar(128), diasString)
             .input('IN_newStartTime', sql.DateTime, formattedHoraInicio) // Pasa la hora con el formato correcto
             .input('IN_newEndTime', sql.DateTime, formattedHoraFin) // Pasa la hora con el formato correcto
