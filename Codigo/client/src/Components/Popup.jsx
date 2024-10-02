@@ -407,9 +407,9 @@ function Popup({ type, closePopup }) {
         const formattedHoraFin = formatTimeForDatabase(formData.horaFin);
 
         const errors = {
+            idHorario: !formData.idHorario,
             nombreHorario: !formData.nombreHorario,
             dias: !formData.dias,
-            idHorario: !formData.idHorario,
             horaInicio: !formData.horaInicio,
             horaFin: !formData.horaFin
         };
