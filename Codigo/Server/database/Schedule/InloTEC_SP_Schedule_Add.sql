@@ -48,11 +48,6 @@ BEGIN
 		RAISERROR('Todos los campos son obligatorios. Por favor, complete la informaci�n.', 16, 1);
 	END;
 
-		IF NOT EXISTS (SELECT 1
-					   WHERE @IN_startTime < @IN_endTime)
-    	BEGIN
-		RAISERROR('La hora final esta antes que la hora inicial.', 16, 1);
-	END;
 
 	BEGIN TRY
 

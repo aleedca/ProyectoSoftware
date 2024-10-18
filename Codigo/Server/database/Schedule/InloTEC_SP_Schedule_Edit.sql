@@ -50,10 +50,10 @@ BEGIN
 								    ELSE @IN_newIdDays END,
 			   @IN_newStartTime = CASE WHEN @IN_newStartTime IS NULL 
 								       THEN CAST(A.StartTime AS TIME(0)) 
-								       ELSE CAST(DATEADD(HOUR, -6, CAST(@IN_newStartTime AS DATETIME)) AS TIME) END , 
+								       ELSE @IN_newStartTime END , 
 			   @IN_newEndTime = CASE WHEN @IN_newEndTime IS NULL 
 								     THEN CAST(A.EndTime AS TIME(0)) 
-								     ELSE CAST(DATEADD(HOUR, -6, CAST(@IN_newEndTime AS DATETIME)) AS TIME) END 
+								     ELSE @IN_newEndTime END 
 		FROM Schedule S
 		INNER JOIN (SELECT SDS.IdSchedule AS 'IdSchedule', 
 						   STRING_AGG(D.Id,',') AS 'Days', 
@@ -85,11 +85,6 @@ BEGIN
 		RAISERROR('Todos los campos son obligatorios. Por favor, complete la informaci�n.', 16, 1);
 	END;
 
-		IF EXISTS (SELECT 1
-					   WHERE @IN_newStartTime > @IN_newEndTime)
-    	BEGIN
-		RAISERROR('La hora final esta antes que la hora inicial.', 16, 1);
-	END;
 
 	BEGIN TRY
 		-- Parse of @IN_IdDays to check for repited days
@@ -103,11 +98,11 @@ BEGIN
 	END CATCH
 	
 	-- Check if the schedule name is already registered and active
-    IF NOT EXISTS (SELECT 1
+    IF EXISTS (SELECT 1
 			   FROM [dbo].[Schedule] S
 			   WHERE LOWER(S.[Name]) = LOWER(LTRIM(RTRIM(@IN_newName)))
-			   AND S.id <> @IN_IdSchedule
-			   AND Deleted = 0 )
+			   AND (NOT (S.Id = @IN_IdSchedule))
+			   AND Deleted = 0)
         BEGIN
 		RAISERROR('El nombre ya está registrado. Por favor, utilice otro.', 16, 1);
 	END;
@@ -133,6 +128,11 @@ BEGIN
 		WHERE IdSchedule = @IN_IdSchedule
 
 
+		UPDATE [Schedule]
+		SET [Name] = @IN_newName
+		WHERE Id = @IN_IdSchedule
+
+
 		-- INSERT Schedule
 
 		--register the hours to the database and get hours id
@@ -142,8 +142,6 @@ BEGIN
 		INSERT INTO @TableSchedule_Days (Id)
 		EXEC [dbo].[InloTEC_SP_Schedule_Days_Add] @IdHours, @IN_newIdDays;
 
-		UPDATE [Schedule]
-		SET [Name] = @IN_newName
 
 		INSERT INTO [dbo].[ScheduleDays_Schedule] ([IdSchedule_Days], [IdSchedule], [Deleted])
 		SELECT TSD.Id ,A.Id, 0
