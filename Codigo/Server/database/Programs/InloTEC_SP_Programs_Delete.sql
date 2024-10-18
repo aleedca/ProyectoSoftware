@@ -1,6 +1,6 @@
 -- Autor:       Luis Molina
 -- Fecha:       2024-10-14
--- Descripci�n: Procedure to delete a program
+-- Descripci�n: Procedure to delete a program. It deletes all courses related to it
 --------------------------------------------------------------------------
 
 CREATE OR ALTER PROCEDURE [dbo].[InloTEC_SP_Programs_Delete]
@@ -31,7 +31,7 @@ BEGIN
 		-- Check if the program is already registered and active
     	IF NOT EXISTS (SELECT 1
 			   FROM [dbo].[Programs] P
-			   WHERE H.[Id] = @IN_IdPrograms
+			   WHERE P.[Id] = @IN_IdPrograms
 			   AND Deleted = 0 )
         BEGIN
 		RAISERROR('El tecnico indicado no fue encontrado. Por favor, utilice otro identificador.', 16, 1);
@@ -52,7 +52,7 @@ BEGIN
 
 		-- DELETE Courses_Programs
 		UPDATE Courses_Programs
-		SET Delete = 1
+		SET Deleted = 1
 		WHERE IdPrograms = @IN_IdPrograms 
 
 
