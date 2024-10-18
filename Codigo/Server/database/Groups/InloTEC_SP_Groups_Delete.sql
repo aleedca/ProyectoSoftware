@@ -18,6 +18,7 @@ BEGIN
 
 	-- VARIABLE DECLARATION
 	DECLARE @Rolname NVARCHAR(64) = 'Admin';
+	DECLARE @IdGroups BIGINT = 0
 
 	BEGIN TRY
         -- VALIDATIONS
@@ -40,13 +41,18 @@ BEGIN
 					   WHERE LOWER([Name]) = LOWER(LTRIM(RTRIM(@IN_name)))
 					   AND Deleted = 0 )
     	BEGIN
-		RAISERROR('El correo electrónico no está registrado. Por favor, utilice otro correo.', 16, 1);
+		RAISERROR('El grupo a borrar no se encontró. Por favor, utilice otro .', 16, 1);
 		END;
-
 
 		--validation of user rol
 
 
+
+		--getting the id value of the group
+		SELECT @IdGroups = G.Id
+		FROM [dbo].[Groups] G
+		WHERE LOWER(G.[Name]) = LOWER(LTRIM(RTRIM(@IN_name)))
+		AND Deleted = 0
 
         -- TRANSACTION BEGUN
         IF @@TRANCOUNT = 0
@@ -55,11 +61,16 @@ BEGIN
 		BEGIN TRANSACTION;
 	END;
 
-		--the group is deleted
+		--deleting the associations with Course_Details
+		UPDATE Courses_Details_Groups
+		SET Deleted = 1
+		WHERE IdGroups = @IdGroups
+
+		--deleting the group
 		UPDATE [dbo].[Groups]
 		SET  
 		    Deleted = 1
-		WHERE LOWER([Name]) = LOWER(LTRIM(RTRIM(@IN_name)))
+		WHERE Id = @IdGroups
 
         
         -- COMMIT TRANSACTION
