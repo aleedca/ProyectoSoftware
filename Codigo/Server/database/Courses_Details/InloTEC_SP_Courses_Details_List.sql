@@ -66,7 +66,8 @@ BEGIN
 				GROUP BY CDG.IdCourses_Details) AS A ON A.IdCourses_Details = CD.Id
 	INNER JOIN Schedule S ON S.Id = CD.IdSchedule
 	INNER JOIN @ScheduleListTable SLT ON SLT.Id = S.Id
-	AND CD.Deleted = 0
+	WHERE CD.Deleted = 0
+	ORDER BY CD.Id
 
 
 
