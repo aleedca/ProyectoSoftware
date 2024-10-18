@@ -28,6 +28,7 @@ BEGIN
 	DECLARE @Rolname NVARCHAR(64) = 'Admin';
 	DECLARE @Collision BIT = 0;
 	DECLARE @IdCourses_Details INT
+	DECLARE @IN_IdPrograms BIGINT = 1 --config wired
 
 	BEGIN TRY
         -- VALIDATIONS
@@ -79,6 +80,14 @@ BEGIN
 					   AND Deleted = 0)
     	BEGIN
 		RAISERROR('El id del grupo no existe.', 16, 1);
+		END;
+
+		IF NOT EXISTS (SELECT 1
+					   FROM [dbo].[Programs] P
+					   WHERE P.Id = @IN_IdPrograms
+					   AND Deleted = 0)
+    	BEGIN
+		RAISERROR('El id del Programs no existe.', 16, 1);
 		END;
 
 		IF NOT EXISTS (SELECT 1
@@ -151,7 +160,7 @@ BEGIN
 		VALUES(@IN_IdLocation,
 			   @IN_IdTeachers,
 			   @IN_IdCourses,
-			   1,
+			   @IN_IdPrograms,
 			   @IN_IdSchedule,
 			   @IN_IdModality,
 			   @IN_startDate,
@@ -161,11 +170,13 @@ BEGIN
 
 		SET @IdCourses_Details = SCOPE_IDENTITY()
 
-		INSERT INTO [dbo].[Courses_Details_Groups] ([IdGroups], [IdCourses_Details], [Deleted])
-		VALUES(@IN_IdGroup, @IdCourses_Details, 0)
-
-			
-
+		INSERT INTO [dbo].[Courses_Details_Groups] (
+				[IdGroups], 
+				[IdCourses_Details], 
+				[Deleted])
+		VALUES(@IN_IdGroup, 
+			   @IdCourses_Details, 
+			   0)
         
         -- COMMIT TRANSACTION
         IF @transactionBegun = 1
