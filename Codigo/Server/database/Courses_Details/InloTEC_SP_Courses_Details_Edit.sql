@@ -1,6 +1,6 @@
 -- Autor:       Luis Molina
 -- Fecha:       2024-09-1
--- Descripci�n: Procedure to add a Course_Details
+-- Descripci�n: Procedure to edit a Course_Details
 --------------------------------------------------------------------------
 
 CREATE OR ALTER PROCEDURE [dbo].[InloTEC_SP_Courses_Details_Edit]
@@ -27,7 +27,7 @@ BEGIN
 
 	-- VARIABLE DECLARATION
 	DECLARE @Rolname NVARCHAR(64) = 'Admin';
-	DECLARE @Collision BIT = 0
+	DECLARE @Collision BIGINT = 0
 	DECLARE @IdCourses_Details INT
 	DECLARE @IN_IdPrograms BIGINT = NULL --config wired
 
@@ -178,7 +178,7 @@ BEGIN
 				   		OR CDG.IdGroups = @IN_IdGroup) -- Teacher or Group collision; true if there is collisions
 				  )
 
-		IF @Collision = 1
+		IF @Collision != 0
     		BEGIN
 			RAISERROR('Existe una colision del curso para el profesor o grupo.', 16, 1);
 			END;
@@ -214,14 +214,14 @@ BEGIN
 			-- deleted the previos associations
 			UPDATE [dbo].[Courses_Details_Groups] 
 			SET [Deleted] =1
-			WHERE Id = @IN_IdCourses_Details
+			WHERE IdCourses_Details = @IN_IdCourses_Details
 
 			INSERT INTO [dbo].[Courses_Details_Groups] (
 				[IdGroups], 
 				[IdCourses_Details], 
 				[Deleted])
 			VALUES(@IN_IdGroup, 
-				   @IdCourses_Details, 
+				   @IN_IdCourses_Details, 
 				   0)
 		END;
 
