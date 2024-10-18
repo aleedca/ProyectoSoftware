@@ -31,18 +31,12 @@ BEGIN
 		END;
 
 		--Response
-		SELECT C.Id, C.Name, A.Programs AS 'Programs'
-		FROM [dbo].[Courses] C
-		INNER JOIN Courses_Programs CP ON CP.IdCourses = C.Id
-		INNER JOIN (SELECT CP.IdPrograms AS 'IdPrograms', STRING_AGG(P.Name, ',') AS 'Programs'
-					FROM Programs P
-					INNER JOIN Courses_Programs CP ON CP.IdPrograms = P.Id
-					WHERE P.Deleted = 0
-					AND CP.Deleted = 0
-					GROUP BY CP.IdPrograms ) AS A ON A.IdPrograms = CP.IdPrograms
+		SELECT CP.IdCourses, C.[Name] , STRING_AGG(CP.IdPrograms,',') AS 'IdPrograms', STRING_AGG(P.[Name],',')
+		FROM Programs P
+		INNER JOIN Courses_Programs CP ON (CP.IdPrograms = P.Id AND CP.Deleted = 0)
+		INNER JOIN Courses C ON (C.Id = CP.IdCourses AND C.Deleted = 0)
 		WHERE C.Id = @IN_IdCourses
-		AND CP.Deleted = 0
-		AND C.Deleted = 0
+		GROUP BY CP.IdCourses, C.[Name]
 
 
     END TRY

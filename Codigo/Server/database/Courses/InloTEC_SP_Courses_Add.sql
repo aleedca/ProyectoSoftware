@@ -42,7 +42,7 @@ BEGIN
 	END;
 
 		-- check for correct ColorValue 
-        IF LTRIM(RTRIM(@IN_ColorValue)) LIKE '[0-9A-Fa-f][0-9A-Fa-f][0-9A-Fa-f][0-9A-Fa-f][0-9A-Fa-f][0-9A-Fa-f]'
+        IF NOT (LEN(LTRIM(RTRIM(@IN_ColorValue))) = 6 AND LTRIM(RTRIM(@IN_ColorValue)) LIKE '[0-9A-Fa-f][0-9A-Fa-f][0-9A-Fa-f][0-9A-Fa-f][0-9A-Fa-f][0-9A-Fa-f]')
         BEGIN
 		RAISERROR('Formato incorrecto en el color del numero. Por favor,use: [0-9A-Fa-f]{6}.', 16, 1);
 	END;
@@ -82,7 +82,7 @@ BEGIN
 		
 
 		IF EXISTS (SELECT 1
-				   FROM [dbo].[Programs]
+				   FROM [dbo].[Programs] P
 				   RIGHT JOIN @TablePrograms TP ON TP.Id = P.Id AND P.Deleted = 0 
 				   WHERE P.id IS NULL)
         BEGIN

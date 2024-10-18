@@ -74,7 +74,7 @@ BEGIN
 	END;
 
 		-- check for correct ColorValue 
-        IF LTRIM(RTRIM(@IN_ColorValue)) LIKE '[0-9A-Fa-f][0-9A-Fa-f][0-9A-Fa-f][0-9A-Fa-f][0-9A-Fa-f][0-9A-Fa-f]'
+        IF NOT (LEN(LTRIM(RTRIM(@IN_newColorValue))) = 6 AND LTRIM(RTRIM(@IN_newColorValue)) LIKE '[0-9A-Fa-f][0-9A-Fa-f][0-9A-Fa-f][0-9A-Fa-f][0-9A-Fa-f][0-9A-Fa-f]')
         BEGIN
 		RAISERROR('Formato incorrecto en el color. Por favor,use: [0-9A-Fa-f]{6}.', 16, 1);
 	END;
@@ -91,7 +91,7 @@ BEGIN
 		-- Check if the ColorValue is already registered and active
         IF EXISTS (SELECT 1
 				   FROM [dbo].[Courses]
-				   WHERE LOWER([ColorValue]) = LOWER(LTRIM(RTRIM(@IN_ColorValue)))
+				   WHERE LOWER([ColorValue]) = LOWER(LTRIM(RTRIM(@IN_newColorValue)))
 				   AND Deleted = 0 )
         BEGIN
 		RAISERROR('El color ya está registrado. Por favor, utilice otro.', 16, 1);
@@ -114,7 +114,7 @@ BEGIN
 		
 
 		IF EXISTS (SELECT 1
-				   FROM [dbo].[Programs]
+				   FROM [dbo].[Programs] P
 				   RIGHT JOIN @TablePrograms TP ON TP.Id = P.Id AND P.Deleted = 0 
 				   WHERE P.id IS NULL)
         BEGIN
