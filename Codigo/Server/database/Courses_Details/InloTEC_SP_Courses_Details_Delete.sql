@@ -32,9 +32,6 @@ BEGIN
 		END;
 
 
-		--here goes the rest if not id
-
-
 		--validation of user rol
 
 

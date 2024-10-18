@@ -26,7 +26,7 @@ BEGIN
 
 	-- VARIABLE DECLARATION
 	DECLARE @Rolname NVARCHAR(64) = 'Admin';
-	DECLARE @Collision BIT = 0;
+	DECLARE @Collision BIGINT = 0;
 	DECLARE @IdCourses_Details INT
 	DECLARE @IN_IdPrograms BIGINT = 1 --config wired
 
@@ -129,7 +129,7 @@ BEGIN
 				   		OR CDG.IdGroups = @IN_IdGroup) -- Teacher or Group collision; true if there is collisions
 				  )
 
-		IF @Collision = 1
+		IF @Collision != 0
     		BEGIN
 			RAISERROR('Existe una colision del curso para el profesor o grupo.', 16, 1);
 			END;
