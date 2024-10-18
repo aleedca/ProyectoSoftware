@@ -1,9 +1,9 @@
 -- Autor:       Luis Molina
 -- Fecha:       2024-09-1
--- Descripci�n: Procedure to add a Course_Details
+-- Descripci�n: Procedure to fusion 2 Courses_Details
 --------------------------------------------------------------------------
 
-CREATE OR ALTER PROCEDURE [dbo].[InloTEC_SP_Courses_Details_Edit]
+CREATE OR ALTER PROCEDURE [dbo].[InloTEC_SP_Courses_Details_Fusion]
 	-- Parameters
 	@IN_IdCourses_Details_1 BIGINT, --0
 	@IN_IdCourses_Details_2 BIGINT, -- 1
@@ -63,16 +63,25 @@ BEGIN
 		END;
 
 
-		--get the combination of the id of both courses_details
+		--the courses must have the same dates
 
-		SELECT CDG.IdGroups
-		FROM Courses_Details_Groups CDG
-		INNER JOIN Groups G ON G.Id = CDG.IdGroups
-		WHERE (CDG.IdCourses_Details = @IN_IdCourses_Details_1 
-			   OR CDG.IdCourses_Details = @IN_IdCourses_Details_2) 
-		AND CDG.Deleted = 0
-		
-		
+    	IF NOT EXISTS (SELECT 1 
+			FROM (SELECT CAST(CD.StartDate AS DATE) AS 'StartDate', 
+						 CAST(CD.EndDate AS DATE) AS 'EndDate'
+			 	  FROM [dbo].[Courses_Details] CD
+			      WHERE CD.Id = @IN_IdCourses_Details_1
+			      AND Deleted = 0) A
+		   	JOIN (SELECT CAST(CD.StartDate AS DATE) AS 'StartDate', 
+						 CAST(CD.EndDate AS DATE) AS 'EndDate'
+			 	  FROM [dbo].[Courses_Details] CD
+			      WHERE CD.Id = @IN_IdCourses_Details_2
+			      AND Deleted = 0) B ON 1 = 1
+		   WHERE A.StartDate = B.StartDate
+		   AND A.EndDate = B.EndDate)
+    	BEGIN
+		RAISERROR('Los cursos a fusionar tienen diferentes fechas.', 16, 1);
+		END;
+				
 
 		--Combinate the notes of both course_details in a variable
 
@@ -96,9 +105,9 @@ BEGIN
 		UPDATE Courses_Details_Groups
 		SET IdCourses_Details = CASE WHEN @IN_opcionToDelete = 0 THEN @IN_IdCourses_Details_2 ELSE @IN_IdCourses_Details_1 END
 		WHERE (@IN_opcionToDelete = 0 
-			   AND CDG.IdCourses_Details = @IN_IdCourses_Details_1)
+			   AND IdCourses_Details = @IN_IdCourses_Details_1)
 		OR (@IN_opcionToDelete = 1 
-			   AND CDG.IdCourses_Details = @IN_IdCourses_Details_2)
+			   AND IdCourses_Details = @IN_IdCourses_Details_2);
 
 		--Delete repeted Course_Details_Groups
 		WITH CTE AS (SELECT Id,
