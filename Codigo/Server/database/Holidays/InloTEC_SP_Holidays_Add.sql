@@ -67,7 +67,7 @@ BEGIN
 		BEGIN TRANSACTION;
 	END;
 
-		-- INSERT Groups
+		-- INSERT holidays
 		INSERT INTO [dbo].[Holidays]
 			([Name], [StartDatetime], [EndDatetime], [Deleted])
 		VALUES(

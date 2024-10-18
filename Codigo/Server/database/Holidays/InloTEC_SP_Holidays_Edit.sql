@@ -69,7 +69,7 @@ BEGIN
 	END;
 
         -- Check if the holiday name is already registered and active
-    	IF NOT EXISTS (SELECT 1
+    	IF  EXISTS (SELECT 1
 			   FROM [dbo].[Holidays] H
 			   WHERE LOWER(H.[Name]) = LOWER(LTRIM(RTRIM(@IN_newName)))
 			   AND H.Id <> @IN_IdHolidays
