@@ -27,7 +27,7 @@ BEGIN
 
 	-- VARIABLE DECLARATION
 	DECLARE @Rolname NVARCHAR(64) = 'Admin';
-	DECLARE @TeacherId INT = NULL;
+	DECLARE @Collision BIT = 0
 	DECLARE @IdCourses_Details INT
 
 	BEGIN TRY
@@ -96,6 +96,45 @@ BEGIN
     	BEGIN
 		RAISERROR('La fecha final esta antes que la fecha inicial.', 16, 1);
 		END;
+
+
+		--check for colision of: schedule and dates for teachers or groups
+		WITH A AS (
+				SELECT SDS.IdSchedule AS 'IdSchedule', 
+					   D.Id AS 'Days', 
+					   H.StartTime AS 'StartTime', 
+					   H.EndTime AS 'EndTime'
+				FROM ScheduleDays_Schedule SDS
+				INNER JOIN Schedule_Days SD ON SD.Id = SDS.IdSchedule_Days
+				INNER JOIN [Hours] H ON H.Id = SD.IdHours
+				INNER JOIN [Days] D ON D.Id = SD.IdDays
+				WHERE H.Deleted = 0
+				AND D.Deleted = 0
+				AND SD.Deleted = 0
+				AND SDS.Deleted = 0
+			)
+			--table of courses, schedule day, teachers, groups, hours, dates
+			SELECT @Collision = COUNT(CD.Id)
+			FROM Courses_Details CD
+			INNER JOIN Schedule S ON (S.Id = CD.IdSchedule AND S.Deleted = 0)
+			INNER JOIN Courses_Details_Groups CDG ON (CDG.IdCourses_Details = CD.Id AND CDG.Deleted = 0)
+			INNER JOIN A ON A.IdSchedule = S.Id
+			JOIN A IN_A ON IN_A.IdSchedule = @IN_IdSchedule
+			WHERE CD.Deleted = 0
+			AND CD.Id <> @IN_IdCourses_Details --removing itself from the search for collision
+			-- conditions to match for a collision; true if collision exists
+			AND (NOT (@IN_endDate <= CD.StartDate OR @IN_startDate >= CD.EndDate) --dates collision; true if dates do overlap
+				   AND NOT (IN_A.EndTime <= A.StartTime OR IN_A.StartTime >= A.EndTime) -- Schedule hour collision; true if hours do overlap
+				   AND (IN_A.[Days] = A.[Days]) -- Schedule days collision; true if days do collisions
+				   AND (CD.IdTeachers = @IN_IdTeachers 
+				   		OR CDG.IdGroups = @IN_IdGroup) -- Teacher or Group collision; true if there is collisions
+				  )
+
+		IF @Collision = 1
+    		BEGIN
+			RAISERROR('Existe una colision del curso para el profesor o grupo.', 16, 1);
+			END;
+
 
 		--validation of user rol
 
