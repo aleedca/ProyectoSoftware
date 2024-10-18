@@ -6,14 +6,14 @@
 CREATE OR ALTER PROCEDURE [dbo].[InloTEC_SP_Courses_Details_Edit]
 	-- Parameters
 	@IN_IdCourses_Details BIGINT,
-	@IN_IdLocation BIGINT,
-	@IN_IdTeachers BIGINT,
-	@IN_IdCourses BIGINT,
-	@IN_IdSchedule BIGINT,
-	@IN_IdModality BIGINT,
-	@IN_IdGroup BIGINT,
-	@IN_startDate DATE,
-	@IN_endDate DATE,
+	@IN_IdLocation BIGINT = NULL,
+	@IN_IdTeachers BIGINT = NULL,
+	@IN_IdCourses BIGINT = NULL,
+	@IN_IdSchedule BIGINT = NULL,
+	@IN_IdModality BIGINT = NULL,
+	@IN_IdGroup BIGINT = NULL,
+	@IN_startDate DATE = NULL,
+	@IN_endDate DATE = NULL,
 	@IN_notes NVARCHAR(512) = NULL
 
 AS
@@ -29,6 +29,7 @@ BEGIN
 	DECLARE @Rolname NVARCHAR(64) = 'Admin';
 	DECLARE @Collision BIT = 0
 	DECLARE @IdCourses_Details INT
+	DECLARE @IN_IdPrograms BIGINT = NULL --config wired
 
 	BEGIN TRY
         -- VALIDATIONS
@@ -41,7 +42,43 @@ BEGIN
     	BEGIN
 		RAISERROR('El identificador del curso no se encontro.', 16, 1);
 		END;
-		
+
+		-- getting old information if input was NULL
+
+		SELECT @IN_IdLocation = CASE WHEN @IN_IdLocation IS NULL 
+									 THEN CD.IdLocations 
+									 ELSE @IN_IdLocation END,
+			   @IN_IdTeachers = CASE WHEN @IN_IdTeachers IS NULL 
+			   					  THEN CD.IdTeachers 
+			   					  ELSE @IN_IdTeachers END,
+			   @IN_IdCourses = CASE WHEN @IN_IdCourses IS NULL 
+			   						THEN CD.IdCourses 
+									ELSE @IN_IdCourses END,
+			   @IN_IdSchedule = CASE WHEN @IN_IdSchedule IS NULL 
+			   						 THEN CD.IdSchedule 
+									 ELSE @IN_IdSchedule END,
+			   @IN_IdModality = CASE WHEN @IN_IdModality IS NULL 
+			   						 THEN CD.IdModality 
+									 ELSE @IN_IdModality END,
+			   @IN_IdGroup = CASE WHEN @IN_IdGroup IS NULL 
+			   					  THEN NULL 
+								  ELSE @IN_IdGroup END,
+			   @IN_IdPrograms = CASE WHEN @IN_IdPrograms IS NULL 
+			   					  THEN CD.IdPrograms 
+								  ELSE @IN_IdPrograms END, 
+			   @IN_startDate = CASE WHEN @IN_startDate IS NULL 
+			   						THEN CD.startDate 
+									ELSE @IN_startDate END,
+			   @IN_endDate = CASE WHEN @IN_endDate IS NULL 
+			   				  	  THEN CD.endDate 
+								  ELSE @IN_endDate END,
+			   @IN_notes = CASE WHEN @IN_notes IS NULL 
+			   					THEN CD.notes 
+								ELSE @IN_notes END
+		FROM Courses_Details CD
+		WHERE CD.Id = @IN_IdCourses_Details
+		AND CD.Deleted = 0
+
 
     	IF NOT EXISTS (SELECT 1
 					   FROM [dbo].[Teachers] T
@@ -84,11 +121,22 @@ BEGIN
 		END;
 
 		IF NOT EXISTS (SELECT 1
+					   FROM [dbo].[Programs] P
+					   WHERE P.Id = @IN_IdPrograms
+					   AND Deleted = 0)
+    	BEGIN
+		RAISERROR('El id del Programs no existe.', 16, 1);
+		END;
+
+		IF NOT (@IN_IdGroup IS NULL)
+		BEGIN
+			IF NOT EXISTS (SELECT 1
 					   FROM [dbo].[Groups] G
 					   WHERE G.Id = @IN_IdGroup
 					   AND Deleted = 0)
-    	BEGIN
-		RAISERROR('El id del grupo no existe.', 16, 1);
+    		BEGIN
+			RAISERROR('El id del grupo no existe.', 16, 1);
+			END;
 		END;
 
 		IF EXISTS (SELECT 1
@@ -147,37 +195,36 @@ BEGIN
 		BEGIN TRANSACTION;
 	END;
 
-		-- INSERT Course_Details
-		INSERT INTO [dbo].[Courses_Details]
-			([IdLocations], 
-			 [IdTeachers], 
-			 [IdCourses], 
-			 [IdPrograms], 
-			 [IdSchedule], 
-			 [IdModality], 
-			 [StartDate], 
-			 [EndDate], 
-			 [Notes],
-			 [Deleted])
-		VALUES(@IN_IdLocation,
-			   @IN_IdTeachers,
-			   @IN_IdCourses,
-			   1,
-			   @IN_IdSchedule,
-			   @IN_IdModality,
-			   @IN_startDate,
-			   @IN_endDate,
-			   @IN_notes,
-			   0);
+		-- Update Course_Details
+		UPDATE [dbo].[Courses_Details]
+		SET [IdLocations] = @IN_IdLocation, 
+			[IdTeachers] = @IN_IdTeachers, 
+			[IdCourses] = @IN_IdCourses, 
+			[IdPrograms] = @IN_IdPrograms, 
+			[IdSchedule] = @IN_IdSchedule, 
+			[IdModality] = @IN_IdModality, 
+			[StartDate] = @IN_startDate, 
+			[EndDate] = @IN_endDate, 
+			[Notes] = @IN_notes
+		WHERE Id = @IN_IdCourses_Details
 
-		SET @IdCourses_Details = SCOPE_IDENTITY()
+		--group is edited 
+		IF NOT (@IN_IdGroup IS NULL)
+		BEGIN
+			-- deleted the previos associations
+			UPDATE [dbo].[Courses_Details_Groups] 
+			SET [Deleted] =1
+			WHERE Id = @IN_IdCourses_Details
 
-		INSERT INTO [dbo].[Courses_Details_Groups] ([IdGroups], [IdCourses_Details], [Deleted])
-		VALUES(@IN_IdGroup, @IdCourses_Details, 0)
+			INSERT INTO [dbo].[Courses_Details_Groups] (
+				[IdGroups], 
+				[IdCourses_Details], 
+				[Deleted])
+			VALUES(@IN_IdGroup, 
+				   @IdCourses_Details, 
+				   0)
+		END;
 
-			
-
-        
         -- COMMIT TRANSACTION
         IF @transactionBegun = 1
         BEGIN
