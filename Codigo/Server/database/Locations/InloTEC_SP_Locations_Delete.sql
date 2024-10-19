@@ -31,6 +31,16 @@ BEGIN
             RAISERROR('La localidad indicada no fue encontrada.', 16, 1);
         END;
 
+        -- Check if locations is associated
+        IF EXISTS (SELECT 1
+					   FROM [dbo].[Courses_Details] CD
+					   INNER JOIN Locations L ON L.Id = CD.IdLocations
+					   WHERE L.Id = @IN_IdLocations
+					   AND CD.Deleted = 0)
+    	BEGIN
+		RAISERROR('La localidad esta asociado a un curso y no se puede borrar.', 16, 1);
+	    END;
+
 
         -- TRANSACTION BEGUN
         IF @@TRANCOUNT = 0

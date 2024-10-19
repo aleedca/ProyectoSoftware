@@ -45,6 +45,16 @@ BEGIN
 		RAISERROR('El horario indicado no fue encontrado. Por favor, utilice otro identificador.', 16, 1);
 	END;
 
+	-- Check if schedule is associated
+    IF EXISTS (SELECT 1
+					   FROM [dbo].[Courses_Details] CD
+					   INNER JOIN Schedule S ON S.Id = CD.IdSchedule
+					   WHERE S.Id = @IN_IdSchedule
+					   AND CD.Deleted = 0)
+    	BEGIN
+		RAISERROR('El horario esta asociado a un curso y no se puede borrar.', 16, 1);
+	END;
+
 		--validation of user rol
 
 

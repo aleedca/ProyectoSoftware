@@ -44,6 +44,17 @@ BEGIN
 		RAISERROR('El grupo a borrar no se encontró. Por favor, utilice otro .', 16, 1);
 		END;
 
+		-- Check if group is associated
+        IF EXISTS (SELECT 1
+					   FROM [dbo].[Courses_Details_Groups] CDG
+					   INNER JOIN Groups G ON G.Id = CDG.IdGroups
+					   WHERE G.[Name] = LTRIM(RTRIM(@IN_name))
+					   AND CDG.Deleted = 0)
+    	BEGIN
+		RAISERROR('El grupo esta asociado a un curso y no se puede borrar.', 16, 1);
+	    END;
+
+
 		--validation of user rol
 
 

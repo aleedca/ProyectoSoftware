@@ -44,6 +44,16 @@ BEGIN
 		RAISERROR('El correo electrónico no está registrado. Por favor, utilice otro correo.', 16, 1);
 		END;
 
+		-- Check if teacher is associated
+    	IF EXISTS (SELECT 1
+					   FROM [dbo].[Courses_Details] CD
+					   INNER JOIN Teachers T ON T.Id = CD.IdTeachers
+					   WHERE T.Email = LTRIM(RTRIM(@IN_email))
+					   AND CD.Deleted = 0)
+    	BEGIN
+		RAISERROR('El profesor esta asociado a un curso y no se puede borrar.', 16, 1);
+		END;
+
 
 		--validation of user rol
 

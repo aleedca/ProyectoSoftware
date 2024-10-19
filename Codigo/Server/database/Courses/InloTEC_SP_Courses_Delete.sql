@@ -37,6 +37,16 @@ BEGIN
             RAISERROR('El curso indicado no fue encontrada.', 16, 1);
         END;
 
+        -- Check if course is associated
+        IF EXISTS (SELECT 1
+					   FROM [dbo].[Courses_Details] CD
+					   INNER JOIN Courses C ON C.Id = CD.IdCourses
+					   WHERE C.Id = @IN_IdCourses
+					   AND CD.Deleted = 0)
+    	BEGIN
+		RAISERROR('La materia(curso) esta asociado a un curso y no se puede borrar.', 16, 1);
+	    END;
+
 
         -- TRANSACTION BEGUN
         IF @@TRANCOUNT = 0
