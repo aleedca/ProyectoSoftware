@@ -56,6 +56,7 @@ function Register() {
     })
       .then((response) => {
         console.log('Post creado:', response.data);
+        alert('Usuario creado exitosamente');
         navigate('/login')
         // Puedes actualizar la lista de posts aquí si es necesario
         
