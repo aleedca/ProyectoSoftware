@@ -1,10 +1,10 @@
 const { getConnection } = require('../connection.js');
 const sql = require('mssql');
 
-const getEvents = async (req, res) => {
+const getHolidays = async (req, res) => {
     try {
         const pool = await getConnection();
-        const result = await pool.request().execute('InloTEC_SP_Event_List');
+        const result = await pool.request().execute('InloTEC_SP_Holidays_List');
         res.json(result.recordset);
     } catch (error) {
         const errorMessage = error.message || 'Error desconocido';
@@ -13,20 +13,20 @@ const getEvents = async (req, res) => {
     }
 }
 
-const getEvent = async (req, res) => {
+const getHoliday = async (req, res) => {
     res.send("obteniendo un Event");
 }
 
-const addEvent = async (req, res) => {
+const addHoliday = async (req, res) => {
     res.send("obteniendo un Event");
 };
 
-const editEvent = async (req, res) => {
+const editHoliday = async (req, res) => {
     res.send("editando un  Event");
 }
 
-const deleteEvent = (req, res) => {
+const deleteHoliday = (req, res) => {
     res.send("eliminando un Event");
 }
 
-module.exports = { getEvents, getEvent, addEvent, editEvent, deleteEvent };
+module.exports = { getHolidays, getHoliday, addHoliday, editHoliday, deleteHoliday };
