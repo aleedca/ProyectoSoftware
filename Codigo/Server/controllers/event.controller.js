@@ -1,10 +1,10 @@
 const { getConnection } = require('../connection.js');
 const sql = require('mssql');
 
-const getModalitys = async (req, res) => {
+const getEvents = async (req, res) => {
     try {
         const pool = await getConnection();
-        const result = await pool.request().execute('InloTEC_SP_Modality_List');
+        const result = await pool.request().execute('InloTEC_SP_Event_List');
         res.json(result.recordset);
     } catch (error) {
         const errorMessage = error.message || 'Error desconocido';
@@ -13,20 +13,20 @@ const getModalitys = async (req, res) => {
     }
 }
 
-const getModality = async (req, res) => {
-    res.send("obteniendo un Modality");
+const getEvent = async (req, res) => {
+    res.send("obteniendo un Event");
 }
 
-const addModality = async (req, res) => {
-    res.send("obteniendo un Modality");
+const addEvent = async (req, res) => {
+    res.send("obteniendo un Event");
 };
 
-const editModality = async (req, res) => {
-    res.send("editando un  Modality");
+const editEvent = async (req, res) => {
+    res.send("editando un  Event");
 }
 
-const deleteModality = (req, res) => {
-    res.send("eliminando un Modality");
+const deleteEvent = (req, res) => {
+    res.send("eliminando un Event");
 }
 
-module.exports = { getModalitys, getModality, addModality, editModality, deleteModality };
+module.exports = { getEvents, getEvent, addEvent, editEvent, deleteEvent };

@@ -1,16 +1,16 @@
 const express = require("express");
 const router = express.Router();
 const { getConnection } = require('../connection.js');
-const { getModalitys, getModality, addModality, editModality, deleteModality } = require('../controllers/modality.controller.js')
+const { getEvents, getEvent, addEvent, editEvent, deleteEvent } = require('../controllers/event.controller.js')
 
-router.get('/getModalitys', getModalitys);
+router.get('/getEvents', getEvents);
 
-router.get('/getModality', getModality);
+router.get('/getEvent', getEvent);
 
-router.post('/addModality', addModality);
+router.post('/addEvent', addEvent);
 
-router.put('/editModality', editModality);
+router.put('/editEvent', editEvent);
 
-router.delete('/deleteModality', deleteModality);
+router.delete('/deleteEvent', deleteEvent);
 
 module.exports = router;
