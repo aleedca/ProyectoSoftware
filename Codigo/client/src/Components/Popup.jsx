@@ -1,6 +1,7 @@
 import React, { cloneElement } from 'react';
 import axios from "axios";
 import { useEffect, useState } from "react";
+import { useNavigate } from 'react-router-dom';
 import '../App.css';
 import Dropdown from './Dropdown.jsx';
 import curso from '../Assets/inicio.png';
@@ -22,6 +23,9 @@ function Popup({ type, closePopup, details }) {
     const [selectedDays, setSelectedDays] = useState([]);
     const [detailss, setdetailss] = useState([]);
     const [error, setError] = useState('');
+
+    const navigate = useNavigate();
+    
     const [formData, setFormData] = useState({
         nombreProfesor: '',
         correoProfesor: '',
@@ -1352,7 +1356,7 @@ function Popup({ type, closePopup, details }) {
                                 <button className="close-popup" onClick={closePopup}>X</button>
                                 <h1>Espera!</h1>
                                 <body style={{ textAlign: 'center', fontSize: '15px', margin: '10px' }}>¿Estás seguro que deseas cerrar sesión?</body>
-                                <button className="btn_naranja" onClick={closePopup}>
+                                <button className="btn_naranja" onClick={() => navigate('/login')} >
                                     Cerrar sesión
                                 </button>
                                 <button className="btn_azul" onClick={closePopup}>
