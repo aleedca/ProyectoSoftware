@@ -2,15 +2,16 @@
 //import './FormLogin.css';
 import './App.css'
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Link } from 'react-router-dom';
 import { FaLock, FaEnvelope } from 'react-icons/fa';
 import imagen from './Assets/login.png';
 import { useNavigate } from 'react-router-dom';
+import { UserContext } from './UserContext';
 
 function Login() {
   const navigate = useNavigate();
-
+  const { setFullName } = useContext(UserContext); 
   const [correo, setCorreo] = useState('');
   const [contrasenna, setContrasenna] = useState('');
   const [error, setError] = useState('');
@@ -45,8 +46,9 @@ function Login() {
       .then((response) => {
         //console.log('Usuario autenticado:', response.data);
         //alert('Usuario encontrado');
-        const nombreCompleto = `${response.data[0].Name} ${response.data[0].LastName1} ${response.data[0].LastName2}`;
-        console.log('Nombre completo:', nombreCompleto);
+        const fullName = `${response.data[0].Name} ${response.data[0].LastName1} ${response.data[0].LastName2}`;
+        console.log('Nombre completo:', fullName);
+        setFullName(fullName);
         navigate('/calendar')
 
       })
