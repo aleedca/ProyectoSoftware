@@ -14,7 +14,7 @@ const getHolidays = async (req, res) => {
 }
 
 const getHoliday = async (req, res) => {
-    res.send("obteniendo un Event");
+    res.send("obteniendo un evento");
 }
 
 const addHoliday = async (req, res) => {
@@ -80,8 +80,22 @@ const editHoliday = async (req, res) => {
     }
 }
 
-const deleteHoliday = (req, res) => {
-    res.send("eliminando un Event");
+const deleteHoliday = async (req, res) => {
+    try {
+        const pool = await getConnection();
+        console.log(req.body)
+
+        let result = await pool.request()
+            .input('IN_IdHolidays', sql.BigInt, req.body['idEvento'])
+            .execute('InloTEC_SP_Holidays_Delete');
+
+        console.log(result);
+        res.status(200).send('Evento eliminado')
+    } catch (error) {
+        const errorMessage = error.message || 'Error desconocido';
+        console.error('Error al ejecutar el query:', errorMessage);
+        res.status(500).send(errorMessage);
+    }
 }
 
 module.exports = { getHolidays, getHoliday, addHoliday, editHoliday, deleteHoliday };

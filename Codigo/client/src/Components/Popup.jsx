@@ -275,33 +275,32 @@ function Popup({ type, closePopup }) {
 
     const handleDeleteHoliday = async () => {
         const errors = {
-            nombreHorario: !formData.nombreHorario,
-            idHorario: !formData.idHorario,
-            dias: !formData.dias,
-            horaInicio: !formData.horaInicio,
-            horaFin: !formData.horaFin
+            idEvento: !formData.idEvento,
+            nombreEvento: !formData.nombreEvento,
+            diaInicio: !formData.diaInicio,
+            diaFin: !formData.diaFin
         };
 
         setIsError(errors);
 
         if (Object.values(errors).includes(true)) {
-            setError('Por favor, Seleccione un horario.');
-            console.error('Por favor,  Seleccione un horario.');
-            alert('Por favor,  Seleccione un horario.');
+            setError('Por favor, Seleccione un evento.');
+            console.error('Por favor,  Seleccione un evento.');
+            alert('Por favor,  Seleccione un evento.');
             return false; // Detiene la ejecución si hay errores
         }
 
         try {
-            const response = await axios.delete('http://localhost:3001/deleteSchedule', {
+            const response = await axios.delete('http://localhost:3001/deleteHoliday', {
                 data: {
-                    idHorario: formData.idHorario
+                    idEvento: formData.idEvento
                 }
             });
-            console.log('Horario Eliminado:', response.data);
+            console.log('Evento Eliminado:', response.data);
             closePopup();
-            alert('Horario eliminado correctamente');
+            alert('Evento eliminado correctamente');
         } catch (error) {
-            console.error('Error al eliminar el horario:', error);
+            console.error('Error al eliminar el evento:', error);
         }
     };
 
