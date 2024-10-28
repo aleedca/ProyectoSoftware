@@ -33,8 +33,12 @@ const addSchedule = async (req, res) => {
         const formattedHoraInicio = `${baseDate} ${req.body['horaInicio']}${completar}`;
         const formattedHoraFin = `${baseDate} ${req.body['horaFin']}${completar}`;
 
-        console.log(formattedHoraInicio);
-        console.log(formattedHoraFin);
+        // Convierte las horas a objetos Date y luego a UTC
+        //const formattedHoraInicio = new Date(`${baseDate}T${req.body['horaInicio']}:00.000Z`);
+        //const formattedHoraFin = new Date(`${baseDate}T${req.body['horaFin']}:00.000Z`);
+
+        //console.log('Hora Inicio (UTC):', formattedHoraInicio.toISOString());
+       //console.log('Hora Fin (UTC):', formattedHoraFin.toISOString());
 
         let result = await pool.request()
             .input('IN_name', sql.NVarChar(128), req.body['nombreHorario'])

@@ -47,7 +47,12 @@ function Popup({ type, closePopup }) {
         horaFin: '',
 
         fechaInicio: '',
-        fechaFin: ''
+        fechaFin: '',
+
+        idEvento: 0,
+        nombreEvento: '',
+        diaInicio: '',
+        diaFin: ''
     });
 
     const [isError, setIsError] = useState({
@@ -69,6 +74,22 @@ function Popup({ type, closePopup }) {
         };
 
         fetchProfesores();
+    }, []);
+
+    useEffect(() => {
+        // Función para obtener la lista de profesores
+        const fetchEventos = async () => {
+            try {
+                const response = await axios.get('http://localhost:3001/getHolidays');
+                setEventos(response.data);
+                console.log(response.data)
+                console.log(eventos)
+            } catch (error) {
+                console.error('Error al obtener la lista de eventos:', error);
+            }
+        };
+
+        fetchEventos();
     }, []);
 
     useEffect(() => {
@@ -151,6 +172,142 @@ function Popup({ type, closePopup }) {
 
         fetchSchedules();
     }, []);
+
+    const handleSelectHolidayChange = (e) => {
+        const selectedId = e.target.value;
+        const selectedHoliday = eventos.find(evento => evento.Id === selectedId);
+
+        // Actualiza el estado de formData
+        if (selectedHoliday) {
+
+            console.log(selectedHoliday.StartDatetime);
+            console.log(selectedHoliday.EndDatetime);
+            
+            setFormData(prevFormData => {
+                // Actualiza el formData con los datos del horario seleccionado
+                const updatedFormData = {
+                    ...prevFormData,
+                    nombreEvento: selectedHoliday.Name,
+                    idEvento: selectedHoliday.Id,
+                    diaInicio: selectedHoliday.StartDatetime.split('T')[0], // Extrae la parte de la fecha
+                    diaFin: selectedHoliday.EndDatetime.split('T')[0]
+                };
+
+                // Para mantener el comportamiento similar a los checkboxes, puedes usar un efecto
+                // para actualizar inmediatamente el estado o trabajar con el estado más reciente
+
+                console.log('FormData actualizado:', updatedFormData); // Para verificar los datos actualizados
+
+                return updatedFormData;
+            });
+        } else {
+            // Limpiar el estado si no se selecciona un horario válido
+            setFormData(prevFormData => ({
+                ...prevFormData,
+                nombreEvento: '',
+                idEvento: 0,
+                diaInicio: '',
+                diaFin: ''
+            }));
+        }
+    };
+
+    const handleAddHoliday = async () => {
+        // Convierte los días seleccionados a un string separado por comas
+        const formattedDiaInicio = formatTimeForDatabase(formData.diaInicio);
+        const formattedDiaFin = formatTimeForDatabase(formData.diaFin);
+
+
+        try {
+            const response = await axios.post('http://localhost:3001/addHoliday', {
+                nombreEvento: formData.nombreEvento,
+                diaInicio: formattedDiaInicio,
+                diaFin: formattedDiaFin
+            });
+            console.log('Evento creado:', response.data);
+            closePopup();
+            alert('Evento creado correctamente');
+        } catch (error) {
+            console.error('Error al crear el evento:', error);
+        }
+
+        // Cierra el popup
+        closePopup();
+    };
+
+    
+
+    const handleEditHoliday = async () => {
+        // Convierte los días seleccionados a un string separado por comas
+        const formattedHoraInicio = formatTimeForDatabase(formData.horaInicio);
+        const formattedHoraFin = formatTimeForDatabase(formData.horaFin);
+
+        const errors = {
+            idHorario: !formData.idHorario,
+            nombreHorario: !formData.nombreHorario,
+            dias: !formData.dias,
+            horaInicio: !formData.horaInicio,
+            horaFin: !formData.horaFin
+        };
+
+        setIsError(errors);
+
+        if (Object.values(errors).includes(true)) {
+            setError('Por favor, complete todos los campos correctamente.');
+            console.error('Por favor, complete todos los campos correctamente.');
+            alert('Por favor, complete todos los campos correctamente.');
+            return false; // Detiene la ejecución si hay errores
+        }
+        const horarioConId = profesores.find(horario => horario.id === formData.idHorario);
+        console.log(horarioConId)
+        try {
+            const response = await axios.put('http://localhost:3001/editSchedule', {
+                idHorario: formData.idHorario,
+                nombreHorario: formData.nombreHorario,
+                dias: formData.dias,
+                horaInicio: formattedHoraInicio,
+                horaFin: formattedHoraFin
+
+            });
+            console.log('Horario actualizado:', response.data);
+            closePopup();
+            alert('Horario actualizado correctamente');
+        } catch (error) {
+            console.error('Error al actualizar el horario:', error);
+        }
+    };
+
+    const handleDeleteHoliday = async () => {
+        const errors = {
+            nombreHorario: !formData.nombreHorario,
+            idHorario: !formData.idHorario,
+            dias: !formData.dias,
+            horaInicio: !formData.horaInicio,
+            horaFin: !formData.horaFin
+        };
+
+        setIsError(errors);
+
+        if (Object.values(errors).includes(true)) {
+            setError('Por favor, Seleccione un horario.');
+            console.error('Por favor,  Seleccione un horario.');
+            alert('Por favor,  Seleccione un horario.');
+            return false; // Detiene la ejecución si hay errores
+        }
+
+        try {
+            const response = await axios.delete('http://localhost:3001/deleteSchedule', {
+                data: {
+                    idHorario: formData.idHorario
+                }
+            });
+            console.log('Horario Eliminado:', response.data);
+            closePopup();
+            alert('Horario eliminado correctamente');
+        } catch (error) {
+            console.error('Error al eliminar el horario:', error);
+        }
+    };
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
@@ -1045,29 +1202,29 @@ function Popup({ type, closePopup }) {
                                         <body style={{ textAlign: 'center'}}>Fecha inicio</body>
                                         <input
                                             type='date'
-                                            name='fechaInicio'
+                                            name='diaInicio'
                                             placeholder='Fecha inicio'
                                             onChange={handleInputChange}
-                                            value={formData.fechaInicio}
+                                            value={formData.diaInicio}
                                         />
                                     </div>
                                     <div className='input-contenedor'>
                                         <body style={{ textAlign: 'center'}}>Fecha fin</body>
                                         <input
                                             type='date'
-                                            name='fechaFin'
+                                            name='diaFin'
                                             placeholder='Hora fin'
                                             onChange={handleInputChange}
-                                            value={formData.fechaFin}
+                                            value={formData.diaFin}
                                         />
                                     </div>
                                 </div>
-
+                                
                                 <body>Seleccione el evento a gestionar</body>
                                 <div className='input-contenedor'>
                                     <select
-                                        value={formData.idEvento}
-                                        onChange={handleSelectScheduleChange}
+                                        value={formData.idEvento} // Asegúrate de que el valor esté sincronizado con el estado
+                                        onChange={handleSelectHolidayChange} // Manejador de eventos
                                     >
                                         <option value={0}>Seleccione un evento</option>
                                         {eventos.map(evento => (
@@ -1076,7 +1233,6 @@ function Popup({ type, closePopup }) {
                                             </option>
                                         ))}
                                     </select>
-
                                 </div>
                                 <body>Nombre del evento</body>
                                 <div className='input-contenedor'>
@@ -1089,12 +1245,12 @@ function Popup({ type, closePopup }) {
                                     />
                                 </div>
                                 
-                                {formData.idHorario === 0 || !formData.idHorario ? (
-                                    <button className="btn_naranja" onClick={handleAddHorario}>Agregar horario</button>
+                                {formData.idEvento === 0 || !formData.idEvento ? (
+                                    <button className="btn_naranja" onClick={handleAddHoliday}>Agregar evento</button>
                                 ) : (
                                     <>
-                                        <button className="btn_azul" onClick={handleEditHorario}>Actualizar horario</button>
-                                        <button className="btn_azul" onClick={handleDeleteHorario}>Eliminar horario</button>
+                                        <button className="btn_azul" onClick={handleEditHoliday}>Actualizar evento</button>
+                                        <button className="btn_azul" onClick={handleDeleteHoliday}>Eliminar evento</button>
                                     </>
                                 )}
                             </div>
