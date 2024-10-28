@@ -45,6 +45,8 @@ function Login() {
       .then((response) => {
         //console.log('Usuario autenticado:', response.data);
         //alert('Usuario encontrado');
+        const nombreCompleto = `${response.data[0].Name} ${response.data[0].LastName1} ${response.data[0].LastName2}`;
+        console.log('Nombre completo:', nombreCompleto);
         navigate('/calendar')
 
       })

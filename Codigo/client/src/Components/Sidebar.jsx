@@ -9,6 +9,7 @@ import { useNavigate } from 'react-router-dom';
 function Sidebar({ isOpen, toggleSidebar, openPopup }) {
 
     const navigate = useNavigate();
+    const nombreCompleto = '';
 
     return (
         <div className={`sidebar ${isOpen ? "open" : "closed"}`}  >
@@ -22,9 +23,8 @@ function Sidebar({ isOpen, toggleSidebar, openPopup }) {
                     <div className="row">
                         <div className="col"><FaUser size={40} /></div>
                         <div className="col">
-                            <span style={{color: 'rgba(255, 255, 255, 0.32)'}}>Puesto:Profesor</span>
                             <br/>
-                            <span style={{color: '#FFFFFF'}}>NombreApellido</span>
+                            <span style={{color: '#FFFFFF'}}></span>
                         </div>
                         <div className="col">
                             <button className="toggle-button" onClick={toggleSidebar}>
