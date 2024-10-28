@@ -16,7 +16,7 @@ const getUser = async (req, res) => {
             .execute('InloTEC_SP_Users_Get'); // Nombre del procedimiento almacenado
 
         console.log(result); // Muestra el resultado
-        res.status(200).send('Usuario obtenido');
+        res.status(200).send(result.recordset);
     } catch (error) {
         const errorMessage = error.message || 'Error desconocido';
         console.error('Error al ejecutar el query:', errorMessage);
