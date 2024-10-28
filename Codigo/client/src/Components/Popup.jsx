@@ -398,6 +398,7 @@ function Popup({ type, closePopup, details }) {
 
     const handleSelectGroupChange = (e) => {
         const { key, value } = e.target;
+        console.log("hoolls")
         console.log(e.target)
         if (e.target.value != 0) {
             const grupoConId = grupos.find(grupo => grupo.id === e.target.value);
@@ -421,14 +422,17 @@ function Popup({ type, closePopup, details }) {
 
     const handleSelectCatalogCourseChange = (e) => {
         const { key, value } = e.target;
+        console.log("-----------")
         console.log(e.target)
+        console.log(key)
+        console.log(value)
         if (e.target.value != 0) {
-            const catalogCourseConId = catalogCourses.find(catalog => catalog.Id === e.target.value);
+            const catalogCourseConId = catalogCourses.find(catalog => catalog.Id === e.target.key);
             console.log(catalogCourseConId)
             setFormData((prevFormData) => ({
                 ...prevFormData,
                 ['nombreCatalogCourse']: catalogCourseConId.Name,
-                ['idCatalogCourse']: catalogCourseConId.Id
+                ['idCatalogCourse']: catalogCourseConId.IdCourses
             }));
         } else {
             setFormData((prevFormData) => ({
@@ -960,7 +964,7 @@ function Popup({ type, closePopup, details }) {
                                     <select placeholder='Seleccione el grupo' onChange={handleSelectCatalogCourseChange}>
                                         <option value={0}>Seleccione un curso </option>
                                         {catalogCourses.map((catalog) => (
-                                            <option key={catalog.Id} value={catalog.Id}>
+                                            <option key={catalog.IdCourses} value={catalog.IdCourses}>
                                                 {catalog.Name}
                                             </option>
                                         ))}
