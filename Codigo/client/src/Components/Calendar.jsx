@@ -164,7 +164,7 @@ function Tooltip({ course, closeTooltip }) {
           <body style={{fontSize:'16px', marginTop: '10px'}}><strong>MODALIDAD: </strong>{Modality}</body>
           <body style={{fontSize:'16px', marginTop: '10px'}}><strong>LUGAR: </strong>{Location}</body>
 
-          <h2>INFORMACIÓN HORARIOs</h2>
+          <h2>INFORMACIÓN HORARIOS</h2>
           <body style={{fontSize:'16px'}}><strong>DÍA(S): </strong>{Days}</body>
           <body style={{fontSize:'16px', marginTop: '10px'}}><strong>FECHA INICIO: </strong>{moment(StartDate).format('LL')}</body>
           <body style={{fontSize:'16px', marginTop: '10px'}}><strong>FECHA FINAL: </strong>{moment(EndDate).format('LL')}</body>
