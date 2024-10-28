@@ -266,7 +266,7 @@ function Popup({ type, closePopup, details }) {
 
         try {
             const response = await axios.post('http://localhost:3001/addHoliday', {
-                nombreEvento: formData.nombreEvento,
+                nombreEvento: formData.nombreEvento.trim(),
                 diaInicio: formattedDiaInicio,
                 diaFin: formattedDiaFin
             });
@@ -307,7 +307,7 @@ function Popup({ type, closePopup, details }) {
         try {
             const response = await axios.put('http://localhost:3001/editHoliday', {
                 idEvento: formData.idEvento,
-                nombreEvento: formData.nombreEvento,
+                nombreEvento: formData.nombreEvento.trim(),
                 diaInicio: formattedDiaInicio,
                 diaFin: formattedDiaFin
 
@@ -585,7 +585,7 @@ function Popup({ type, closePopup, details }) {
 
         try {
             const response = await axios.post('http://localhost:3001/addSchedule', {
-                nombreHorario: formData.nombreHorario,
+                nombreHorario: formData.nombreHorario.trim(),
                 dias: formData.dias,
                 horaInicio: formattedHoraInicio,
                 horaFin: formattedHoraFin
@@ -627,7 +627,7 @@ function Popup({ type, closePopup, details }) {
         try {
             const response = await axios.put('http://localhost:3001/editSchedule', {
                 idHorario: formData.idHorario,
-                nombreHorario: formData.nombreHorario,
+                nombreHorario: formData.nombreHorario.trim(),
                 dias: formData.dias,
                 horaInicio: formattedHoraInicio,
                 horaFin: formattedHoraFin
@@ -693,9 +693,9 @@ function Popup({ type, closePopup, details }) {
         try {
 
             const response = await axios.post('http://localhost:3001/addTeacher', {
-                nombre: formData.nombreProfesor,
-                correo: formData.correoProfesor,
-                identificacion: formData.identificacionProfesor
+                nombre: formData.nombreProfesor.trim(),
+                correo: formData.correoProfesor.trim(),
+                identificacion: formData.identificacionProfesor.trim()
             });
             console.log('Profesor creado:', response.data);
             closePopup();
@@ -727,10 +727,10 @@ function Popup({ type, closePopup, details }) {
             const response = await axios.put('http://localhost:3001/editTeacher', {
 
 
-                nombre: formData.nombreProfesor,
-                correo: formData.correoProfesor,
-                correoviejo: profesorConId.email,
-                identificacion: formData.identificacion
+                nombre: formData.nombreProfesor.trim(),
+                correo: formData.correoProfesor.trim(),
+                correoviejo: profesorConId.email.trim(),
+                identificacion: formData.identificacion.trim()
             });
             console.log('Profesor actualizado:', response.data);
             closePopup();
@@ -790,7 +790,7 @@ function Popup({ type, closePopup, details }) {
 
         try {
             const response = await axios.post('http://localhost:3001/addGroup', {
-                nombre: formData.nombreGrupo,
+                nombre: formData.nombreGrupo.trim(),
 
             });
             console.log('Grupo creado:', response.data);
@@ -900,9 +900,9 @@ function Popup({ type, closePopup, details }) {
             const response = await axios.put('http://localhost:3001/editGroup', {
 
 
-                nombrenuevo: formData.nombreGrupo,
+                nombrenuevo: formData.nombreGrupo.trim(),
 
-                nombreviejo: grupoConId.Name,
+                nombreviejo: grupoConId.Name.trim(),
 
             });
             console.log('Grupo actualizado:', response.data);
@@ -932,7 +932,7 @@ function Popup({ type, closePopup, details }) {
         try {
             const response = await axios.delete('http://localhost:3001/deleteGroup', {
                 data: {
-                    nombre: formData.nombreGrupo
+                    nombre: formData.nombreGrupo.trim()
                 }
             });
             console.log('grupo Eliminado:', response.data);
