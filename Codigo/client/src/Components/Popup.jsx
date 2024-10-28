@@ -2,12 +2,14 @@ import React, { cloneElement } from 'react';
 import axios from "axios";
 import { useEffect, useState } from "react";
 import '../App.css';
-import Dropdown from './Dropdown.jsx'; // Asegúrate de importar el componente Dropdown
+import Dropdown from './Dropdown.jsx';
 import curso from '../Assets/inicio.png';
 import profesor from '../Assets/gestionar_profesor.png';
 import fusion from '../Assets/fusionar_cursos.png';
 import grupo from '../Assets/gestionar_grupo.png';
 import cerrar from '../Assets/cerrar.png';
+import imaEvento from '../Assets/eventos.png';
+import imaHorario from '../Assets/horario.png';
 
 function Popup({ type, closePopup }) {
     const [profesores, setProfesores] = useState([]);
@@ -16,6 +18,7 @@ function Popup({ type, closePopup }) {
     const [locaciones, setLocaciones] = useState([]);
     const [modalidades, setModalidades] = useState([]);
     const [horarios, setHorarios] = useState([]);
+    const [eventos, setEventos] = useState([]);
     const [selectedDays, setSelectedDays] = useState([]);
     const [error, setError] = useState('');
     const [formData, setFormData] = useState({
@@ -35,7 +38,7 @@ function Popup({ type, closePopup }) {
 
         nombreModalidad: '',
         idModalidad: 0,
-        
+
 
         nombreHorario: '',
         idHorario: 0,
@@ -289,28 +292,28 @@ function Popup({ type, closePopup }) {
         console.log('Updated formData:', formData);
 
     };
-    
+
     // Función para manejar la selección del horario
     const handleSelectScheduleChange = (e) => {
         const selectedId = e.target.value;
         const selectedSchedule = horarios.find(horario => horario.Id === selectedId);
 
         const dicDias = {
-            'Domingo':0,
+            'Domingo': 0,
             'Lunes': 1,
             'Martes': 2,
-            'Miércoles':3,
-            'Jueves':4,
-            'Viernes':5,
-            'Sabado':6
+            'Miércoles': 3,
+            'Jueves': 4,
+            'Viernes': 5,
+            'Sabado': 6
         }
-        
-    
+
+
         // Actualiza el estado de formData
         if (selectedSchedule) {
             var listadias = []
-            for (var dia in selectedSchedule['Days'].split(",")){
-                
+            for (var dia in selectedSchedule['Days'].split(",")) {
+
                 listadias.push(dicDias[selectedSchedule['Days'].split(",")[dia]].toString())
             }
             console.log(listadias)
@@ -324,12 +327,12 @@ function Popup({ type, closePopup }) {
                     horaInicio: selectedSchedule.StartTime.split('T')[1].split(':')[0] + ':' + selectedSchedule.StartTime.split('T')[1].split(':')[1], // Extrae solo la hora
                     horaFin: selectedSchedule.EndTime.split('T')[1].split(':')[0] + ':' + selectedSchedule.StartTime.split('T')[1].split(':')[1]    // Extrae solo la hora
                 };
-    
+
                 // Para mantener el comportamiento similar a los checkboxes, puedes usar un efecto
                 // para actualizar inmediatamente el estado o trabajar con el estado más reciente
-    
+
                 console.log('FormData actualizado:', updatedFormData); // Para verificar los datos actualizados
-    
+
                 return updatedFormData;
             });
         } else {
@@ -344,33 +347,33 @@ function Popup({ type, closePopup }) {
             }));
         }
     };
-    
-    
+
+
     const handleCheckBoxChange = (e) => {
         const { value } = e.target;
-        
+
         // Calcula la nueva lista de días seleccionados
         const newSelectedDays = e.target.checked
             ? [...selectedDays, value]
             : selectedDays.filter((day) => day !== value);
-    
+
         // Actualiza el estado de selectedDays y formData juntos usando newSelectedDays
         setSelectedDays(newSelectedDays);
-        
+
         // Usa el valor actualizado de newSelectedDays para actualizar formData
         setFormData((prevFormData) => ({
             ...prevFormData,
             dias: newSelectedDays,
         }));
-        
+
         console.log('Updated formData:', {
             ...formData,
             dias: newSelectedDays,
         });
-        
+
     };
-    
-    
+
+
 
     const formatTimeForDatabase = (time) => {
         const [hours, minutes] = time.split(':');
@@ -381,8 +384,8 @@ function Popup({ type, closePopup }) {
         // Convierte los días seleccionados a un string separado por comas
         const formattedHoraInicio = formatTimeForDatabase(formData.horaInicio);
         const formattedHoraFin = formatTimeForDatabase(formData.horaFin);
-    
-       
+
+
         try {
             const response = await axios.post('http://localhost:3001/addSchedule', {
                 nombreHorario: formData.nombreHorario,
@@ -396,7 +399,7 @@ function Popup({ type, closePopup }) {
         } catch (error) {
             console.error('Error al crear el horario:', error);
         }
-    
+
         // Cierra el popup
         closePopup();
     };
@@ -491,7 +494,7 @@ function Popup({ type, closePopup }) {
         }
 
         try {
-            
+
             const response = await axios.post('http://localhost:3001/addTeacher', {
                 nombre: formData.nombreProfesor,
                 correo: formData.correoProfesor,
@@ -603,7 +606,7 @@ function Popup({ type, closePopup }) {
 
     const addCourse = async () => {
         const errors = {
-            
+
         };
 
         setIsError(errors);
@@ -617,16 +620,16 @@ function Popup({ type, closePopup }) {
 
         try {
             const response = await axios.post('http://localhost:3001/addCourse', {
-               
-                
-                idUbicacion:formData.idLocacion,
-                idProfesores:formData.idProfesor,
-                idCursos:formData.idCatalogCourse,
-                idHorario:formData.idHorario,
-                idModalidad:formData.idModalidad,
-                idGrupo:formData.idGrupo,
+
+
+                idUbicacion: formData.idLocacion,
+                idProfesores: formData.idProfesor,
+                idCursos: formData.idCatalogCourse,
+                idHorario: formData.idHorario,
+                idModalidad: formData.idModalidad,
+                idGrupo: formData.idGrupo,
                 fechaInicio: formData.fechaInicio,
-                fechaFinal:formData.fechaFin,
+                fechaFinal: formData.fechaFin,
                 notes: '',
 
             });
@@ -703,7 +706,7 @@ function Popup({ type, closePopup }) {
         }
     };
 
-    
+
 
     const renderContent = () => {
         switch (type) {
@@ -754,7 +757,7 @@ function Popup({ type, closePopup }) {
                                 <div className='fila-juntas'>
                                     <div className='input-contenedor'>
                                         <body style={{ textAlign: 'center', marginTop: '10px' }}>Fecha inicio</body>
-                                        <input type='date' placeholder='Fecha inicio' name='fechaInicio' value={formData.fechaInicio} onChange={handleInputChange}/>
+                                        <input type='date' placeholder='Fecha inicio' name='fechaInicio' value={formData.fechaInicio} onChange={handleInputChange} />
                                     </div>
                                     <div className='input-contenedor'>
                                         <body style={{ textAlign: 'center', marginTop: '10px' }}>Fecha fin</body>
@@ -763,7 +766,7 @@ function Popup({ type, closePopup }) {
                                 </div>
                                 <body>Horario</body>
                                 <div className='input-contenedor'>
-                                <select 
+                                    <select
                                         value={formData.idHorario} // Asegúrate de que el valor esté sincronizado con el estado
                                         onChange={handleSelectScheduleChange} // Manejador de eventos
                                     >
@@ -812,63 +815,63 @@ function Popup({ type, closePopup }) {
             case 'GestionarProfesor':
                 return (
                     <div className='contenedor'>
-                      <div className='contenedor-columnas'>
-                        <div className='columna columna-imagen'>
-                          <img src={profesor} alt="Imagen Gestionar profesor" />
+                        <div className='contenedor-columnas'>
+                            <div className='columna columna-imagen'>
+                                <img src={profesor} alt="Imagen Gestionar profesor" />
+                            </div>
+                            <div className='columna columna-formulario' style={{ width: '400px' }}>
+                                <button className="close-popup" onClick={closePopup}>X</button>
+                                <h1>Gestionar Profesor</h1>
+                                <body>Seleccione el profesor a gestionar</body>
+                                <div className='input-contenedor'>
+                                    <Dropdown type='dropdown'
+                                        options={profesores.map(profesor => profesor.Name)}
+                                        onSelect={handleSelectTeacher}
+                                    />
+                                </div>
+                                <body>Profesor(a)</body>
+                                <div className='input-contenedor'>
+                                    <input
+                                        type='text'
+                                        name='nombreProfesor'
+                                        placeholder='Profesor o profesora'
+                                        value={formData.nombreProfesor}
+                                        onChange={handleInputChange}
+                                    />
+                                </div>
+                                <body>Identificacion</body>
+                                <div className='input-contenedor'>
+                                    <input
+                                        type='text'
+                                        name='identificacionProfesor'
+                                        placeholder='Identificacion'
+                                        value={formData.identificacionProfesor}
+                                        onChange={handleInputChange}
+                                    />
+                                </div>
+                                <body>Correo electrónico</body>
+                                <div className='input-contenedor'>
+                                    <input
+                                        type='text'
+                                        name='correoProfesor'
+                                        placeholder='usuario@dominiotec.com'
+                                        value={formData.correoProfesor}
+                                        onChange={handleInputChange}
+                                    />
+                                </div>
+                                {formData.idProfesor === 0 ? (
+                                    <button className="btn_naranja" onClick={addTeacher}>Agregar profesor</button>
+                                ) : (
+                                    <>
+                                        <button className="btn_azul" onClick={editTeacher}>Actualizar profesor</button>
+                                        <button className="btn_azul" onClick={deleteTeacher}>Eliminar profesor</button>
+                                    </>
+                                )}
+                            </div>
                         </div>
-                        <div className='columna columna-formulario' style={{ width: '400px' }}>
-                          <button className="close-popup" onClick={closePopup}>X</button>
-                          <h1>Gestionar Profesor</h1>
-                          <body>Seleccione el profesor a gestionar</body>
-                          <div className='input-contenedor'>
-                            <Dropdown type='dropdown'
-                              options={profesores.map(profesor => profesor.Name)}
-                              onSelect={handleSelectTeacher}
-                            />
-                          </div>
-                          <body>Profesor(a)</body>
-                          <div className='input-contenedor'>
-                            <input
-                              type='text'
-                              name='nombreProfesor'
-                              placeholder='Profesor o profesora'
-                              value={formData.nombreProfesor}
-                              onChange={handleInputChange}
-                            />
-                          </div>
-                          <body>Identificacion</body>
-                          <div className='input-contenedor'>
-                            <input
-                              type='text'
-                              name='identificacionProfesor'
-                              placeholder='Identificacion'
-                              value={formData.identificacionProfesor}
-                              onChange={handleInputChange}
-                            />
-                          </div>
-                          <body>Correo electrónico</body>
-                          <div className='input-contenedor'>
-                            <input
-                              type='text'
-                              name='correoProfesor'
-                              placeholder='usuario@dominiotec.com'
-                              value={formData.correoProfesor}
-                              onChange={handleInputChange}
-                            />
-                          </div>
-                          {formData.idProfesor === 0 ? (
-                            <button className="btn_naranja" onClick={addTeacher}>Agregar profesor</button>
-                          ) : (
-                            <>
-                              <button className="btn_azul" onClick={editTeacher}>Actualizar profesor</button>
-                              <button className="btn_azul" onClick={deleteTeacher}>Eliminar profesor</button>
-                            </>
-                          )}
-                        </div>
-                      </div>
                     </div>
-                  );
-                
+                );
+
             case 'FusionarCursos':
                 return (
                     <div className='contenedor'>
@@ -939,25 +942,23 @@ function Popup({ type, closePopup }) {
                                         <button className="btn_azul" onClick={editGroup}> Actualizar grupo </button>
                                     </>
                                 )}
-
-
                             </div>
                         </div>
                     </div>
                 );
             case 'GestionarHorarios':
-                    return (
-                        <div className='contenedor'>
-                            <div className='contenedor-columnas'>
-                                <div className='columna columna-imagen'>
-                                    <img src={curso} alt="Imagen Agregar curso" />
-                                </div>
-                                <div className='columna columna-formulario'>
-                                    <button className="close-popup" onClick={closePopup}>X</button>
-                                    <h1>Gestionar Horario</h1>
-                                    <body>Seleccione el horario a gestionar</body>
-                                    <div className='input-contenedor'>
-                                    <select 
+                return (
+                    <div className='contenedor'>
+                        <div className='contenedor-columnas'>
+                            <div className='columna columna-imagen'>
+                                <img src={imaHorario} alt="Imagen Agregar curso" />
+                            </div>
+                            <div className='columna columna-formulario'>
+                                <button className="close-popup" onClick={closePopup}>X</button>
+                                <h1>Gestionar Horario</h1>
+                                <body>Seleccione el horario a gestionar</body>
+                                <div className='input-contenedor'>
+                                    <select
                                         value={formData.idHorario} // Asegúrate de que el valor esté sincronizado con el estado
                                         onChange={handleSelectScheduleChange} // Manejador de eventos
                                     >
@@ -969,66 +970,138 @@ function Popup({ type, closePopup }) {
                                         ))}
                                     </select>
 
-                                    </div>
-                                    <body>Nombre del horario</body>
+                                </div>
+                                <body>Nombre del horario</body>
+                                <div className='input-contenedor'>
+                                    <input
+                                        type='text'
+                                        name='nombreHorario'
+                                        placeholder='Nombre del horario'
+                                        value={formData.nombreHorario}
+                                        onChange={handleInputChange}
+                                    />
+                                </div>
+
+                                <div style={{ textAlign: 'center', margin: '5px' }}>Días de clases</div>
+                                <div className='checkbox-container'>
+
+                                    <label><input type='checkbox' value='1' checked={formData.dias.includes('1')} onChange={handleCheckBoxChange} />Lunes</label>
+                                    <label><input type='checkbox' value='2' checked={formData.dias.includes('2')} onChange={handleCheckBoxChange} />Martes</label>
+                                    <label><input type='checkbox' value='3' checked={formData.dias.includes('3')} onChange={handleCheckBoxChange} />Miércoles</label>
+                                    <label><input type='checkbox' value='4' checked={formData.dias.includes('4')} onChange={handleCheckBoxChange} />Jueves</label>
+                                    <label><input type='checkbox' value='5' checked={formData.dias.includes('5')} onChange={handleCheckBoxChange} />Viernes</label>
+                                    <label><input type='checkbox' value='6' checked={formData.dias.includes('6')} onChange={handleCheckBoxChange} />Sábado</label>
+                                </div>
+
+                                <div className='fila-juntas'>
                                     <div className='input-contenedor'>
-                                        <input 
-                                            type='text' 
-                                            name='nombreHorario' 
-                                            placeholder='Nombre del horario' 
-                                            value={formData.nombreHorario} 
-                                            onChange={handleInputChange} 
+                                        <body style={{ textAlign: 'center', marginTop: '10px' }}>Hora inicio</body>
+                                        <input
+                                            type='time'
+                                            name='horaInicio'
+                                            placeholder='Hora inicio'
+                                            onChange={handleInputChange}
+                                            value={formData.horaInicio}
                                         />
                                     </div>
-                
-                                    <div style={{ textAlign: 'center', margin: '5px' }}>Días de clases</div>
-                                    <div className='checkbox-container'>
-                                    
-                                        <label><input type='checkbox' value='1'  checked={formData.dias.includes('1')} onChange={handleCheckBoxChange} />Lunes</label>
-                                        <label><input type='checkbox' value='2'  checked={formData.dias.includes('2')}  onChange={handleCheckBoxChange} />Martes</label>
-                                        <label><input type='checkbox' value='3'  checked={formData.dias.includes('3')}  onChange={handleCheckBoxChange} />Miércoles</label>
-                                        <label><input type='checkbox' value='4'  checked={formData.dias.includes('4')}  onChange={handleCheckBoxChange} />Jueves</label>
-                                        <label><input type='checkbox' value='5'  checked={formData.dias.includes('5')}  onChange={handleCheckBoxChange} />Viernes</label>
-                                        <label><input type='checkbox' value='6'  checked={formData.dias.includes('6')}  onChange={handleCheckBoxChange} />Sábado</label>
+                                    <div className='input-contenedor'>
+                                        <body style={{ textAlign: 'center', marginTop: '10px' }}>Hora fin</body>
+                                        <input
+                                            type='time'
+                                            name='horaFin'
+                                            placeholder='Hora fin'
+                                            onChange={handleInputChange}
+                                            value={formData.horaFin}
+                                        />
                                     </div>
-                                    
-                                    <div className='fila-juntas'>
-                                        <div className='input-contenedor'>
-                                            <body style={{ textAlign: 'center', marginTop: '10px' }}>Hora inicio</body>
-                                            <input 
-                                                type='time' 
-                                                name='horaInicio' 
-                                                placeholder='Hora inicio' 
-                                                onChange={handleInputChange} 
-                                                value={formData.horaInicio}
-                                            />
-                                        </div>
-                                        <div className='input-contenedor'>
-                                            <body style={{ textAlign: 'center', marginTop: '10px' }}>Hora fin</body>
-                                            <input 
-                                                type='time' 
-                                                name='horaFin' 
-                                                placeholder='Hora fin' 
-                                                onChange={handleInputChange} 
-                                                value={formData.horaFin}
-                                            />
-                                        </div>
-                                    </div>
-                
-                                    {formData.idHorario === 0 || !formData.idHorario ? (
-                                        <button className="btn_naranja" onClick={handleAddHorario}>Agregar horario</button>
-                                    ) : (
-                                        <>
-                                            <button className="btn_azul" onClick={handleEditHorario}>Actualizar horario</button>
-                                            <button className="btn_azul" onClick={handleDeleteHorario}>Eliminar horario</button>
-                                        </>
-                                    )}
                                 </div>
+
+                                {formData.idHorario === 0 || !formData.idHorario ? (
+                                    <button className="btn_naranja" onClick={handleAddHorario}>Agregar horario</button>
+                                ) : (
+                                    <>
+                                        <button className="btn_azul" onClick={handleEditHorario}>Actualizar horario</button>
+                                        <button className="btn_azul" onClick={handleDeleteHorario}>Eliminar horario</button>
+                                    </>
+                                )}
                             </div>
                         </div>
-                    );
+                    </div>
+                );
 
-  
+            case 'GestionarEvento':
+                return (
+                    <div className='contenedor'>
+                        <div className='contenedor-columnas'>
+                            <div className='columna columna-imagen'>
+                                <img src={imaEvento} alt="Imagen Evento" />
+                            </div>
+                            <div className='columna columna-formulario'>
+                                <button className="close-popup" onClick={closePopup}>X</button>
+                                <h1>Gestionar Evento</h1>
+
+                                <div className='fila-juntas'>
+                                    <div className='input-contenedor'>
+                                        <body style={{ textAlign: 'center'}}>Fecha inicio</body>
+                                        <input
+                                            type='date'
+                                            name='fechaInicio'
+                                            placeholder='Fecha inicio'
+                                            onChange={handleInputChange}
+                                            value={formData.fechaInicio}
+                                        />
+                                    </div>
+                                    <div className='input-contenedor'>
+                                        <body style={{ textAlign: 'center'}}>Fecha fin</body>
+                                        <input
+                                            type='date'
+                                            name='fechaFin'
+                                            placeholder='Hora fin'
+                                            onChange={handleInputChange}
+                                            value={formData.fechaFin}
+                                        />
+                                    </div>
+                                </div>
+
+                                <body>Seleccione el evento a gestionar</body>
+                                <div className='input-contenedor'>
+                                    <select
+                                        value={formData.idEvento}
+                                        onChange={handleSelectScheduleChange}
+                                    >
+                                        <option value={0}>Seleccione un evento</option>
+                                        {eventos.map(evento => (
+                                            <option key={evento.Id} value={evento.Id}>
+                                                {evento.Name}
+                                            </option>
+                                        ))}
+                                    </select>
+
+                                </div>
+                                <body>Nombre del evento</body>
+                                <div className='input-contenedor'>
+                                    <input
+                                        type='text'
+                                        name='nombreEvento'
+                                        placeholder='Nombre del evento'
+                                        value={formData.nombreEvento}
+                                        onChange={handleInputChange}
+                                    />
+                                </div>
+                                
+                                {formData.idHorario === 0 || !formData.idHorario ? (
+                                    <button className="btn_naranja" onClick={handleAddHorario}>Agregar horario</button>
+                                ) : (
+                                    <>
+                                        <button className="btn_azul" onClick={handleEditHorario}>Actualizar horario</button>
+                                        <button className="btn_azul" onClick={handleDeleteHorario}>Eliminar horario</button>
+                                    </>
+                                )}
+                            </div>
+                        </div>
+                    </div>
+                );
+
             case 'CerrarSesion':
                 return (
                     <div className='contenedor'>

@@ -1,5 +1,7 @@
 import React from "react";
-import { FaUser, FaEdit, FaPlus, FaChalkboardTeacher, FaObjectGroup, FaLayerGroup, FaSignOutAlt, FaBars } from "react-icons/fa";
+import { FaUser, FaEdit, FaPlus, FaChalkboardTeacher, FaObjectGroup, FaTasks,
+        FaSignOutAlt, FaBars, FaClipboardList, FaCalendarCheck, FaPeopleArrows } from "react-icons/fa";
+import { LuCombine } from "react-icons/lu";
 import '../Styles/Sidebar.css';
 import './Popup.jsx'
 import { useNavigate } from 'react-router-dom';
@@ -41,11 +43,11 @@ function Sidebar({ isOpen, toggleSidebar, openPopup }) {
                     <li style={{backgroundColor: 'transparent'}}>
                         
                         <button className="buttons" style={{alignItems: 'center'}} onClick={() => navigate('/editar')} >
-                            {/*<FaEdit  style={{color:"white"}} size={20} />*/}
+                            {<FaEdit  style={{color:"white"}} size={20} />}
                             {isOpen && <span >Editar Perfil</span>}
                         </button>
                     </li>
-                    <li style={{backgroundColor: 'transparent',height: '48px',marginTop: '70%'}}> 
+                    <li style={{backgroundColor: 'transparent',height: '48px',marginTop: '40%'}}> 
                         <button className="buttons" onClick={() => openPopup('AgregarCurso')}>
                             <FaPlus size={20} />
                             {isOpen && <span>Agregar Curso</span>}
@@ -59,20 +61,26 @@ function Sidebar({ isOpen, toggleSidebar, openPopup }) {
                     </li>
                     <li style={{backgroundColor: 'transparent',height: '48px'}}>
                         <button className="buttons" onClick={() => openPopup('FusionarCursos')}>
-                            <FaObjectGroup size={20} />
+                            <LuCombine  size={20} />
                             {isOpen && <span>Fusionar Cursos</span>}
                         </button>
                     </li>
                     <li style={{backgroundColor: 'transparent',height: '48px'}}>
                         <button className="buttons" onClick={() => openPopup('GestionarGrupo')}>
-                            <FaLayerGroup size={20} />
+                            <FaPeopleArrows  size={20} />
                             {isOpen && <span>Gestionar Grupo</span>}
                         </button>
                     </li>
                     <li style={{backgroundColor: 'transparent',height: '48px'}}>
                         <button className="buttons" onClick={() => openPopup('GestionarHorarios')}>
-                            <FaLayerGroup size={20} />
+                            <FaTasks   size={20} />
                             {isOpen && <span>Gestionar Horarios</span>}
+                        </button>
+                    </li>
+                    <li style={{backgroundColor: 'transparent',height: '48px'}}>
+                        <button className="buttons" onClick={() => openPopup('GestionarEvento')}>
+                            <FaCalendarCheck  size={20} />
+                            {isOpen && <span>Gestionar Evento</span>}
                         </button>
                     </li>
                     <li style={{backgroundColor: 'transparent',height: '48px'}}>
