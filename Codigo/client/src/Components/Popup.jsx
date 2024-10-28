@@ -213,7 +213,6 @@ function Popup({ type, closePopup }) {
     };
 
     const handleAddHoliday = async () => {
-        // Convierte los días seleccionados a un string separado por comas
         const formattedDiaInicio = formatTimeForDatabase(formData.diaInicio);
         const formattedDiaFin = formatTimeForDatabase(formData.diaFin);
 
@@ -238,16 +237,14 @@ function Popup({ type, closePopup }) {
     
 
     const handleEditHoliday = async () => {
-        // Convierte los días seleccionados a un string separado por comas
-        const formattedHoraInicio = formatTimeForDatabase(formData.horaInicio);
-        const formattedHoraFin = formatTimeForDatabase(formData.horaFin);
+        const formattedDiaInicio = formatTimeForDatabase(formData.diaInicio);
+        const formattedDiaFin = formatTimeForDatabase(formData.diaFin);
 
         const errors = {
-            idHorario: !formData.idHorario,
-            nombreHorario: !formData.nombreHorario,
-            dias: !formData.dias,
-            horaInicio: !formData.horaInicio,
-            horaFin: !formData.horaFin
+            idEvento: !formData.idEvento,
+            nombreEvento: !formData.nombreEvento,
+            diaInicio: !formData.diaInicio,
+            diaFin: !formData.diaFin
         };
 
         setIsError(errors);
@@ -261,19 +258,18 @@ function Popup({ type, closePopup }) {
         const horarioConId = profesores.find(horario => horario.id === formData.idHorario);
         console.log(horarioConId)
         try {
-            const response = await axios.put('http://localhost:3001/editSchedule', {
-                idHorario: formData.idHorario,
-                nombreHorario: formData.nombreHorario,
-                dias: formData.dias,
-                horaInicio: formattedHoraInicio,
-                horaFin: formattedHoraFin
+            const response = await axios.put('http://localhost:3001/editHoliday', {
+                idEvento: formData.idEvento,
+                nombreEvento: formData.nombreEvento,
+                diaInicio: formattedDiaInicio,
+                diaFin: formattedDiaFin
 
             });
-            console.log('Horario actualizado:', response.data);
+            console.log('Evento actualizado:', response.data);
             closePopup();
-            alert('Horario actualizado correctamente');
+            alert('Evento actualizado correctamente');
         } catch (error) {
-            console.error('Error al actualizar el horario:', error);
+            console.error('Error al actualizar el evento:', error);
         }
     };
 
