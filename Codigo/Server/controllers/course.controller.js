@@ -18,28 +18,28 @@ const getCoursesCalendar = async (req, res) => {
         const pool = await getConnection();
         const result1 = await pool.request().execute('InloTEC_SP_Courses_Details_List');
 
-        
-        
+
+
 
         let result = [];
 
         for (const resultBD of result1.recordset) {
-            
-        
+
+
 
             let currentDate = new Date(resultBD['StartDate']);
 
             dicDias = {
-                'Domingo':0,
+                'Domingo': 0,
                 'Lunes': 1,
                 'Martes': 2,
-                'Miércoles':3,
-                'Jueves':4,
-                'Viernes':5,
-                'Sabado':6
+                'Miércoles': 3,
+                'Jueves': 4,
+                'Viernes': 5,
+                'Sabado': 6
             }
             var listadias = []
-            for (dia in resultBD['Days'].split(",")){
+            for (dia in resultBD['Days'].split(",")) {
                 console.log(resultBD['Days'][dia])
                 listadias.push(dicDias[resultBD['Days'].split(",")[dia]])
             }
@@ -56,9 +56,9 @@ const getCoursesCalendar = async (req, res) => {
                     console.log('dsd')
                     console.log(dayOfWeek)
                     console.log(listadias)
-                    let StartTime = new Date(resultBD['StartTime']); 
-                    let EndTime = new Date(resultBD['EndTime']); 
-                    let date1 = new Date(currentDate); 
+                    let StartTime = new Date(resultBD['StartTime']);
+                    let EndTime = new Date(resultBD['EndTime']);
+                    let date1 = new Date(currentDate);
                     let date2 = new Date(currentDate);
 
                     date1.setHours(StartTime.getHours());
@@ -75,17 +75,17 @@ const getCoursesCalendar = async (req, res) => {
                         title: resultBD['Course'],
                         start: date1,
                         end: date2,
-                        color: '#'+resultBD['Color'],
-                      });
+                        color: '#' + resultBD['Color'],
+                    });
                 }
 
                 // Avanzar al siguiente día
                 currentDate.setDate(currentDate.getDate() + 1);
             }
         }
-            
 
-    
+
+
 
         res.json(result);
     } catch (error) {
@@ -105,7 +105,7 @@ const addCourse = async (req, res) => {
         console.log(req.body);
 
         let result = await pool.request()
-            
+
             .input('IN_IdLocation', sql.BigInt, req.body['idUbicacion'])
             .input('IN_IdTeachers', sql.BigInt, req.body['idProfesores'])
             .input('IN_IdCourses', sql.BigInt, req.body['idCursos'])
@@ -134,4 +134,25 @@ const deleteCourse = (req, res) => {
     res.send("eliminando un curso");
 }
 
-module.exports = { getCourses, getCourse, addCourse, editCourse, deleteCourse,getCoursesCalendar };
+const fusionCourses = async (req, res) => {
+    try {
+        const pool = await getConnection();
+        console.log(req.body);
+
+        let result = await pool.request()
+
+            .input('IN_IdCourses', sql.BigInt, req.body['idCurso1'])
+            .input('IN_IdCourses2', sql.BigInt, req.body['idCurso2'])
+            .input('IN_optionToDelete', sql.Bit, req.body['opcion'])
+            .execute('InloTEC_SP_Courses_Details_Fusion'); // Nombre del procedimiento almacenado
+
+        console.log(result); // Muestra el resultado
+        res.status(200).send('Fusion realizada');
+    } catch (error) {
+        const errorMessage = error.message || 'Error desconocido';
+        console.error('Error al ejecutar el query:', errorMessage);
+        res.status(500).send(errorMessage);
+    }
+}
+
+module.exports = { getCourses, getCourse, addCourse, editCourse, deleteCourse, getCoursesCalendar, fusionCourses };

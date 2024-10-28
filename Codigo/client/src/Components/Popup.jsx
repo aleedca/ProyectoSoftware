@@ -20,6 +20,7 @@ function Popup({ type, closePopup }) {
     const [horarios, setHorarios] = useState([]);
     const [eventos, setEventos] = useState([]);
     const [selectedDays, setSelectedDays] = useState([]);
+    const [detailsCourses, setDetailsCourses] = useState([]);
     const [error, setError] = useState('');
     const [formData, setFormData] = useState({
         nombreProfesor: '',
@@ -39,7 +40,6 @@ function Popup({ type, closePopup }) {
         nombreModalidad: '',
         idModalidad: 0,
 
-
         nombreHorario: '',
         idHorario: 0,
         dias: '',
@@ -52,13 +52,33 @@ function Popup({ type, closePopup }) {
         idEvento: 0,
         nombreEvento: '',
         diaInicio: '',
-        diaFin: ''
+        diaFin: '',
+
+        idCurso1: 0,
+        idCurso2: 0,
+        fusionarCursos: false
     });
 
     const [isError, setIsError] = useState({
         nombreProfesor: false,
         correoProfesor: false
     });
+
+    useEffect(() => {
+        // Función para obtener la lista de los detalles de los cursos
+        const fetchDetailsCourses = async () => {
+            try {
+                const response = await axios.get('http://localhost:3001/getCourses');
+                setDetailsCourses(response.data);
+                console.log(response.data)
+                console.log(detailsCourses)
+            } catch (error) {
+                console.error('Error al obtener la lista de detalles de los cursos:', error);
+            }
+        };
+
+        fetchDetailsCourses();
+    }, []);
 
     useEffect(() => {
         // Función para obtener la lista de profesores
@@ -173,6 +193,29 @@ function Popup({ type, closePopup }) {
         fetchSchedules();
     }, []);
 
+    const handleCheckboxChange = (event) => {
+        const isChecked = event.target.checked;
+        setFormData(prevState => ({
+            ...prevState,
+            fusionarCursos: isChecked
+        }));
+    };
+
+    const handleSelectCourseChange = (event, courseNumber) => {
+        const selectedValue = parseInt(event.target.value, 10);
+        if (courseNumber === 1) {
+            setFormData(prevState => ({
+                ...prevState,
+                idCurso1: selectedValue
+            }));
+        } else if (courseNumber === 2) {
+            setFormData(prevState => ({
+                ...prevState,
+                idCurso2: selectedValue
+            }));
+        }
+    };
+
     const handleSelectHolidayChange = (e) => {
         const selectedId = e.target.value;
         const selectedHoliday = eventos.find(evento => evento.Id === selectedId);
@@ -182,7 +225,7 @@ function Popup({ type, closePopup }) {
 
             console.log(selectedHoliday.StartDatetime);
             console.log(selectedHoliday.EndDatetime);
-            
+
             setFormData(prevFormData => {
                 // Actualiza el formData con los datos del horario seleccionado
                 const updatedFormData = {
@@ -234,7 +277,7 @@ function Popup({ type, closePopup }) {
         closePopup();
     };
 
-    
+
 
     const handleEditHoliday = async () => {
         const formattedDiaInicio = formatTimeForDatabase(formData.diaInicio);
@@ -793,6 +836,46 @@ function Popup({ type, closePopup }) {
         }
     };
 
+    const handleFusionCourses = async () => {
+        const errors = {
+            idCurso1: formData.idCurso1 === 0, // Verifica si idCurso1 es 0
+            idCurso2: formData.idCurso2 === 0, // Verifica si idCurso2 es 0
+            sameCourses: formData.idCurso1 === formData.idCurso2 // Verifica si los cursos son iguales
+        };
+
+        setIsError(errors);
+
+        if (Object.values(errors).includes(true)) {
+            let errorMessage;
+            if (errors.idCurso1 && errors.idCurso2) {
+                errorMessage = 'Por favor, complete todos los campos correctamente.';
+            } else if (errors.sameCourses) {
+                errorMessage = 'Los cursos seleccionados no pueden ser iguales.';
+            } else {
+                errorMessage = 'Debe seleccionar ambos cursos.';
+            }
+            setError(errorMessage);
+            console.error(errorMessage);
+            alert(errorMessage);
+
+            return false; // Detiene la ejecución si hay errores
+        }
+
+        try {
+            const response = await axios.get('http://localhost:3001/fusionCourses', {
+                data: {
+                    idCurso1: formData.idCurso1,
+                    idCurso2: formData.idCurso2,
+                    opcion: formData.fusionarCursos ? 1 : 0
+                }
+            });
+            console.log('Cursos fusionados:', response.data);
+            closePopup();
+            alert('Cursos fusionados correctamente');
+        } catch (error) {
+            console.error('Error al fusionar los cursos:', error);
+        }
+    };
 
     const editGroup = async () => {
         const errors = {
@@ -857,8 +940,6 @@ function Popup({ type, closePopup }) {
             console.error('Error al eliminar el grupo:', error);
         }
     };
-
-
 
     const renderContent = () => {
         switch (type) {
@@ -1034,26 +1115,33 @@ function Popup({ type, closePopup }) {
                             <div className='columna columna-formulario' style={{ width: '400px' }}>
                                 <button className="close-popup" onClick={closePopup}>X</button>
                                 <h1>Fusionar Cursos</h1>
-                                <body>Seleccione el curso a fusionar</body>
+                                <body>Seleccione el primer curso</body>
                                 <div className='input-contenedor'>
-                                    <input type='select' placeholder='Seleccione curso' />
+                                    <select onChange={(e) => handleSelectCourseChange(e, 1)}>
+                                        <option value={0}>Seleccione un curso</option>
+                                        {detailsCourses.map((curso) => (
+                                            <option key={curso.Id} value={curso.Id}>
+                                                {'ID' + curso.Id + ' ' + curso.Course + ' - ' + curso.Location}
+                                            </option>
+                                        ))}
+                                    </select>
                                 </div>
-                                <body>Sede del curso</body>
+                                <body>Seleccione el segundo curso</body>
                                 <div className='input-contenedor'>
-                                    <input type='select' placeholder='Seleccione Sede' />
+                                    <select onChange={(e) => handleSelectCourseChange(e, 2)}>
+                                        <option value={0}>Seleccione un curso</option>
+                                        {detailsCourses.map((curso) => (
+                                            <option key={curso.Id} value={curso.Id}>
+                                                {'ID' + curso.Id + ' ' + curso.Course + ' - ' + curso.Location}
+                                            </option>
+                                        ))}
+                                    </select>
                                 </div>
-                                <body>Grupos a fusionar</body>
-                                <div className='fila-juntas'>
-                                    <div className='input-contenedor'>
-                                        <body style={{ textAlign: 'center', marginTop: '10px' }}>Grupo 1</body>
-                                        <input type='select' placeholder='Seleccione 1er grupo' />
-                                    </div>
-                                    <div className='input-contenedor'>
-                                        <body style={{ textAlign: 'center', marginTop: '10px' }}>Grupo 2</body>
-                                        <input type='select' placeholder='Seleccione 2do grupo' />
-                                    </div>
+
+                                <div className='checkbox-container'>
+                                    <label><input className='' type='checkbox' onChange={handleCheckboxChange}></input> Quiero que el primer curso se fusione con el segundo curso</label>
                                 </div>
-                                <button className="btn_naranja" onClick={closePopup}> Fusionar cursos </button>
+                                <button className="btn_naranja" onClick={handleFusionCourses}> Fusionar cursos </button>
                             </div>
                         </div>
                     </div>
@@ -1194,7 +1282,7 @@ function Popup({ type, closePopup }) {
 
                                 <div className='fila-juntas'>
                                     <div className='input-contenedor'>
-                                        <body style={{ textAlign: 'center'}}>Fecha inicio</body>
+                                        <body style={{ textAlign: 'center' }}>Fecha inicio</body>
                                         <input
                                             type='date'
                                             name='diaInicio'
@@ -1204,7 +1292,7 @@ function Popup({ type, closePopup }) {
                                         />
                                     </div>
                                     <div className='input-contenedor'>
-                                        <body style={{ textAlign: 'center'}}>Fecha fin</body>
+                                        <body style={{ textAlign: 'center' }}>Fecha fin</body>
                                         <input
                                             type='date'
                                             name='diaFin'
@@ -1214,7 +1302,7 @@ function Popup({ type, closePopup }) {
                                         />
                                     </div>
                                 </div>
-                                
+
                                 <body>Seleccione el evento a gestionar</body>
                                 <div className='input-contenedor'>
                                     <select
@@ -1239,7 +1327,7 @@ function Popup({ type, closePopup }) {
                                         onChange={handleInputChange}
                                     />
                                 </div>
-                                
+
                                 {formData.idEvento === 0 || !formData.idEvento ? (
                                     <button className="btn_naranja" onClick={handleAddHoliday}>Agregar evento</button>
                                 ) : (
