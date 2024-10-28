@@ -11,7 +11,7 @@ import cerrar from '../Assets/cerrar.png';
 import imaEvento from '../Assets/eventos.png';
 import imaHorario from '../Assets/horario.png';
 
-function Popup({ type, closePopup }) {
+function Popup({ type, closePopup, details }) {
     const [profesores, setProfesores] = useState([]);
     const [grupos, setGrupos] = useState([]);
     const [catalogCourses, setCatalogCourses] = useState([]);
@@ -20,7 +20,7 @@ function Popup({ type, closePopup }) {
     const [horarios, setHorarios] = useState([]);
     const [eventos, setEventos] = useState([]);
     const [selectedDays, setSelectedDays] = useState([]);
-    const [detailsCourses, setDetailsCourses] = useState([]);
+    const [detailss, setdetailss] = useState([]);
     const [error, setError] = useState('');
     const [formData, setFormData] = useState({
         nombreProfesor: '',
@@ -66,18 +66,18 @@ function Popup({ type, closePopup }) {
 
     useEffect(() => {
         // Función para obtener la lista de los detalles de los cursos
-        const fetchDetailsCourses = async () => {
+        const fetchdetailss = async () => {
             try {
                 const response = await axios.get('http://localhost:3001/getCourses');
-                setDetailsCourses(response.data);
+                setdetailss(response.data);
                 console.log(response.data)
-                console.log(detailsCourses)
+                console.log(detailss)
             } catch (error) {
                 console.error('Error al obtener la lista de detalles de los cursos:', error);
             }
         };
 
-        fetchDetailsCourses();
+        fetchdetailss();
     }, []);
 
     useEffect(() => {
@@ -568,8 +568,6 @@ function Popup({ type, closePopup }) {
 
     };
 
-
-
     const formatTimeForDatabase = (time) => {
         const [hours, minutes] = time.split(':');
         return `${hours}:${minutes}:00`;
@@ -1045,6 +1043,7 @@ function Popup({ type, closePopup }) {
                         </div>
                     </div>
                 );
+                
             case 'GestionarProfesor':
                 return (
                     <div className='contenedor'>
@@ -1119,7 +1118,7 @@ function Popup({ type, closePopup }) {
                                 <div className='input-contenedor'>
                                     <select onChange={(e) => handleSelectCourseChange(e, 1)}>
                                         <option value={0}>Seleccione un curso</option>
-                                        {detailsCourses.map((curso) => (
+                                        {detailss.map((curso) => (
                                             <option key={curso.Id} value={curso.Id}>
                                                 {'ID' + curso.Id + ' ' + curso.Course + ' - ' + curso.Location}
                                             </option>
@@ -1130,7 +1129,7 @@ function Popup({ type, closePopup }) {
                                 <div className='input-contenedor'>
                                     <select onChange={(e) => handleSelectCourseChange(e, 2)}>
                                         <option value={0}>Seleccione un curso</option>
-                                        {detailsCourses.map((curso) => (
+                                        {detailss.map((curso) => (
                                             <option key={curso.Id} value={curso.Id}>
                                                 {'ID' + curso.Id + ' ' + curso.Course + ' - ' + curso.Location}
                                             </option>
@@ -1146,6 +1145,7 @@ function Popup({ type, closePopup }) {
                         </div>
                     </div>
                 );
+                
             case 'GestionarGrupo':
                 return (
                     <div className='contenedor'>
@@ -1289,57 +1289,57 @@ function Popup({ type, closePopup }) {
                                             placeholder='Fecha inicio'
                                             onChange={handleInputChange}
                                             value={formData.diaInicio}
-                                        />
-                                    </div>
-                                    <div className='input-contenedor'>
-                                        <body style={{ textAlign: 'center' }}>Fecha fin</body>
-                                        <input
-                                            type='date'
-                                            name='diaFin'
-                                            placeholder='Hora fin'
-                                            onChange={handleInputChange}
-                                            value={formData.diaFin}
-                                        />
-                                    </div>
-                                </div>
-
-                                <body>Seleccione el evento a gestionar</body>
-                                <div className='input-contenedor'>
-                                    <select
-                                        value={formData.idEvento} // Asegúrate de que el valor esté sincronizado con el estado
-                                        onChange={handleSelectHolidayChange} // Manejador de eventos
-                                    >
-                                        <option value={0}>Seleccione un evento</option>
-                                        {eventos.map(evento => (
-                                            <option key={evento.Id} value={evento.Id}>
-                                                {evento.Name}
-                                            </option>
-                                        ))}
-                                    </select>
-                                </div>
-                                <body>Nombre del evento</body>
-                                <div className='input-contenedor'>
-                                    <input
-                                        type='text'
-                                        name='nombreEvento'
-                                        placeholder='Nombre del evento'
-                                        value={formData.nombreEvento}
-                                        onChange={handleInputChange}
                                     />
                                 </div>
-
-                                {formData.idEvento === 0 || !formData.idEvento ? (
-                                    <button className="btn_naranja" onClick={handleAddHoliday}>Agregar evento</button>
-                                ) : (
-                                    <>
-                                        <button className="btn_azul" onClick={handleEditHoliday}>Actualizar evento</button>
-                                        <button className="btn_azul" onClick={handleDeleteHoliday}>Eliminar evento</button>
-                                    </>
-                                )}
+                                <div className='input-contenedor'>
+                                    <body style={{ textAlign: 'center' }}>Fecha fin</body>
+                                    <input
+                                        type='date'
+                                        name='diaFin'
+                                        placeholder='Hora fin'
+                                        onChange={handleInputChange}
+                                        value={formData.diaFin}
+                                    />
+                                </div>
                             </div>
+
+                            <body>Seleccione el evento a gestionar</body>
+                            <div className='input-contenedor'>
+                                <select
+                                    value={formData.idEvento} // Asegúrate de que el valor esté sincronizado con el estado
+                                    onChange={handleSelectHolidayChange} // Manejador de eventos
+                                >
+                                    <option value={0}>Seleccione un evento</option>
+                                    {eventos.map(evento => (
+                                        <option key={evento.Id} value={evento.Id}>
+                                            {evento.Name}
+                                        </option>
+                                    ))}
+                                </select>
+                            </div>
+                            <body>Nombre del evento</body>
+                            <div className='input-contenedor'>
+                                <input
+                                    type='text'
+                                    name='nombreEvento'
+                                    placeholder='Nombre del evento'
+                                    value={formData.nombreEvento}
+                                    onChange={handleInputChange}
+                                />
+                            </div>
+
+                            {formData.idEvento === 0 || !formData.idEvento ? (
+                                <button className="btn_naranja" onClick={handleAddHoliday}>Agregar evento</button>
+                            ) : (
+                                <>
+                                    <button className="btn_azul" onClick={handleEditHoliday}>Actualizar evento</button>
+                                    <button className="btn_azul" onClick={handleDeleteHoliday}>Eliminar evento</button>
+                                </>
+                            )}
                         </div>
                     </div>
-                );
+                </div>
+            );
 
             case 'CerrarSesion':
                 return (
