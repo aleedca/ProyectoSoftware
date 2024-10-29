@@ -21,6 +21,8 @@ BEGIN
 
 	-- VARIABLE DECLARATION
 	DECLARE @Rolname NVARCHAR(64) = 'Admin';
+	DECLARE @message1 NVARCHAR(64);
+	DECLARE @message2 NVARCHAR(64);
 
 	BEGIN TRY
         -- VALIDATIONS
@@ -34,13 +36,16 @@ BEGIN
 		RAISERROR('Todos los campos son obligatorios. Por favor, complete la informaci�n.', 16, 1);
 	END;
 
+	--ADD WHEN USING IN WEB AND COMMENT WHEN LOCALHOST
 	SELECT @IN_startTime = CAST(DATEADD(HOUR, -6, CAST(@IN_startTime AS DATETIME)) AS TIME)
 	SELECT @IN_endTime = CAST(DATEADD(HOUR, -6, CAST(@IN_endTime AS DATETIME)) AS TIME)
 
 		IF NOT EXISTS (SELECT 1
 					   WHERE @IN_startTime < @IN_endTime)
     	BEGIN
-		RAISERROR('La hora final esta antes que la hora inicial.', 16, 1);
+		SELECT @message1 = CAST(@IN_endTime AS NVARCHAR(8))
+		SELECT @message2 = CAST(@IN_startTime AS NVARCHAR(8))
+		RAISERROR('La hora final (%s) esta antes que la hora inicial (%s).', 16, 1, @message1, @message2);
 	END;
 
 	--
