@@ -206,6 +206,7 @@ function Popup({ type, closePopup, details }) {
     };
 
     const handleSelectCourseChange = (event, courseNumber) => {
+        console.log(event.target.value)
         const selectedValue = parseInt(event.target.value, 10);
         if (courseNumber === 1) {
             setFormData(prevState => ({
@@ -424,10 +425,16 @@ function Popup({ type, closePopup, details }) {
         const { key, value } = e.target;
         console.log("-----------")
         console.log(e.target)
-        console.log(key)
-        console.log(value)
+        console.log("key = "+key)
+        console.log("value = "+value)
         if (e.target.value != 0) {
-            const catalogCourseConId = catalogCourses.find(catalog => catalog.Id === e.target.key);
+            console.log(typeof value)
+            console.log(typeof catalogCourses[4]['IdCourses'])
+            console.log( value)
+            console.log( catalogCourses[4]['IdCourses'])
+            console.log(value === catalogCourses[4]['IdCourses'])
+            console.log(catalogCourses)
+            const catalogCourseConId = catalogCourses.find(catalog => catalog.IdCourses === e.target.value);
             console.log(catalogCourseConId)
             setFormData((prevFormData) => ({
                 ...prevFormData,
@@ -843,6 +850,7 @@ function Popup({ type, closePopup, details }) {
     };
 
     const handleFusionCourses = async () => {
+        console.log(formData)
         const errors = {
             idCurso1: formData.idCurso1 === 0, // Verifica si idCurso1 es 0
             idCurso2: formData.idCurso2 === 0, // Verifica si idCurso2 es 0
@@ -868,7 +876,7 @@ function Popup({ type, closePopup, details }) {
         }
 
         try {
-            const response = await axios.get('http://localhost:3001/fusionCourses', {
+            const response = await axios.post('http://localhost:3001/fusionCourses', {
                 data: {
                     idCurso1: formData.idCurso1,
                     idCurso2: formData.idCurso2,
@@ -1146,7 +1154,7 @@ function Popup({ type, closePopup, details }) {
                                 </div>
 
                                 <div className='checkbox-container'>
-                                    <label><input className='' type='checkbox' onChange={handleCheckboxChange}></input> Quiero que el primer curso se fusione con el segundo curso</label>
+                                    <label><input className='' type='checkbox' onChange={handleCheckboxChange}></input> Deseo conservar el primer curso</label>
                                 </div>
                                 <button className="btn_naranja" onClick={handleFusionCourses}> Fusionar cursos </button>
                             </div>
