@@ -21,7 +21,7 @@ function Popup({ type, closePopup, details }) {
     const [horarios, setHorarios] = useState([]);
     const [eventos, setEventos] = useState([]);
     const [selectedDays, setSelectedDays] = useState([]);
-    const [details, setDetails] = useState([]);
+    const [courses, setCourses] = useState([]);
     const [error, setError] = useState('');
 
     const navigate = useNavigate();
@@ -70,16 +70,16 @@ function Popup({ type, closePopup, details }) {
 
     useEffect(() => {
         // Función para obtener la lista de los detalles de los cursos
-        const fetchdetails = async () => {
+        const fetchCourses = async () => {
             try {
                 const response = await axios.get('http://localhost:3001/getCourses');
-                setDetails(response.data);
+                setCourses(response.data);
             } catch (error) {
                 console.error('Error al obtener la lista de detalles de los cursos:', error);
             }
         };
 
-        fetchdetails();
+        fetchCourses();
     }, []);
 
     useEffect(() => {
@@ -1078,7 +1078,7 @@ function Popup({ type, closePopup, details }) {
                                 <div className='input-contenedor'>
                                     <select onChange={(e) => handleSelectCourseChange(e, 1)}>
                                         <option value={0}>Seleccione un curso</option>
-                                        {details.map((curso) => (
+                                        {courses.map((curso) => (
                                             <option key={curso.Id} value={curso.Id}>
                                                 {'ID' + curso.Id + ' ' + curso.Course + ' - ' + curso.Location}
                                             </option>
@@ -1089,7 +1089,7 @@ function Popup({ type, closePopup, details }) {
                                 <div className='input-contenedor'>
                                     <select onChange={(e) => handleSelectCourseChange(e, 2)}>
                                         <option value={0}>Seleccione un curso</option>
-                                        {details.map((curso) => (
+                                        {courses.map((curso) => (
                                             <option key={curso.Id} value={curso.Id}>
                                                 {'ID' + curso.Id + ' ' + curso.Course + ' - ' + curso.Location}
                                             </option>
