@@ -1,12 +1,14 @@
 
 //import './FormLogin.css';
 import './App.css'
-import { useEffect, useState } from "react";
+import { useEffect, useState ,useContext }from "react";
 import { Link } from 'react-router-dom';
 import { FaLock, FaEnvelope, FaUser, FaIdCard, FaUnlock} from 'react-icons/fa';
 import imagen from './Assets/changepassword.png';
+import { UserContext } from './UserContext'; // Asegúrate de importar UserContext
 
 function CrearNuevaContrasena() {
+  const { link } = useContext(UserContext); 
   const [correo, setCorreo] = useState('');
   const [codigo, setCodigo] = useState('');
   const [contrasenna, setContrasenna] = useState('');

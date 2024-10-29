@@ -1,17 +1,18 @@
 
 //import './FormLogin.css';
 import './App.css'
-import { useEffect, useState } from "react";
+import { useEffect, useState ,  useContext } from "react";
 import { Link } from 'react-router-dom';
 import { FaLock, FaEnvelope, FaUser, FaIdCard, FaUnlock} from 'react-icons/fa';
 import imagen from './Assets/changepassword.png';
 import { useNavigate } from 'react-router-dom';
+import { UserContext } from './UserContext'; // Asegúrate de importar UserContext
 
 function RecuperarContrasena() {
   const [correo, setCorreo] = useState('');
   const navigate = useNavigate();
 
-  
+  const { link } = useContext(UserContext); 
 
   return (
     <div className='fondo-cambiarContraseña'>

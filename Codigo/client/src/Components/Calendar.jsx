@@ -1,6 +1,6 @@
 // Calendar.jsx
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect ,useContext } from 'react';
 import Sidebar from './Sidebar';
 import Popup from './Popup';
 import { Calendar as BigCalendar, momentLocalizer } from 'react-big-calendar';
@@ -11,11 +11,14 @@ import '../Styles/Styles.css';
 import '../App.css';
 import axios from 'axios';
 import imaMostrar from '../Assets/MostrarInfo.png';
+import { UserContext } from '../UserContext'; // Asegúrate de importar UserContext
+
 
 const localizer = momentLocalizer(moment);
 
 function Calendar() {
   //const [Courses, setCourses] = useState([]);
+  const { link } = useContext(UserContext); 
   const [detailsCourses, setDetailsCourses] = useState([]);
   const [selectedCourse, setSelectedCourse] = useState(null); 
   const [tooltipPosition, setTooltipPosition] = useState({ x: 0, y: 0 });
@@ -28,7 +31,7 @@ function Calendar() {
   useEffect(() => {
     const fetchCoursesCalendar = async () => {
       try {
-        const response = await axios.get('http://localhost:3001/getCoursesCalendar');
+        const response = await axios.get(link + '/getCoursesCalendar');
         setCourses(response.data);
       } catch (error) {
         console.error('Error al obtener la lista de cursos del calendario:', error);
@@ -41,7 +44,7 @@ function Calendar() {
   useEffect(() => {
     const fetchDetailsCourses = async () => {
       try {
-        const response = await axios.get('http://localhost:3001/getCourses');
+        const response = await axios.get(link + '/getCourses');
         setDetailsCourses(response.data);
       } catch (error) {
         console.error('Error al obtener la lista de detalles de los cursos:', error);

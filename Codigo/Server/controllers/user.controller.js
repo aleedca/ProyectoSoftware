@@ -82,9 +82,6 @@ const deleteUser = async (req, res) => {
     
     try {
         const pool = await getConnection()
-        console.log(req.body)
-        console.log(req.body['correo'])
-        console.log(req.body['contrasenna'])
 
         let result = await pool.request()
             .input('IN_passwordhash', sql.NVarChar(32), contrasenna)

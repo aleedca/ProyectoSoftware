@@ -2,14 +2,15 @@
 //import './FormLogin.css';
 import './App.css'
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { useEffect, useState ,useContext } from "react";
 import { Link } from 'react-router-dom';
 import { FaLock, FaEnvelope, FaUser, FaIdCard, FaUnlock } from 'react-icons/fa';
 import imagen from './Assets/register.png';
 import { useNavigate } from 'react-router-dom';
+import { UserContext } from './UserContext'; // Asegúrate de importar UserContext
 function Edit() {
   const navigate = useNavigate();
-
+  const { link } = useContext(UserContext); 
   const [nombre, setNombre] = useState('');
   const [primerApellido, setPrimerApellido] = useState('');
   const [segundoApellido, setSegundoApellido] = useState('');
@@ -33,7 +34,7 @@ function Edit() {
       return; // Detiene la ejecución si hay errores
     }
 
-    axios.put("http://localhost:3001/editUser", {
+    axios.put(link + "/editUser", {
       contrasenna,
       correo,
       nuevaContrasenna,
@@ -68,7 +69,7 @@ function Edit() {
       return; // Detiene la ejecución si hay errores
     }
 
-    axios.delete("http://localhost:3001/deleteUser", {
+    axios.delete(link + "/deleteUser", {
       params: {
         contrasenna,
         correo

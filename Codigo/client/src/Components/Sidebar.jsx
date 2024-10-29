@@ -10,7 +10,7 @@ import { UserContext } from '../UserContext'; // Asegúrate de importar UserCont
 function Sidebar({ isOpen, toggleSidebar, openPopup }) {
 
     const navigate = useNavigate();
-    const { fullName } = useContext(UserContext); // Usar el contexto
+    const { fullName,link } = useContext(UserContext); // Usar el contexto
 
     return (
         <div className={`sidebar ${isOpen ? "open" : "closed"}`}>

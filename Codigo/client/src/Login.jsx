@@ -9,9 +9,13 @@ import imagen from './Assets/login.png';
 import { useNavigate } from 'react-router-dom';
 import { UserContext } from './UserContext';
 
+
 function Login() {
   const navigate = useNavigate();
-  const { setFullName } = useContext(UserContext); 
+  
+  
+  const { setFullName,link } = useContext(UserContext); 
+
   const [correo, setCorreo] = useState('');
   const [contrasenna, setContrasenna] = useState('');
   const [error, setError] = useState('');
@@ -37,7 +41,7 @@ function Login() {
       return; // Detiene la ejecución si hay errores
     }
 
-    axios.get("http://localhost:3001/getUser", {
+    axios.get(link + "/getUser", {
       params: {
         contrasenna,
         correo

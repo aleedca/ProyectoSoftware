@@ -2,22 +2,23 @@
 //import './FormLogin.css';
 import './App.css'
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { useEffect, useState , useContext } from "react";
 import { Link } from 'react-router-dom';
 import { FaLock, FaEnvelope } from 'react-icons/fa';
 import imagen from './Assets/inicio.png';
 import { useNavigate } from 'react-router-dom';
+import { UserContext } from './UserContext'; // Asegúrate de importar UserContext
 
 function Inicio() {
   const navigate = useNavigate();
-
+  const { link } = useContext(UserContext); 
   const [correo, setCorreo] = useState('');
   const [contrasenna, setContrasenna] = useState('');
   const [error, setError] = useState('');
 
   const [listOfPosts, setListOfPosts] = useState([]);
   /*useEffect(() => {
-    axios.get("http://localhost:3001/basic").then((response) => {
+    axios.get(link + "/basic").then((response) => {
       setListOfPosts(response.data);
       console.log(response.data)
     });

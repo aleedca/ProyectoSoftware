@@ -1,4 +1,4 @@
-import React, { cloneElement } from 'react';
+import React, { cloneElement ,  useContext } from 'react';
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useNavigate } from 'react-router-dom';
@@ -11,8 +11,10 @@ import grupo from '../Assets/gestionar_grupo.png';
 import cerrar from '../Assets/cerrar.png';
 import imaEvento from '../Assets/eventos.png';
 import imaHorario from '../Assets/horario.png';
+import { UserContext } from '../UserContext'; // Asegúrate de importar UserContext
 
 function Popup({ type, closePopup, details }) {
+    const { link } = useContext(UserContext); 
     const [profesores, setProfesores] = useState([]);
     const [grupos, setGrupos] = useState([]);
     const [catalogCourses, setCatalogCourses] = useState([]);
@@ -72,7 +74,7 @@ function Popup({ type, closePopup, details }) {
         // Función para obtener la lista de los detalles de los cursos
         const fetchCourses = async () => {
             try {
-                const response = await axios.get('http://localhost:3001/getCourses');
+                const response = await axios.get(link + '/getCourses');
                 setCourses(response.data);
             } catch (error) {
                 console.error('Error al obtener la lista de detalles de los cursos:', error);
@@ -86,7 +88,7 @@ function Popup({ type, closePopup, details }) {
         // Función para obtener la lista de profesores
         const fetchProfesores = async () => {
             try {
-                const response = await axios.get('http://localhost:3001/getTeachers');
+                const response = await axios.get(link + '/getTeachers');
                 setProfesores(response.data);
             } catch (error) {
                 console.error('Error al obtener la lista de profesores:', error);
@@ -100,7 +102,7 @@ function Popup({ type, closePopup, details }) {
         // Función para obtener la lista de profesores
         const fetchEventos = async () => {
             try {
-                const response = await axios.get('http://localhost:3001/getHolidays');
+                const response = await axios.get(link + '/getHolidays');
                 setEventos(response.data);
             } catch (error) {
                 console.error('Error al obtener la lista de eventos:', error);
@@ -114,7 +116,7 @@ function Popup({ type, closePopup, details }) {
         // Función para obtener la lista de grupos
         const fetchGrupos = async () => {
             try {
-                const response = await axios.get('http://localhost:3001/getGroups');
+                const response = await axios.get(link + '/getGroups');
                 setGrupos(response.data);
             } catch (error) {
                 console.error('Error al obtener la lista de grupos:', error);
@@ -128,7 +130,7 @@ function Popup({ type, closePopup, details }) {
         // Función para obtener la lista de grupos
         const fetchCatalogCourse = async () => {
             try {
-                const response = await axios.get('http://localhost:3001/getCatalogCourses');
+                const response = await axios.get(link + '/getCatalogCourses');
                 setCatalogCourses(response.data);
             } catch (error) {
                 console.error('Error al obtener la lista de catalogo de coursos:', error);
@@ -142,7 +144,7 @@ function Popup({ type, closePopup, details }) {
         // Función para obtener la lista de locaciones
         const fetchLocaciones = async () => {
             try {
-                const response = await axios.get('http://localhost:3001/getLocations');
+                const response = await axios.get(link + '/getLocations');
                 setLocaciones(response.data);
             } catch (error) {
                 console.error('Error al obtener la lista de locaciones:', error);
@@ -156,7 +158,7 @@ function Popup({ type, closePopup, details }) {
         // Función para obtener la lista de locaciones
         const fetchModalidades = async () => {
             try {
-                const response = await axios.get('http://localhost:3001/getModalitys');
+                const response = await axios.get(link + '/getModalitys');
                 setModalidades(response.data);
             } catch (error) {
                 console.error('Error al obtener la lista de modalidades:', error);
@@ -170,7 +172,7 @@ function Popup({ type, closePopup, details }) {
         // Función para obtener la lista de horarios
         const fetchSchedules = async () => {
             try {
-                const response = await axios.get('http://localhost:3001/getSchedules');
+                const response = await axios.get(link + '/getSchedules');
                 setHorarios(response.data);
             } catch (error) {
                 console.error('Error al obtener la lista de horarios:', error);
@@ -243,7 +245,7 @@ function Popup({ type, closePopup, details }) {
         const formattedDiaInicio = formatTimeForDatabase(formData.diaInicio);
         const formattedDiaFin = formatTimeForDatabase(formData.diaFin);
         try {
-            const response = await axios.post('http://localhost:3001/addHoliday', {
+            const response = await axios.post(link + '/addHoliday', {
                 nombreEvento: formData.nombreEvento.trim(),
                 diaInicio: formattedDiaInicio,
                 diaFin: formattedDiaFin
@@ -282,7 +284,7 @@ function Popup({ type, closePopup, details }) {
         const horarioConId = profesores.find(horario => horario.id === formData.idHorario);
         console.log(horarioConId)
         try {
-            const response = await axios.put('http://localhost:3001/editHoliday', {
+            const response = await axios.put(link + '/editHoliday', {
                 idEvento: formData.idEvento,
                 nombreEvento: formData.nombreEvento.trim(),
                 diaInicio: formattedDiaInicio,
@@ -317,7 +319,7 @@ function Popup({ type, closePopup, details }) {
         }
 
         try {
-            const response = await axios.delete('http://localhost:3001/deleteHoliday', {
+            const response = await axios.delete(link + '/deleteHoliday', {
                 data: {
                     idEvento: formData.idEvento
                 }
@@ -543,7 +545,7 @@ function Popup({ type, closePopup, details }) {
         const formattedHoraFin = formatTimeForDatabase(formData.horaFin);
 
         try {
-            const response = await axios.post('http://localhost:3001/addSchedule', {
+            const response = await axios.post(link + '/addSchedule', {
                 nombreHorario: formData.nombreHorario.trim(),
                 dias: formData.dias,
                 horaInicio: formattedHoraInicio,
@@ -583,7 +585,7 @@ function Popup({ type, closePopup, details }) {
         const horarioConId = profesores.find(horario => horario.id === formData.idHorario);
         console.log(horarioConId)
         try {
-            const response = await axios.put('http://localhost:3001/editSchedule', {
+            const response = await axios.put(link + '/editSchedule', {
                 idHorario: formData.idHorario,
                 nombreHorario: formData.nombreHorario.trim(),
                 dias: formData.dias,
@@ -619,7 +621,7 @@ function Popup({ type, closePopup, details }) {
         }
 
         try {
-            const response = await axios.delete('http://localhost:3001/deleteSchedule', {
+            const response = await axios.delete(link + '/deleteSchedule', {
                 data: {
                     idHorario: formData.idHorario
                 }
@@ -651,7 +653,7 @@ function Popup({ type, closePopup, details }) {
 
         try {
 
-            const response = await axios.post('http://localhost:3001/addTeacher', {
+            const response = await axios.post(link + '/addTeacher', {
                 nombre: formData.nombreProfesor.trim(),
                 correo: formData.correoProfesor.trim(),
                 identificacion: formData.identificacionProfesor.trim()
@@ -683,7 +685,7 @@ function Popup({ type, closePopup, details }) {
         }
         const profesorConId = profesores.find(profesor => profesor.id === formData.idProfesor);
         try {
-            const response = await axios.put('http://localhost:3001/editTeacher', {
+            const response = await axios.put(link + '/editTeacher', {
                 nombre: formData.nombreProfesor.trim(),
                 correo: formData.correoProfesor.trim(),
                 correoviejo: profesorConId.email.trim(),
@@ -715,7 +717,7 @@ function Popup({ type, closePopup, details }) {
         }
 
         try {
-            const response = await axios.delete('http://localhost:3001/deleteTeacher', {
+            const response = await axios.delete(link + '/deleteTeacher', {
                 data: {
                     correo: formData.correoProfesor
                 }
@@ -744,7 +746,7 @@ function Popup({ type, closePopup, details }) {
         }
 
         try {
-            const response = await axios.post('http://localhost:3001/addGroup', {
+            const response = await axios.post(link + '/addGroup', {
                 nombre: formData.nombreGrupo.trim(),
             });
 
@@ -774,7 +776,7 @@ function Popup({ type, closePopup, details }) {
         const grupoConId = grupos.find(grupo => grupo.id === formData.idGrupo);
         console.log(grupoConId)
         try {
-            const response = await axios.put('http://localhost:3001/editGroup', {
+            const response = await axios.put(link + '/editGroup', {
                 nombrenuevo: formData.nombreGrupo.trim(),
                 nombreviejo: grupoConId.Name.trim(),
             });
@@ -804,7 +806,7 @@ function Popup({ type, closePopup, details }) {
         }
 
         try {
-            const response = await axios.delete('http://localhost:3001/deleteGroup', {
+            const response = await axios.delete(link + '/deleteGroup', {
                 data: {
                     nombre: formData.nombreGrupo.trim()
                 }
@@ -834,7 +836,7 @@ function Popup({ type, closePopup, details }) {
         }
 
         try {
-            const response = await axios.post('http://localhost:3001/addCourse', {
+            const response = await axios.post(link + '/addCourse', {
                 idUbicacion: formData.idLocacion,
                 idProfesores: formData.idProfesor,
                 idCursos: formData.idCatalogCourse,
@@ -883,7 +885,7 @@ function Popup({ type, closePopup, details }) {
         }
 
         try {
-            const response = await axios.post('http://localhost:3001/fusionCourses', {
+            const response = await axios.post(link + '/fusionCourses', {
                 data: {
                     idCurso1: formData.idCurso1,
                     idCurso2: formData.idCurso2,
