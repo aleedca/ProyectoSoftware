@@ -6,17 +6,97 @@ import { useEffect, useState } from "react";
 import { Link } from 'react-router-dom';
 import { FaLock, FaEnvelope, FaUser, FaIdCard, FaUnlock} from 'react-icons/fa';
 import imagen from './Assets/register.png';
-
+import { useNavigate } from 'react-router-dom';
 function Edit() {
+  const navigate = useNavigate();
 
   const [nombre, setNombre] = useState('');
   const [primerApellido, setPrimerApellido] = useState('');
   const [segundoApellido, setSegundoApellido] = useState('');
   const [correo, setCorreo] = useState('');
   const [contrasenna, setContrasenna] = useState('');
-  const [confirmContrasenna, setConfirmContrasenna] = useState('');
+  const [nuevaContrasenna, setNuevaContrasenna] = useState('');
   const [error, setError] = useState('');
 
+
+  function sendData() {
+    const errors = {
+      contrasenna: !contrasenna,
+      correo: !correo
+    };
+
+    setError(errors);
+
+    if (Object.values(errors).includes(true)) {
+      setError('Por favor, complete todos los campos correctamente.');
+      console.error('Por favor, complete todos los campos correctamente.');
+      return; // Detiene la ejecución si hay errores
+    }
+
+    axios.put("http://localhost:3001/editUser", {
+      
+        contrasenna,
+        correo,
+        nuevaContrasenna,
+        nombre,
+        primerApellido,
+        segundoApellido
+      
+    })
+      .then((response) => {
+        //console.log('Usuario autenticado:', response.data);
+        //alert('Usuario encontrado');
+        const fullName = `${response.data[0].Name} ${response.data[0].LastName1} ${response.data[0].LastName2}`;
+        console.log('Nombre completo:', fullName);
+        console.log(response.data)
+        //setFullName(fullName);
+        navigate('/login')
+
+      })
+      .catch((error) => {
+        console.error('No existe el usurio con ese correo y esa contraseña', error.response.data);
+        alert('Usuario no encontrado')
+        setError(error.response.data);
+      });
+  }
+  function sendDataDelete() {
+    const errors = {
+      contrasenna: !contrasenna,
+      correo: !correo
+    };
+
+    setError(errors);
+
+    if (Object.values(errors).includes(true)) {
+      setError('Por favor, complete todos los campos correctamente.');
+      console.error('Por favor, complete todos los campos correctamente.');
+      return; // Detiene la ejecución si hay errores
+    }
+
+    axios.delete("http://localhost:3001/deleteUser", {
+      
+      params: {
+        contrasenna,
+        correo
+      }
+      
+    })
+      .then((response) => {
+        //console.log('Usuario autenticado:', response.data);
+        //alert('Usuario encontrado');
+        const fullName = `${response.data[0].Name} ${response.data[0].LastName1} ${response.data[0].LastName2}`;
+        console.log('Nombre completo:', fullName);
+        console.log(response.data)
+        //setFullName(fullName);
+        navigate('/login')
+
+      })
+      .catch((error) => {
+        console.error('No existe el usurio con ese correo y esa contraseña', error.response.data);
+        alert('Usuario no encontrado')
+        setError(error.response.data);
+      });
+  }
   return (
     <div className='fondo-crearCuenta'>
       <div className='contenedor'>
@@ -56,18 +136,18 @@ function Edit() {
                   <input type="Password" placeholder="Ingrese la contraseña" value={contrasenna} onChange={(e) => setContrasenna(e.target.value)} />
               </div>
 
-              <body>Confirmar contraseña</body>
+              <body>Nueva contraseña</body>
               <div className="input-contenedor">
                   <FaUnlock  className="icono" />
-                  <input type="Password" placeholder="Confirme la contraseña" value={confirmContrasenna} onChange={(e) => setConfirmContrasenna(e.target.value)} />
+                  <input type="Password" placeholder="Confirme la contraseña" value={nuevaContrasenna} onChange={(e) => setNuevaContrasenna(e.target.value)} />
               </div>
           </div>
 
           {/* Columna para la imagen */}
           <div className='columna columna-imagen'>
             <img style={{ marginTop: '40px' }} src={imagen} alt='Imagen Login' />
-            <button style={{ marginTop: '20px' }} className="btn_naranja">Actualizar cuenta</button>
-            <body> ¿Desea eliminar la cuenta? <Link to="" style={{color: '#018ABD', fontWeight: 'bold', marginLeft: '80px'}}>Eliminar</Link></body>
+            <button style={{ marginTop: '20px' }}  onClick={sendData} className="btn_naranja">Actualizar cuenta</button>
+            <body> ¿Desea eliminar la cuenta? <Link to="" style={{color: '#018ABD', fontWeight: 'bold', marginLeft: '80px'}} onClick={sendDataDelete}>Eliminar</Link></body>
           </div>
 
         </div>
