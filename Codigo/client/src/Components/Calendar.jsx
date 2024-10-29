@@ -15,15 +15,16 @@ import imaMostrar from '../Assets/MostrarInfo.png';
 const localizer = momentLocalizer(moment);
 
 function Calendar() {
-  const [Courses, setCourses] = useState([]);
+  //const [Courses, setCourses] = useState([]);
   const [detailsCourses, setDetailsCourses] = useState([]);
-  const [selectedCourse, setSelectedCourse] = useState(null); // Estado para el evento seleccionado
+  const [selectedCourse, setSelectedCourse] = useState(null); 
   const [tooltipPosition, setTooltipPosition] = useState({ x: 0, y: 0 });
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [view, setView] = useState('month');
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [popupType, setPopupType] = useState('');
 
+  /*
   useEffect(() => {
     const fetchCoursesCalendar = async () => {
       try {
@@ -35,12 +36,13 @@ function Calendar() {
     };
     fetchCoursesCalendar();
   }, []);
+  */
 
   useEffect(() => {
     const fetchDetailsCourses = async () => {
       try {
         const response = await axios.get('http://localhost:3001/getCourses');
-        setDetailsCourses(response.data[0]);
+        setDetailsCourses(response.data);
       } catch (error) {
         console.error('Error al obtener la lista de detalles de los cursos:', error);
       }
@@ -61,14 +63,60 @@ function Calendar() {
     setIsSidebarOpen(!isSidebarOpen);
   };
 
-  const events = Courses.map((course) => ({
-    ...course,
-    start: new Date(course.start),
-    end: new Date(course.end),
-  }));
+  const events = detailsCourses.flatMap((course) => {
+    // Diccionario para convertir nombres de días a índices de JavaScript (0 para domingo a 6 para sábado)
+    const dayMap = {
+      'Domingo': 0,
+      'Lunes': 1,
+      'Martes': 2,
+      'Miércoles': 3,
+      'Jueves': 4,
+      'Viernes': 5,
+      'Sábado': 6,
+    };
+    
+    // Convertir los días de la semana a sus correspondientes índices numéricos
+    const daysOfWeek = course.Days.split(",").map(day => dayMap[day.trim()]);
+    
+    const startDate = new Date(course.StartDate);
+    const endDate = new Date(course.EndDate);
+    const startTime = new Date(course.StartTime);
+    const endTime = new Date(course.EndTime);
+    
+    const eventsForCourse = [];
+
+    // Iterar desde la fecha de inicio hasta la fecha de fin del curso
+    let currentDate = new Date(startDate);
+    while (currentDate <= endDate) {
+      if (daysOfWeek.includes(currentDate.getDay())) {
+        // Crear un evento para cada día correspondiente
+        const eventStart = new Date(currentDate);
+        const eventEnd = new Date(currentDate);
+
+        // Asignar horas y minutos a start y end
+        eventStart.setHours(startTime.getHours(), startTime.getMinutes());
+        eventEnd.setHours(endTime.getHours(), endTime.getMinutes());
+
+        // Agregar el evento
+        eventsForCourse.push({
+          ...course,
+          id: course.Id,
+          title: course.Course,
+          start: eventStart,
+          end: eventEnd,
+          color: course.Color ? `#${course.Color}` : '#E0FFFF',
+        });
+      }
+
+      // Avanzar al siguiente día
+      currentDate.setDate(currentDate.getDate() + 1);
+    }
+
+    return eventsForCourse;
+  });
 
   const handleEventClick = (event, e) => {
-    setSelectedCourse(detailsCourses);
+    setSelectedCourse(event);
     setTooltipPosition({ x: e.clientX, y: e.clientY });
   };
 
@@ -117,7 +165,7 @@ function Calendar() {
         )}
         {selectedCourse && (
           <>
-            <div className="overlay" onClick={closeTooltip} /> {/* Overlay para desenfoque y bloqueo */}
+            <div className="overlay" onClick={closeTooltip} />
             <Tooltip course={selectedCourse} position={tooltipPosition} closeTooltip={closeTooltip} />
           </>
         )}
@@ -146,7 +194,7 @@ function EventComponent({ event }) {
 }
 
 function Tooltip({ course, closeTooltip }) {
-  const { Course, Teacher, Group, Modality, Location, Days, StartDate, EndDate, StartTime, EndTime, Notes } = course;
+  const { Id, Course, Teacher, Email, Group, Modality, Location, Days, StartDate, EndDate, StartTime, EndTime, Notes } = course;
   return (
     <div className="tooltip">
       
@@ -156,10 +204,12 @@ function Tooltip({ course, closeTooltip }) {
           </div>
           <div className='columna columna-formulario'>
               
-          <h1>{Course}</h1>
+          <h1 style={{fontSize:'26px', alignSelf:'center'}}>{Course}</h1>
           
           <p style={{fontSize:'16px', marginTop: '15px'}}><strong>PROFESOR: </strong>{Teacher}</p>
+          <body style={{fontSize:'16px', alignSelf:'center'}}>{Email}</body>
           <h2>INFORMACIÓN GENERAL</h2>
+          <body style={{fontSize:'16px'}}><strong>ID: </strong>{Id}</body>
           <body style={{fontSize:'16px', marginTop: '10px'}}><strong>GRUPO: </strong>{Group}</body>
           <body style={{fontSize:'16px', marginTop: '10px'}}><strong>MODALIDAD: </strong>{Modality}</body>
           <body style={{fontSize:'16px', marginTop: '10px'}}><strong>LUGAR: </strong>{Location}</body>
@@ -174,7 +224,7 @@ function Tooltip({ course, closeTooltip }) {
         </div>
       </div>
   </div>
-   );             
+  );             
 }
 
 function Toolbar(props) {
