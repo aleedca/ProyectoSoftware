@@ -29,19 +29,19 @@ function Edit() {
               <body>Nombre</body>
               <div className="input-contenedor">
                   <FaUser  className="icono" />
-                  <input type="text" placeholder="Nombre" value={correo} onChange={(e) => setCorreo(e.target.value)} />
+                  <input type="text" placeholder="Nombre" value={nombre} onChange={(e) => setNombre(e.target.value)} />
               </div>
 
               <body>Primer apellido</body>
               <div className="input-contenedor">
                   <FaIdCard  className="icono" />
-                  <input type="text" placeholder="Primer apellido" value={correo} onChange={(e) => setCorreo(e.target.value)} />
+                  <input type="text" placeholder="Primer apellido" value={primerApellido} onChange={(e) => setPrimerApellido(e.target.value)} />
               </div>
 
               <body>Segundo apellido</body>
               <div className="input-contenedor">
                   <FaIdCard  className="icono" />
-                  <input type="text" placeholder="Segundo apellido" value={correo} onChange={(e) => setCorreo(e.target.value)} />
+                  <input type="text" placeholder="Segundo apellido" value={segundoApellido} onChange={(e) => setSegundoApellido(e.target.value)} />
               </div>
 
               <body>Correo</body>
@@ -59,7 +59,7 @@ function Edit() {
               <body>Confirmar contraseña</body>
               <div className="input-contenedor">
                   <FaUnlock  className="icono" />
-                  <input type="Password" placeholder="Confirme la contraseña" value={contrasenna} onChange={(e) => setContrasenna(e.target.value)} />
+                  <input type="Password" placeholder="Confirme la contraseña" value={confirmContrasenna} onChange={(e) => setConfirmContrasenna(e.target.value)} />
               </div>
           </div>
 
