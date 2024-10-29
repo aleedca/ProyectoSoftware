@@ -21,11 +21,11 @@ function Popup({ type, closePopup, details }) {
     const [horarios, setHorarios] = useState([]);
     const [eventos, setEventos] = useState([]);
     const [selectedDays, setSelectedDays] = useState([]);
-    const [detailss, setdetailss] = useState([]);
+    const [details, setDetails] = useState([]);
     const [error, setError] = useState('');
 
     const navigate = useNavigate();
-    
+
     const [formData, setFormData] = useState({
         nombreProfesor: '',
         correoProfesor: '',
@@ -70,18 +70,16 @@ function Popup({ type, closePopup, details }) {
 
     useEffect(() => {
         // Función para obtener la lista de los detalles de los cursos
-        const fetchdetailss = async () => {
+        const fetchdetails = async () => {
             try {
                 const response = await axios.get('http://localhost:3001/getCourses');
-                setdetailss(response.data);
-                console.log(response.data)
-                console.log(detailss)
+                setDetails(response.data);
             } catch (error) {
                 console.error('Error al obtener la lista de detalles de los cursos:', error);
             }
         };
 
-        fetchdetailss();
+        fetchdetails();
     }, []);
 
     useEffect(() => {
@@ -90,8 +88,6 @@ function Popup({ type, closePopup, details }) {
             try {
                 const response = await axios.get('http://localhost:3001/getTeachers');
                 setProfesores(response.data);
-                console.log(response.data)
-                console.log(profesores)
             } catch (error) {
                 console.error('Error al obtener la lista de profesores:', error);
             }
@@ -106,8 +102,6 @@ function Popup({ type, closePopup, details }) {
             try {
                 const response = await axios.get('http://localhost:3001/getHolidays');
                 setEventos(response.data);
-                console.log(response.data)
-                console.log(eventos)
             } catch (error) {
                 console.error('Error al obtener la lista de eventos:', error);
             }
@@ -122,8 +116,6 @@ function Popup({ type, closePopup, details }) {
             try {
                 const response = await axios.get('http://localhost:3001/getGroups');
                 setGrupos(response.data);
-                console.log(response.data)
-                console.log(grupos)
             } catch (error) {
                 console.error('Error al obtener la lista de grupos:', error);
             }
@@ -138,8 +130,6 @@ function Popup({ type, closePopup, details }) {
             try {
                 const response = await axios.get('http://localhost:3001/getCatalogCourses');
                 setCatalogCourses(response.data);
-                console.log(response.data)
-                console.log(catalogCourses)
             } catch (error) {
                 console.error('Error al obtener la lista de catalogo de coursos:', error);
             }
@@ -154,8 +144,6 @@ function Popup({ type, closePopup, details }) {
             try {
                 const response = await axios.get('http://localhost:3001/getLocations');
                 setLocaciones(response.data);
-                console.log(response.data)
-                console.log(locaciones)
             } catch (error) {
                 console.error('Error al obtener la lista de locaciones:', error);
             }
@@ -164,15 +152,12 @@ function Popup({ type, closePopup, details }) {
         fetchLocaciones();
     }, []);
 
-
     useEffect(() => {
         // Función para obtener la lista de locaciones
         const fetchModalidades = async () => {
             try {
                 const response = await axios.get('http://localhost:3001/getModalitys');
                 setModalidades(response.data);
-                console.log(response.data)
-                console.log(modalidades)
             } catch (error) {
                 console.error('Error al obtener la lista de modalidades:', error);
             }
@@ -187,8 +172,6 @@ function Popup({ type, closePopup, details }) {
             try {
                 const response = await axios.get('http://localhost:3001/getSchedules');
                 setHorarios(response.data);
-                console.log(response.data)
-                console.log(modalidades)
             } catch (error) {
                 console.error('Error al obtener la lista de horarios:', error);
             }
@@ -197,6 +180,7 @@ function Popup({ type, closePopup, details }) {
         fetchSchedules();
     }, []);
 
+    // Función para manejar el cambio en el checkbox de fusión de cursos
     const handleCheckboxChange = (event) => {
         const isChecked = event.target.checked;
         setFormData(prevState => ({
@@ -205,6 +189,7 @@ function Popup({ type, closePopup, details }) {
         }));
     };
 
+    // Función para manejar el cambio en la selección de cursos
     const handleSelectCourseChange = (event, courseNumber) => {
         console.log(event.target.value)
         const selectedValue = parseInt(event.target.value, 10);
@@ -221,18 +206,17 @@ function Popup({ type, closePopup, details }) {
         }
     };
 
+    // Función para manejar el cambio de los eventos
     const handleSelectHolidayChange = (e) => {
         const selectedId = e.target.value;
         const selectedHoliday = eventos.find(evento => evento.Id === selectedId);
 
-        // Actualiza el estado de formData
         if (selectedHoliday) {
 
             console.log(selectedHoliday.StartDatetime);
             console.log(selectedHoliday.EndDatetime);
 
             setFormData(prevFormData => {
-                // Actualiza el formData con los datos del horario seleccionado
                 const updatedFormData = {
                     ...prevFormData,
                     nombreEvento: selectedHoliday.Name,
@@ -241,15 +225,9 @@ function Popup({ type, closePopup, details }) {
                     diaFin: selectedHoliday.EndDatetime.split('T')[0]
                 };
 
-                // Para mantener el comportamiento similar a los checkboxes, puedes usar un efecto
-                // para actualizar inmediatamente el estado o trabajar con el estado más reciente
-
-                console.log('FormData actualizado:', updatedFormData); // Para verificar los datos actualizados
-
                 return updatedFormData;
             });
         } else {
-            // Limpiar el estado si no se selecciona un horario válido
             setFormData(prevFormData => ({
                 ...prevFormData,
                 nombreEvento: '',
@@ -260,11 +238,10 @@ function Popup({ type, closePopup, details }) {
         }
     };
 
+    // Función para manejar la creación de un evento
     const handleAddHoliday = async () => {
         const formattedDiaInicio = formatTimeForDatabase(formData.diaInicio);
         const formattedDiaFin = formatTimeForDatabase(formData.diaFin);
-
-
         try {
             const response = await axios.post('http://localhost:3001/addHoliday', {
                 nombreEvento: formData.nombreEvento.trim(),
@@ -276,14 +253,13 @@ function Popup({ type, closePopup, details }) {
             alert('Evento creado correctamente');
         } catch (error) {
             console.error('Error al crear el evento:', error);
+            alert('Hubo un error al crear el evento');
         }
 
-        // Cierra el popup
         closePopup();
     };
 
-
-
+    // Función para manejar la edición de un evento
     const handleEditHoliday = async () => {
         const formattedDiaInicio = formatTimeForDatabase(formData.diaInicio);
         const formattedDiaFin = formatTimeForDatabase(formData.diaFin);
@@ -318,9 +294,11 @@ function Popup({ type, closePopup, details }) {
             alert('Evento actualizado correctamente');
         } catch (error) {
             console.error('Error al actualizar el evento:', error);
+            alert('Hubo un error al actualizar el evento');
         }
     };
 
+    // Función para manejar la eliminación de un evento
     const handleDeleteHoliday = async () => {
         const errors = {
             idEvento: !formData.idEvento,
@@ -349,19 +327,20 @@ function Popup({ type, closePopup, details }) {
             alert('Evento eliminado correctamente');
         } catch (error) {
             console.error('Error al eliminar el evento:', error);
+            alert('Hubo un error al eliminar el evento');
         }
     };
 
+    // Función para manejar el cambio en el input
     const handleInputChange = (e) => {
         const { name, value } = e.target;
         setFormData((prevFormData) => ({
             ...prevFormData,
             [name]: value
         }));
-        console.log('FormData actualizado:', formData);
-
     }
 
+    // Función para manejar la selección del profesor
     const handleSelectTeacher = (option) => {
         const selectedProfesor = profesores.find(profesor => profesor.Name === option);
         setFormData(prevFormData => ({
@@ -372,6 +351,7 @@ function Popup({ type, closePopup, details }) {
         }));
     };
 
+    // Función para manejar el cambio en la selección del profesor
     const handleSelectTeacherChange = (e) => {
         const { key, value } = e.target;
         console.log(e.target)
@@ -392,18 +372,15 @@ function Popup({ type, closePopup, details }) {
                 ['idProfesor']: 0
             }));
         }
-
-        console.log('Updated formData:', formData);
-
     };
 
+    // Función para manejar el cambio en la selección del grupo
     const handleSelectGroupChange = (e) => {
         const { key, value } = e.target;
         console.log("hoolls")
         console.log(e.target)
         if (e.target.value != 0) {
             const grupoConId = grupos.find(grupo => grupo.id === e.target.value);
-            console.log(grupoConId)
             setFormData((prevFormData) => ({
                 ...prevFormData,
                 ['nombreGrupo']: grupoConId.Name,
@@ -416,22 +393,20 @@ function Popup({ type, closePopup, details }) {
                 ['idGrupo']: 0
             }));
         }
-
-        console.log('Updated formData:', formData);
-
     };
 
+    // Función para manejar el cambio en la selección del curso catálogo
     const handleSelectCatalogCourseChange = (e) => {
         const { key, value } = e.target;
         console.log("-----------")
         console.log(e.target)
-        console.log("key = "+key)
-        console.log("value = "+value)
+        console.log("key = " + key)
+        console.log("value = " + value)
         if (e.target.value != 0) {
             console.log(typeof value)
             console.log(typeof catalogCourses[4]['IdCourses'])
-            console.log( value)
-            console.log( catalogCourses[4]['IdCourses'])
+            console.log(value)
+            console.log(catalogCourses[4]['IdCourses'])
             console.log(value === catalogCourses[4]['IdCourses'])
             console.log(catalogCourses)
             const catalogCourseConId = catalogCourses.find(catalog => catalog.IdCourses === e.target.value);
@@ -448,11 +423,9 @@ function Popup({ type, closePopup, details }) {
                 ['idCatalogCourse']: 0
             }));
         }
-
-        console.log('Updated formData:', formData);
-
     };
 
+    // Función para manejar el cambio en la selección de la locación
     const handleSelectLocacionChange = (e) => {
         const { key, value } = e.target;
         console.log(e.target)
@@ -478,14 +451,12 @@ function Popup({ type, closePopup, details }) {
 
     };
 
+    // Función para manejar el cambio en la selección de la modalidad
     const handleSelectModalidadChange = (e) => {
         const { key, value } = e.target;
         console.log(e.target)
         if (e.target.value != 0) {
-            console.log(e.target.value)
-            console.log(modalidades)
             const modalidadConId = modalidades.find(modalidad => modalidad.id === e.target.value);
-            console.log(modalidadConId)
             setFormData((prevFormData) => ({
                 ...prevFormData,
                 ['nombreModalidad']: modalidadConId.Name,
@@ -498,12 +469,9 @@ function Popup({ type, closePopup, details }) {
                 ['idModalidad']: 0
             }));
         }
-
-        console.log('Updated formData:', formData);
-
     };
 
-    // Función para manejar la selección del horario
+    // Función para manejar el cambio en la selección del horario
     const handleSelectScheduleChange = (e) => {
         const selectedId = e.target.value;
         const selectedSchedule = horarios.find(horario => horario.Id === selectedId);
@@ -518,17 +486,13 @@ function Popup({ type, closePopup, details }) {
             'Sabado': 6
         }
 
-
-        // Actualiza el estado de formData
         if (selectedSchedule) {
             var listadias = []
             for (var dia in selectedSchedule['Days'].split(",")) {
-
                 listadias.push(dicDias[selectedSchedule['Days'].split(",")[dia]].toString())
             }
             console.log(listadias)
             setFormData(prevFormData => {
-                // Actualiza el formData con los datos del horario seleccionado
                 const updatedFormData = {
                     ...prevFormData,
                     nombreHorario: selectedSchedule.Name,
@@ -538,15 +502,9 @@ function Popup({ type, closePopup, details }) {
                     horaFin: selectedSchedule.EndTime.split('T')[1].split(':')[0] + ':' + selectedSchedule.StartTime.split('T')[1].split(':')[1]    // Extrae solo la hora
                 };
 
-                // Para mantener el comportamiento similar a los checkboxes, puedes usar un efecto
-                // para actualizar inmediatamente el estado o trabajar con el estado más reciente
-
-                console.log('FormData actualizado:', updatedFormData); // Para verificar los datos actualizados
-
                 return updatedFormData;
             });
         } else {
-            // Limpiar el estado si no se selecciona un horario válido
             setFormData(prevFormData => ({
                 ...prevFormData,
                 nombreHorario: '',
@@ -558,41 +516,31 @@ function Popup({ type, closePopup, details }) {
         }
     };
 
-
+    // Función para manejar el cambio en el checkbox de los días
     const handleCheckBoxChange = (e) => {
         const { value } = e.target;
 
-        // Calcula la nueva lista de días seleccionados
         const newSelectedDays = e.target.checked
             ? [...selectedDays, value]
             : selectedDays.filter((day) => day !== value);
 
-        // Actualiza el estado de selectedDays y formData juntos usando newSelectedDays
         setSelectedDays(newSelectedDays);
-
-        // Usa el valor actualizado de newSelectedDays para actualizar formData
         setFormData((prevFormData) => ({
             ...prevFormData,
             dias: newSelectedDays,
         }));
-
-        console.log('Updated formData:', {
-            ...formData,
-            dias: newSelectedDays,
-        });
-
     };
 
+    // Función para formatear la hora para la base de datos
     const formatTimeForDatabase = (time) => {
         const [hours, minutes] = time.split(':');
         return `${hours}:${minutes}:00`;
     };
 
+    // Función para manejar el agregar un horario
     const handleAddHorario = async () => {
-        // Convierte los días seleccionados a un string separado por comas
         const formattedHoraInicio = formatTimeForDatabase(formData.horaInicio);
         const formattedHoraFin = formatTimeForDatabase(formData.horaFin);
-
 
         try {
             const response = await axios.post('http://localhost:3001/addSchedule', {
@@ -601,19 +549,18 @@ function Popup({ type, closePopup, details }) {
                 horaInicio: formattedHoraInicio,
                 horaFin: formattedHoraFin
             });
-            console.log('Horario creado:', response.data);
             closePopup();
             alert('Horario creado correctamente');
         } catch (error) {
             console.error('Error al crear el horario:', error);
+            alert('Hubo un error al crear el horario');
         }
 
-        // Cierra el popup
         closePopup();
     };
 
+    // Función para manejar la edición de un horario
     const handleEditHorario = async () => {
-        // Convierte los días seleccionados a un string separado por comas
         const formattedHoraInicio = formatTimeForDatabase(formData.horaInicio);
         const formattedHoraFin = formatTimeForDatabase(formData.horaFin);
 
@@ -644,14 +591,15 @@ function Popup({ type, closePopup, details }) {
                 horaFin: formattedHoraFin
 
             });
-            console.log('Horario actualizado:', response.data);
             closePopup();
             alert('Horario actualizado correctamente');
         } catch (error) {
             console.error('Error al actualizar el horario:', error);
+            alert('Hubo un error al actualizar el horario');
         }
     };
 
+    // Función para manejar la eliminación de un horario
     const handleDeleteHorario = async () => {
         const errors = {
             nombreHorario: !formData.nombreHorario,
@@ -676,21 +624,21 @@ function Popup({ type, closePopup, details }) {
                     idHorario: formData.idHorario
                 }
             });
-            console.log('Horario Eliminado:', response.data);
             closePopup();
             alert('Horario eliminado correctamente');
         } catch (error) {
             console.error('Error al eliminar el horario:', error);
+            alert('Hubo un error al eliminar el horario');
         }
     };
 
+    // Función para manejar la creación de un profesor
     const addTeacher = async () => {
         const errors = {
             nombreProfesor: !formData.nombreProfesor,
             correoProfesor: !formData.correoProfesor,
             identificacionProfesor: !formData.identificacionProfesor
         };
-        console.log(formData.identificacionProfesor)
 
         setIsError(errors);
 
@@ -708,14 +656,15 @@ function Popup({ type, closePopup, details }) {
                 correo: formData.correoProfesor.trim(),
                 identificacion: formData.identificacionProfesor.trim()
             });
-            console.log('Profesor creado:', response.data);
             closePopup();
             alert('Profesor creado correctamente');
         } catch (error) {
             console.error('Error al crear el profesor:', error);
+            alert('Hubo un error al crear el profesor');
         }
     };
 
+    // Función para manejar la edición de un profesor
     const editTeacher = async () => {
         const errors = {
             nombreProfesor: !formData.nombreProfesor,
@@ -733,24 +682,22 @@ function Popup({ type, closePopup, details }) {
             return false; // Detiene la ejecución si hay errores
         }
         const profesorConId = profesores.find(profesor => profesor.id === formData.idProfesor);
-        console.log(profesorConId)
         try {
             const response = await axios.put('http://localhost:3001/editTeacher', {
-
-
                 nombre: formData.nombreProfesor.trim(),
                 correo: formData.correoProfesor.trim(),
                 correoviejo: profesorConId.email.trim(),
                 identificacion: formData.identificacion.trim()
             });
-            console.log('Profesor actualizado:', response.data);
             closePopup();
             alert('Profesor actualizado correctamente');
         } catch (error) {
             console.error('Error al actualizar el profesor:', error);
+            alert('Hubo un error al actualizar el profesor');
         }
     };
 
+    // Función para manejar la eliminación de un profesor
     const deleteTeacher = async () => {
         const errors = {
             nombreProfesor: !formData.nombreProfesor,
@@ -769,25 +716,22 @@ function Popup({ type, closePopup, details }) {
 
         try {
             const response = await axios.delete('http://localhost:3001/deleteTeacher', {
-
-
                 data: {
                     correo: formData.correoProfesor
                 }
             });
-            console.log('Profesor Eliminado:', response.data);
             closePopup();
             alert('Profesor eliminado correctamente');
         } catch (error) {
             console.error('Error al eliminar el profesor:', error);
+            alert('Hubo un error al eliminar el profesor');
         }
     };
 
-
+    // Función para manejar la creación de un grupo
     const addGroup = async () => {
         const errors = {
             nombreGrupo: !formData.nombreGrupo,
-
         };
 
         setIsError(errors);
@@ -802,16 +746,79 @@ function Popup({ type, closePopup, details }) {
         try {
             const response = await axios.post('http://localhost:3001/addGroup', {
                 nombre: formData.nombreGrupo.trim(),
-
             });
-            console.log('Grupo creado:', response.data);
+
             closePopup();
             alert('Grupo creado correctamente');
         } catch (error) {
             console.error('Error al crear el grupo:', error);
+            alert('Hubo un error al crear el grupo');
         }
     };
 
+    // Función para manejar la edición de un grupo
+    const editGroup = async () => {
+        const errors = {
+            nombreGrupo: !formData.nombreGrupo,
+            idGrupo: !formData.idGrupo
+        };
+
+        setIsError(errors);
+
+        if (Object.values(errors).includes(true)) {
+            setError('Por favor, complete todos los campos correctamente.');
+            console.error('Por favor, complete todos los campos correctamente.');
+            alert('Por favor, complete todos los campos correctamente.');
+            return false; // Detiene la ejecución si hay errores
+        }
+        const grupoConId = grupos.find(grupo => grupo.id === formData.idGrupo);
+        console.log(grupoConId)
+        try {
+            const response = await axios.put('http://localhost:3001/editGroup', {
+                nombrenuevo: formData.nombreGrupo.trim(),
+                nombreviejo: grupoConId.Name.trim(),
+            });
+
+            closePopup();
+            alert('Grupo actualizado correctamente');
+        } catch (error) {
+            console.error('Error al actualizar el grupo:', error);
+            alert('Hubo un error al actualizar el grupo');
+        }
+    };
+
+    // Función para manejar la eliminación de un grupo
+    const deleteGroup = async () => {
+        const errors = {
+            nombreGrupo: !formData.nombreGrupo,
+            idGrupo: !formData.idGrupo
+        };
+
+        setIsError(errors);
+
+        if (Object.values(errors).includes(true)) {
+            setError('Por favor, seleccione un grupo.');
+            console.error('Por favor, seleccione un grupo.');
+            alert('Por favor, seleccione un grupo.');
+            return false; // Detiene la ejecución si hay errores
+        }
+
+        try {
+            const response = await axios.delete('http://localhost:3001/deleteGroup', {
+                data: {
+                    nombre: formData.nombreGrupo.trim()
+                }
+            });
+
+            closePopup();
+            alert('Grupo eliminado correctamente');
+        } catch (error) {
+            console.error('Error al eliminar el grupo:', error);
+            alert('Hubo un error al eliminar el grupo');
+        }
+    };
+
+    // Función para manejar la creación de un curso
     const addCourse = async () => {
         const errors = {
 
@@ -828,8 +835,6 @@ function Popup({ type, closePopup, details }) {
 
         try {
             const response = await axios.post('http://localhost:3001/addCourse', {
-
-
                 idUbicacion: formData.idLocacion,
                 idProfesores: formData.idProfesor,
                 idCursos: formData.idCatalogCourse,
@@ -841,14 +846,16 @@ function Popup({ type, closePopup, details }) {
                 notes: '',
 
             });
-            console.log('Curso creado:', response.data);
+            
             closePopup();
             alert('Curso creado correctamente');
         } catch (error) {
-            console.error('Error al crear el Curso:', error);
+            console.error('Error al crear el curso:', error);
+            alert('Hubo un error al crear el curso');
         }
     };
 
+    // Función para manejar la fusión de cursos
     const handleFusionCourses = async () => {
         console.log(formData)
         const errors = {
@@ -883,75 +890,12 @@ function Popup({ type, closePopup, details }) {
                     opcion: formData.fusionarCursos ? 1 : 0
                 }
             });
-            console.log('Cursos fusionados:', response.data);
+
             closePopup();
             alert('Cursos fusionados correctamente');
         } catch (error) {
             console.error('Error al fusionar los cursos:', error);
-        }
-    };
-
-    const editGroup = async () => {
-        const errors = {
-            nombreGrupo: !formData.nombreGrupo,
-
-            idGrupo: !formData.idGrupo
-        };
-
-        setIsError(errors);
-
-        if (Object.values(errors).includes(true)) {
-            setError('Por favor, complete todos los campos correctamente.');
-            console.error('Por favor, complete todos los campos correctamente.');
-            alert('Por favor, complete todos los campos correctamente.');
-            return false; // Detiene la ejecución si hay errores
-        }
-        const grupoConId = grupos.find(grupo => grupo.id === formData.idGrupo);
-        console.log(grupoConId)
-        try {
-            const response = await axios.put('http://localhost:3001/editGroup', {
-
-
-                nombrenuevo: formData.nombreGrupo.trim(),
-
-                nombreviejo: grupoConId.Name.trim(),
-
-            });
-            console.log('Grupo actualizado:', response.data);
-            closePopup();
-            alert('Grupo actualizado correctamente');
-        } catch (error) {
-            console.error('Error al actualizar el Grupo:', error);
-        }
-    };
-
-    const deleteGroup = async () => {
-        const errors = {
-            nombreGrupo: !formData.nombreGrupo,
-
-            idGrupo: !formData.idGrupo
-        };
-
-        setIsError(errors);
-
-        if (Object.values(errors).includes(true)) {
-            setError('Por favor, Seleccione un grupo.');
-            console.error('Por favor,  Seleccione un grupo.');
-            alert('Por favor,  Seleccione un grupo.');
-            return false; // Detiene la ejecución si hay errores
-        }
-
-        try {
-            const response = await axios.delete('http://localhost:3001/deleteGroup', {
-                data: {
-                    nombre: formData.nombreGrupo.trim()
-                }
-            });
-            console.log('grupo Eliminado:', response.data);
-            closePopup();
-            alert('grupo eliminado correctamente');
-        } catch (error) {
-            console.error('Error al eliminar el grupo:', error);
+            alert('Hubo un error al fusionar los cursos');
         }
     };
 
@@ -1059,7 +1003,7 @@ function Popup({ type, closePopup, details }) {
                         </div>
                     </div>
                 );
-                
+
             case 'GestionarProfesor':
                 return (
                     <div className='contenedor'>
@@ -1134,7 +1078,7 @@ function Popup({ type, closePopup, details }) {
                                 <div className='input-contenedor'>
                                     <select onChange={(e) => handleSelectCourseChange(e, 1)}>
                                         <option value={0}>Seleccione un curso</option>
-                                        {detailss.map((curso) => (
+                                        {details.map((curso) => (
                                             <option key={curso.Id} value={curso.Id}>
                                                 {'ID' + curso.Id + ' ' + curso.Course + ' - ' + curso.Location}
                                             </option>
@@ -1145,7 +1089,7 @@ function Popup({ type, closePopup, details }) {
                                 <div className='input-contenedor'>
                                     <select onChange={(e) => handleSelectCourseChange(e, 2)}>
                                         <option value={0}>Seleccione un curso</option>
-                                        {detailss.map((curso) => (
+                                        {details.map((curso) => (
                                             <option key={curso.Id} value={curso.Id}>
                                                 {'ID' + curso.Id + ' ' + curso.Course + ' - ' + curso.Location}
                                             </option>
@@ -1161,7 +1105,7 @@ function Popup({ type, closePopup, details }) {
                         </div>
                     </div>
                 );
-                
+
             case 'GestionarGrupo':
                 return (
                     <div className='contenedor'>
@@ -1305,57 +1249,57 @@ function Popup({ type, closePopup, details }) {
                                             placeholder='Fecha inicio'
                                             onChange={handleInputChange}
                                             value={formData.diaInicio}
-                                    />
+                                        />
+                                    </div>
+                                    <div className='input-contenedor'>
+                                        <body style={{ textAlign: 'center' }}>Fecha fin</body>
+                                        <input
+                                            type='date'
+                                            name='diaFin'
+                                            placeholder='Hora fin'
+                                            onChange={handleInputChange}
+                                            value={formData.diaFin}
+                                        />
+                                    </div>
                                 </div>
+
+                                <body>Seleccione el evento a gestionar</body>
                                 <div className='input-contenedor'>
-                                    <body style={{ textAlign: 'center' }}>Fecha fin</body>
+                                    <select
+                                        value={formData.idEvento} // Asegúrate de que el valor esté sincronizado con el estado
+                                        onChange={handleSelectHolidayChange} // Manejador de eventos
+                                    >
+                                        <option value={0}>Seleccione un evento</option>
+                                        {eventos.map(evento => (
+                                            <option key={evento.Id} value={evento.Id}>
+                                                {evento.Name}
+                                            </option>
+                                        ))}
+                                    </select>
+                                </div>
+                                <body>Nombre del evento</body>
+                                <div className='input-contenedor'>
                                     <input
-                                        type='date'
-                                        name='diaFin'
-                                        placeholder='Hora fin'
+                                        type='text'
+                                        name='nombreEvento'
+                                        placeholder='Nombre del evento'
+                                        value={formData.nombreEvento}
                                         onChange={handleInputChange}
-                                        value={formData.diaFin}
                                     />
                                 </div>
-                            </div>
 
-                            <body>Seleccione el evento a gestionar</body>
-                            <div className='input-contenedor'>
-                                <select
-                                    value={formData.idEvento} // Asegúrate de que el valor esté sincronizado con el estado
-                                    onChange={handleSelectHolidayChange} // Manejador de eventos
-                                >
-                                    <option value={0}>Seleccione un evento</option>
-                                    {eventos.map(evento => (
-                                        <option key={evento.Id} value={evento.Id}>
-                                            {evento.Name}
-                                        </option>
-                                    ))}
-                                </select>
+                                {formData.idEvento === 0 || !formData.idEvento ? (
+                                    <button className="btn_naranja" onClick={handleAddHoliday}>Agregar evento</button>
+                                ) : (
+                                    <>
+                                        <button className="btn_azul" onClick={handleEditHoliday}>Actualizar evento</button>
+                                        <button className="btn_azul" onClick={handleDeleteHoliday}>Eliminar evento</button>
+                                    </>
+                                )}
                             </div>
-                            <body>Nombre del evento</body>
-                            <div className='input-contenedor'>
-                                <input
-                                    type='text'
-                                    name='nombreEvento'
-                                    placeholder='Nombre del evento'
-                                    value={formData.nombreEvento}
-                                    onChange={handleInputChange}
-                                />
-                            </div>
-
-                            {formData.idEvento === 0 || !formData.idEvento ? (
-                                <button className="btn_naranja" onClick={handleAddHoliday}>Agregar evento</button>
-                            ) : (
-                                <>
-                                    <button className="btn_azul" onClick={handleEditHoliday}>Actualizar evento</button>
-                                    <button className="btn_azul" onClick={handleDeleteHoliday}>Eliminar evento</button>
-                                </>
-                            )}
                         </div>
                     </div>
-                </div>
-            );
+                );
 
             case 'CerrarSesion':
                 return (
