@@ -15,6 +15,6 @@ router.put('/editCourse', editCourse);
 
 router.delete('/deleteCourse', deleteCourse);
 
-router.get('/fusionCourses', fusionCourses);
+router.post('/fusionCourses', fusionCourses);
 
 module.exports = router;

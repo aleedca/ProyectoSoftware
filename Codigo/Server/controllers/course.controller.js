@@ -141,13 +141,14 @@ const fusionCourses = async (req, res) => {
 
         let result = await pool.request()
 
-            .input('IN_IdCourses', sql.BigInt, req.body['idCurso1'])
-            .input('IN_IdCourses2', sql.BigInt, req.body['idCurso2'])
-            .input('IN_optionToDelete', sql.Bit, req.body['opcion'])
+            .input('IN_IdCourses_Details_1', sql.BigInt, req.body['data']['idCurso1'])
+            .input('IN_IdCourses_Details_2', sql.BigInt, req.body['data']['idCurso2'])
+            .input('IN_opcionToDelete', sql.Bit, req.body['data']['opcion'])
             .execute('InloTEC_SP_Courses_Details_Fusion'); // Nombre del procedimiento almacenado
 
         console.log(result); // Muestra el resultado
         res.status(200).send('Fusion realizada');
+        
     } catch (error) {
         const errorMessage = error.message || 'Error desconocido';
         console.error('Error al ejecutar el query:', errorMessage);
