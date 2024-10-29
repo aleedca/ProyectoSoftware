@@ -61,7 +61,7 @@ BEGIN
 	INNER JOIN Modality M ON M.Id = CD.IdModality
 	INNER JOIN (SELECT CDG.IdCourses_Details AS 'IdCourses_Details' ,  STRING_AGG(G.Name, ',') AS 'Name'
 				FROM Courses_Details CD
-				INNER JOIN Courses_Details_Groups CDG ON CDG.IdCourses_Details = CD.Id
+				INNER JOIN Courses_Details_Groups CDG ON (CDG.IdCourses_Details = CD.Id AND CDG.Deleted = 0)
 				INNER JOIN Groups G ON G.Id = CDG.IdGroups
 				GROUP BY CDG.IdCourses_Details) AS A ON A.IdCourses_Details = CD.Id
 	INNER JOIN Schedule S ON S.Id = CD.IdSchedule

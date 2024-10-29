@@ -79,8 +79,8 @@ BEGIN
         -- Check if the user is already registered and active
         IF NOT EXISTS (SELECT 1 
 				   FROM [dbo].[Users] 
-				   WHERE email = LTRIM(RTRIM(@IN_oldEmail))
-				   AND LTRIM(RTRIM(@IN_oldPasswordhash)) = Passwordhash
+				   WHERE LTRIM(RTRIM(Email)) = LTRIM(RTRIM(@IN_oldEmail))
+				   AND LTRIM(RTRIM(Passwordhash)) = LTRIM(RTRIM(@IN_oldPasswordhash))
 				   AND Deleted = 0 )
         BEGIN
             RAISERROR('El usuario a editar no fue encontrado.', 16, 1);
@@ -89,7 +89,7 @@ BEGIN
         -- Check if the email is already registered and active
         IF EXISTS (SELECT 1 
 				   FROM [dbo].[Users] 
-				   WHERE email = LTRIM(RTRIM(@IN_newEmail))
+				   WHERE LTRIM(RTRIM(Email)) = LTRIM(RTRIM(@IN_newEmail))
 				   AND Deleted = 0 )
         BEGIN
             RAISERROR('El nuevo correo electrónico ya está registrado. Por favor, utilice otro correo.', 16, 1);
@@ -99,7 +99,7 @@ BEGIN
 		--get the user id of the email
 		SELECT @UserId = U.id
 		FROM [dbo].[Users] U
-		WHERE email = LTRIM(RTRIM(@IN_oldEmail))
+		WHERE LTRIM(RTRIM(Email)) = LTRIM(RTRIM(@IN_oldEmail))
 		AND LTRIM(RTRIM(@IN_oldPasswordhash)) = U.Passwordhash 
 		AND Deleted = 0
 

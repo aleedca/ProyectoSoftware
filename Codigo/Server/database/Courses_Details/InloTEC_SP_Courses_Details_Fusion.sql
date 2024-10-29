@@ -65,22 +65,6 @@ BEGIN
 
 		--the courses must have the same dates
 
-    	IF NOT EXISTS (SELECT 1 
-			FROM (SELECT CAST(CD.StartDate AS DATE) AS 'StartDate', 
-						 CAST(CD.EndDate AS DATE) AS 'EndDate'
-			 	  FROM [dbo].[Courses_Details] CD
-			      WHERE CD.Id = @IN_IdCourses_Details_1
-			      AND Deleted = 0) A
-		   	JOIN (SELECT CAST(CD.StartDate AS DATE) AS 'StartDate', 
-						 CAST(CD.EndDate AS DATE) AS 'EndDate'
-			 	  FROM [dbo].[Courses_Details] CD
-			      WHERE CD.Id = @IN_IdCourses_Details_2
-			      AND Deleted = 0) B ON 1 = 1
-		   WHERE A.StartDate = B.StartDate
-		   AND A.EndDate = B.EndDate)
-    	BEGIN
-		RAISERROR('Los cursos a fusionar tienen diferentes fechas.', 16, 1);
-		END;
 				
 
 		--Combinate the notes of both course_details in a variable
@@ -122,6 +106,11 @@ BEGIN
 					 FROM CTE 
 					 WHERE row_num > 1
 					);
+
+		UPDATE Courses_Details
+		SET Deleted = 1
+		WHERE (Id = @IN_IdCourses_Details_1 AND @IN_opcionToDelete = 0)
+		OR (Id = @IN_IdCourses_Details_2 AND @IN_opcionToDelete = 1)
 
         
         -- COMMIT TRANSACTION
