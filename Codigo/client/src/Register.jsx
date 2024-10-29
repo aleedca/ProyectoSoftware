@@ -2,15 +2,16 @@
 //import './FormLogin.css';
 import './App.css'
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { useEffect, useState , useContext } from "react";
 import { Link } from 'react-router-dom';
 import { FaLock, FaEnvelope, FaUser, FaIdCard, FaUnlock} from 'react-icons/fa';
 import imagen from './Assets/register.png';
 import { useNavigate } from 'react-router-dom';
+import { UserContext } from './UserContext'; // Asegúrate de importar UserContext
 
 function Register() {
   const navigate = useNavigate();
-
+  const { link } = useContext(UserContext); 
   const [nombre, setNombre] = useState('');
   const [primerApellido, setPrimerApellido] = useState('');
   const [segundoApellido, setSegundoApellido] = useState('');
@@ -47,7 +48,7 @@ function Register() {
       return; // Detiene la ejecución si hay errores
     }
 
-    axios.post("http://localhost:3001/addUser", {
+    axios.post(link + "/addUser", {
       nombre,
       primerApellido,
       segundoApellido,

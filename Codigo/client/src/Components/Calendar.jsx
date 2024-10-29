@@ -1,36 +1,56 @@
 // Calendar.jsx
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect ,useContext } from 'react';
 import Sidebar from './Sidebar';
 import Popup from './Popup';
 import { Calendar as BigCalendar, momentLocalizer } from 'react-big-calendar';
 import moment from 'moment';
-import 'moment/locale/es';  // Asegurarse de que el locale esté correctamente importado
+import 'moment/locale/es';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import '../Styles/Styles.css';
+import '../App.css';
 import axios from 'axios';
+import imaMostrar from '../Assets/MostrarInfo.png';
+import { UserContext } from '../UserContext'; // Asegúrate de importar UserContext
 
-const localizer = momentLocalizer(moment);  // Usa momentLocalizer directamente
+
+const localizer = momentLocalizer(moment);
 
 function Calendar() {
-  const [Courses, setCourses] = useState([]);
+  //const [Courses, setCourses] = useState([]);
+  const { link } = useContext(UserContext); 
+  const [detailsCourses, setDetailsCourses] = useState([]);
+  const [selectedCourse, setSelectedCourse] = useState(null); 
+  const [tooltipPosition, setTooltipPosition] = useState({ x: 0, y: 0 });
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [view, setView] = useState('month');
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [popupType, setPopupType] = useState('');
 
+  /*
   useEffect(() => {
-    // Función para obtener la lista de cursos
     const fetchCoursesCalendar = async () => {
       try {
-        const response = await axios.get('http://localhost:3001/getCoursesCalendar');
+        const response = await axios.get(link + '/getCoursesCalendar');
         setCourses(response.data);
       } catch (error) {
         console.error('Error al obtener la lista de cursos del calendario:', error);
       }
     };
-
     fetchCoursesCalendar();
+  }, []);
+  */
+
+  useEffect(() => {
+    const fetchDetailsCourses = async () => {
+      try {
+        const response = await axios.get(link + '/getCourses');
+        setDetailsCourses(response.data);
+      } catch (error) {
+        console.error('Error al obtener la lista de detalles de los cursos:', error);
+      }
+    };
+    fetchDetailsCourses();
   }, []);
 
   const openPopup = (type) => {
@@ -46,14 +66,65 @@ function Calendar() {
     setIsSidebarOpen(!isSidebarOpen);
   };
 
-  const events = Courses.map((course) => ({
-    ...course,
-    start: new Date(course.start),  // Asegúrate de que estas fechas estén en formato Date
-    end: new Date(course.end),
-  }));
+  const events = detailsCourses.flatMap((course) => {
+    // Diccionario para convertir nombres de días a índices de JavaScript (0 para domingo a 6 para sábado)
+    const dayMap = {
+      'Domingo': 0,
+      'Lunes': 1,
+      'Martes': 2,
+      'Miércoles': 3,
+      'Jueves': 4,
+      'Viernes': 5,
+      'Sábado': 6,
+    };
+    
+    // Convertir los días de la semana a sus correspondientes índices numéricos
+    const daysOfWeek = course.Days.split(",").map(day => dayMap[day.trim()]);
+    
+    const startDate = new Date(course.StartDate);
+    const endDate = new Date(course.EndDate);
+    const startTime = new Date(course.StartTime);
+    const endTime = new Date(course.EndTime);
+    
+    const eventsForCourse = [];
 
-  const handleEventClick = (event) => {
-    openPopup('AgregarCurso');
+    // Iterar desde la fecha de inicio hasta la fecha de fin del curso
+    let currentDate = new Date(startDate);
+    while (currentDate <= endDate) {
+      if (daysOfWeek.includes(currentDate.getDay())) {
+        // Crear un evento para cada día correspondiente
+        const eventStart = new Date(currentDate);
+        const eventEnd = new Date(currentDate);
+
+        // Asignar horas y minutos a start y end
+        eventStart.setHours(startTime.getHours(), startTime.getMinutes());
+        eventEnd.setHours(endTime.getHours(), endTime.getMinutes());
+
+        // Agregar el evento
+        eventsForCourse.push({
+          ...course,
+          id: course.Id,
+          title: course.Course,
+          start: eventStart,
+          end: eventEnd,
+          color: course.Color ? `#${course.Color}` : '#E0FFFF',
+        });
+      }
+
+      // Avanzar al siguiente día
+      currentDate.setDate(currentDate.getDate() + 1);
+    }
+
+    return eventsForCourse;
+  });
+
+  const handleEventClick = (event, e) => {
+    setSelectedCourse(event);
+    setTooltipPosition({ x: e.clientX, y: e.clientY });
+  };
+
+  const closeTooltip = () => {
+    setSelectedCourse(null);
   };
 
   return (
@@ -70,7 +141,7 @@ function Calendar() {
       </div>
       <div style={{ flex: 1, padding: '20px', position: 'relative' }}>
         <BigCalendar
-          localizer={localizer}  // Usa el localizer directamente aquí
+          localizer={localizer}
           events={events}
           startAccessor="start"
           endAccessor="end"
@@ -95,6 +166,12 @@ function Calendar() {
         {isPopupOpen && (
           <Popup type={popupType} closePopup={closePopup} />
         )}
+        {selectedCourse && (
+          <>
+            <div className="overlay" onClick={closeTooltip} />
+            <Tooltip course={selectedCourse} position={tooltipPosition} closeTooltip={closeTooltip} />
+          </>
+        )}
       </div>
     </div>
   );
@@ -117,6 +194,40 @@ function EventComponent({ event }) {
       {event.title}
     </div>
   );
+}
+
+function Tooltip({ course, closeTooltip }) {
+  const { Id, Course, Teacher, Email, Group, Modality, Location, Days, StartDate, EndDate, StartTime, EndTime, Notes } = course;
+  return (
+    <div className="tooltip">
+      
+      <div className='contenedor-columnas'>
+          <div className='columna columna-imagen'>
+              <img src={imaMostrar} alt="Imagen mostrar información" />
+          </div>
+          <div className='columna columna-formulario'>
+              
+          <h1 style={{fontSize:'26px', alignSelf:'center'}}>{Course}</h1>
+          
+          <p style={{fontSize:'16px', marginTop: '15px'}}><strong>PROFESOR: </strong>{Teacher}</p>
+          <body style={{fontSize:'16px', alignSelf:'center'}}>{Email}</body>
+          <h2>INFORMACIÓN GENERAL</h2>
+          <body style={{fontSize:'16px'}}><strong>ID: </strong>{Id}</body>
+          <body style={{fontSize:'16px', marginTop: '10px'}}><strong>GRUPO: </strong>{Group}</body>
+          <body style={{fontSize:'16px', marginTop: '10px'}}><strong>MODALIDAD: </strong>{Modality}</body>
+          <body style={{fontSize:'16px', marginTop: '10px'}}><strong>LUGAR: </strong>{Location}</body>
+
+          <h2>INFORMACIÓN HORARIOS</h2>
+          <body style={{fontSize:'16px'}}><strong>DÍA(S): </strong>{Days}</body>
+          <body style={{fontSize:'16px', marginTop: '10px'}}><strong>FECHA INICIO: </strong>{moment(StartDate).format('LL')}</body>
+          <body style={{fontSize:'16px', marginTop: '10px'}}><strong>FECHA FINAL: </strong>{moment(EndDate).format('LL')}</body>
+          <body style={{fontSize:'16px', marginTop: '10px'}}><strong>HORARIO: </strong>{moment(StartTime).format('HH:mm')} a {moment(EndTime).format('HH:mm')}</body>
+          
+          <body style={{fontSize:'16px', marginTop: '10px'}}><strong>NOTAS: </strong>{Notes || 'Ninguna'}</body>
+        </div>
+      </div>
+  </div>
+  );             
 }
 
 function Toolbar(props) {

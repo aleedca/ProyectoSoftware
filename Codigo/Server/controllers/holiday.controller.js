@@ -14,19 +14,88 @@ const getHolidays = async (req, res) => {
 }
 
 const getHoliday = async (req, res) => {
-    res.send("obteniendo un Event");
+    res.send("obteniendo un evento");
 }
 
 const addHoliday = async (req, res) => {
-    res.send("obteniendo un Event");
-};
+    try {
+        const pool = await getConnection();
+        console.log(req.body)
+        const primerDiaInicio = req.body['diaInicio'].substring(0, 10);
+        const primerDiaFin = req.body['diaFin'].substring(0, 10);
 
-const editHoliday = async (req, res) => {
-    res.send("editando un  Event");
+        const baseHour1 = '00:00:00'; 
+        const baseHour2 = '23:00:00'; 
+        const completar = '.000'; 
+        const formattedDiaInicio = `${primerDiaInicio} ${baseHour1}${completar}`;
+        const formattedDiaFin = `${primerDiaFin} ${baseHour2}${completar}`;
+
+        console.log(formattedDiaInicio)
+        console.log(formattedDiaFin)
+
+        let result = await pool.request()
+            .input('IN_name', sql.NVarChar(256), req.body['nombreEvento'])
+            .input('IN_startDatetime', sql.DateTime, formattedDiaInicio) // Pasa la hora con el formato correcto
+            .input('IN_endDatetime', sql.DateTime, formattedDiaFin) // Pasa la hora con el formato correcto
+            .execute('InloTEC_SP_Holidays_Add');
+
+        console.log(result);
+        res.status(200).send('Evento eliminado')
+    } catch (error) {
+        const errorMessage = error.message || 'Error desconocido';
+        console.error('Error al ejecutar el query:', errorMessage);
+        res.status(500).send(errorMessage);
+    }
 }
 
-const deleteHoliday = (req, res) => {
-    res.send("eliminando un Event");
+const editHoliday = async (req, res) => {
+    try {
+        const pool = await getConnection();
+        console.log(req.body)
+        const primerDiaInicio = req.body['diaInicio'].substring(0, 10);
+        const primerDiaFin = req.body['diaFin'].substring(0, 10);
+
+        const baseHour1 = '00:00:00'; 
+        const baseHour2 = '23:00:00'; 
+        const completar = '.000'; 
+        const formattedDiaInicio = `${primerDiaInicio} ${baseHour1}${completar}`;
+        const formattedDiaFin = `${primerDiaFin} ${baseHour2}${completar}`;
+
+        console.log(formattedDiaInicio)
+        console.log(formattedDiaFin)
+
+        let result = await pool.request()
+            .input('IN_IdHolidays', sql.BigInt, req.body['idEvento'])
+            .input('IN_newName', sql.NVarChar(256), req.body['nombreEvento'])
+            .input('IN_startDatetime', sql.DateTime, formattedDiaInicio) // Pasa la hora con el formato correcto
+            .input('IN_endDatetime', sql.DateTime, formattedDiaFin) // Pasa la hora con el formato correcto
+            .execute('InloTEC_SP_Holidays_Edit');
+
+        console.log(result);
+        res.status(200).send('Evento eliminado')
+    } catch (error) {
+        const errorMessage = error.message || 'Error desconocido';
+        console.error('Error al ejecutar el query:', errorMessage);
+        res.status(500).send(errorMessage);
+    }
+}
+
+const deleteHoliday = async (req, res) => {
+    try {
+        const pool = await getConnection();
+        console.log(req.body)
+
+        let result = await pool.request()
+            .input('IN_IdHolidays', sql.BigInt, req.body['idEvento'])
+            .execute('InloTEC_SP_Holidays_Delete');
+
+        console.log(result);
+        res.status(200).send('Evento eliminado')
+    } catch (error) {
+        const errorMessage = error.message || 'Error desconocido';
+        console.error('Error al ejecutar el query:', errorMessage);
+        res.status(500).send(errorMessage);
+    }
 }
 
 module.exports = { getHolidays, getHoliday, addHoliday, editHoliday, deleteHoliday };

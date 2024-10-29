@@ -1,6 +1,8 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect , useContext } from 'react';
+import { UserContext } from '../UserContext'; // Asegúrate de importar UserContext
 
 const Dropdown = ({ options, onSelect }) => {
+  const { link } = useContext(UserContext); 
   const [inputValue, setInputValue] = useState('');
   const [filteredOptions, setFilteredOptions] = useState(options);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);

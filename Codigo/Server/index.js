@@ -30,8 +30,8 @@ app.use("/", locationRoutes);
 const modalityRoutes = require("./routes/modality.routes.js")
 app.use("/", modalityRoutes);
 
-const eventRoutes = require("./routes/event.routes.js")
-app.use("/", eventRoutes);
+const holidayRoutes = require("./routes/holiday.routes.js")
+app.use("/", holidayRoutes);
 
 app.listen(3001, () => {
   console.log("Server running on port 3001")

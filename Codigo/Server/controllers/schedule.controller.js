@@ -25,13 +25,38 @@ const addSchedule = async (req, res) => {
 
         // Convierte el array de días a un string separado por comas
         const diasString = req.body['dias'].join(',');
+        // Convierte las horas a un formato correcto de SQL Time (HH:mm:ss)
+        console.log(req.body['nombreHorario']);
         console.log(req.body['horaInicio']);
         console.log(req.body['horaFin']);
 
+        var [horasInicioNum] = req.body['horaInicio'].split(':').map(Number);
+        var [horasFinNum] = req.body['horaFin'].split(':').map(Number);
+
+        console.log('Horas separadas:', horasInicioNum, horasFinNum);
+
+        // Sumar 6 horas asegurando que no se pase de 24 horas
+        // Aquí se convierte a UTC para cuando se corra en Azure
+        for (let i = 1; i < 7; i++) {
+            horasInicioNum = horasInicioNum+1;
+            horasFinNum = horasFinNum+1;
+            if(horasInicioNum==24){
+                horasInicioNum=0;
+            }
+            if(horasFinNum==24){
+                horasFinNum=0;
+            }
+        }
+        const horaInicioStr = horasInicioNum.toString().padStart(2, '0') + ':00:00';
+        const horaFinStr = horasFinNum.toString().padStart(2, '0') + ':00:00';
+
+        console.log('Hora inicio final (string):', horaInicioStr);
+        console.log('Hora fin final (string):', horaFinStr);
+
         const baseDate = '1970-01-01'; // Fecha ficticia
         const completar = '.000'; // Fecha ficticia
-        const formattedHoraInicio = `${baseDate} ${req.body['horaInicio']}${completar}`;
-        const formattedHoraFin = `${baseDate} ${req.body['horaFin']}${completar}`;
+        const formattedHoraInicio = `${baseDate} ${horaInicioStr}${completar}`;
+        const formattedHoraFin = `${baseDate} ${horaFinStr}${completar}`;
 
         console.log(formattedHoraInicio);
         console.log(formattedHoraFin);
@@ -60,17 +85,38 @@ const editSchedule = async (req, res) => {
         // Convierte el array de días a un string separado por comas
         const diasString = req.body['dias'].join(',');
         // Convierte las horas a un formato correcto de SQL Time (HH:mm:ss)
-        console.log(req.body['horaInicio']);
-        console.log(req.body['horaFin']);
+        //console.log(req.body['horaInicio']);
+        //console.log(req.body['horaFin']);
+        var [horasInicioNum] = req.body['horaInicio'].split(':').map(Number);
+        var [horasFinNum] = req.body['horaFin'].split(':').map(Number);
+
+        console.log('Horas separadas:', horasInicioNum, horasFinNum);
+
+        // Sumar 6 horas asegurando que no se pase de 24 horas
+        // Aquí se convierte a UTC para cuando se corra en Azure
+        for (let i = 1; i < 7; i++) {
+            horasInicioNum = horasInicioNum+1;
+            horasFinNum = horasFinNum+1;
+            if(horasInicioNum==24){
+                horasInicioNum=0;
+            }
+            if(horasFinNum==24){
+                horasFinNum=0;
+            }
+        }
+        const horaInicioStr = horasInicioNum.toString().padStart(2, '0') + ':00:00';
+        const horaFinStr = horasFinNum.toString().padStart(2, '0') + ':00:00';
+
+        console.log('Hora inicio final (string):', horaInicioStr);
+        console.log('Hora fin final (string):', horaFinStr);
 
         const baseDate = '1970-01-01'; // Fecha ficticia
         const completar = '.000'; // Fecha ficticia
-        const formattedHoraInicio = `${baseDate} ${req.body['horaInicio']}${completar}`;
-        const formattedHoraFin = `${baseDate} ${req.body['horaFin']}${completar}`;
+        const formattedHoraInicio = `${baseDate} ${horaInicioStr}${completar}`;
+        const formattedHoraFin = `${baseDate} ${horaFinStr}${completar}`;
 
         console.log(formattedHoraInicio);
         console.log(formattedHoraFin);
-        console.log(req.body['nombreHorario']);
 
         let result = await pool.request()
             .input('IN_IdSchedule', sql.BigInt, req.body['idHorario'])
