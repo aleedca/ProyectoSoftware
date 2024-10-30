@@ -20,6 +20,7 @@ function Calendar() {
   //const [Courses, setCourses] = useState([]);
   const { link } = useContext(UserContext); 
   const [detailsCourses, setDetailsCourses] = useState([]);
+  const [detailsHolidays, setDetailsHolidays] = useState([]);
   const [selectedCourse, setSelectedCourse] = useState(null); 
   const [tooltipPosition, setTooltipPosition] = useState({ x: 0, y: 0 });
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
@@ -51,6 +52,19 @@ function Calendar() {
       }
     };
     fetchDetailsCourses();
+  }, []);
+
+  useEffect(() => {
+    const fetchDetailsHolidays = async () => {
+      try {
+        const response = await axios.get(link + '/getHolidays');
+        setDetailsHolidays(response.data);
+        console.log(response.data)
+      } catch (error) {
+        console.error('Error al obtener la lista de detalles de los holidays:', error);
+      }
+    };
+    fetchDetailsHolidays();
   }, []);
 
   const openPopup = (type) => {
@@ -127,6 +141,33 @@ function Calendar() {
     setSelectedCourse(null);
   };
 
+ /* const dayPropGetter = (date) => {
+    const today = new Date();
+    if (date.getDate() === today.getDate() && date.getMonth() === today.getMonth() && date.getFullYear() === today.getFullYear()) {
+      return {
+        style: { backgroundColor: '#ffdd57', color: '#333' } // Cambia el color aquí
+      };
+    }
+    return {};
+  };*/
+
+  const dayPropGetter = (date) => {
+    // Cambia el color de fondo si `date` está dentro del rango de un festivo
+    const isHoliday = detailsHolidays.some(holiday => {
+      const startDate = new Date(holiday.StartDatetime);
+      const endDate = new Date(holiday.EndDatetime);
+      
+      // Verifica si `date` está dentro del rango [startDate, endDate]
+      return date >= startDate && date <= endDate;
+    });
+  
+    return {
+      style: {
+        backgroundColor: isHoliday ? '#e0e0e0' : undefined, // Color específico si es festivo
+      }
+    };
+  };
+
   return (
     <div style={{ display: 'flex', height: '100vh' }}>
       <div
@@ -162,6 +203,7 @@ function Calendar() {
             toolbar: (props) => <Toolbar {...props} view={view} setView={setView} />,
             event: EventComponent,
           }}
+          dayPropGetter={dayPropGetter} // Usar dayPropGetter aquí
         />
         {isPopupOpen && (
           <Popup type={popupType} closePopup={closePopup} />
