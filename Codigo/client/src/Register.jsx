@@ -54,7 +54,7 @@ function Register() {
       segundoApellido,
       correo,
       contrasenna
-    })
+    }, { withCredentials: true })
       .then((response) => {
         console.log('Post creado:', response.data);
         alert('Usuario creado exitosamente');

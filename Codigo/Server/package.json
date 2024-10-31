@@ -17,6 +17,7 @@
     "nodemon": "^3.1.4",
     "sequelize": "^6.37.3",
     "sequelize-cli": "^6.6.2",
-    "tedious": "^18.3.0"
+    "tedious": "^18.3.0",
+    "react-select": "^5.8.0"
   }
 }

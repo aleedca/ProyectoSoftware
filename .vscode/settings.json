@@ -1,0 +1,10 @@
+{
+    "appService.zipIgnorePattern": [
+        "node_modules{,/**}",
+        "Codigo/Server/node_modules{,/**}",
+        "Codigo/Server/database{,/**}",
+        "Codigo/client/build{,/**}",
+        "Codigo/client/node_modules{,/**}",
+        ".vscode{,/**}"
+    ]
+}

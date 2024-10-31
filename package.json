@@ -1,0 +1,15 @@
+{
+  "name": "pagina-InloTEC",
+  "version": "1.0.0",
+  "private": true,
+  "engines": {
+    "node": "18.x"
+  },
+  "scripts": {
+    "install-client": "cd Codigo/client && npm install",
+    "install-server": "cd Codigo/Server && npm install",
+    "install": "npm run install-client && npm run install-server",
+    "build": "cd Codigo/client && npm run build",
+    "start": "cd Codigo/Server && node index.js"
+  }
+}

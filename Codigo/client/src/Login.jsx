@@ -45,7 +45,7 @@ function Login() {
       params: {
         contrasenna,
         correo
-      }
+      }, withCredentials: true
     })
       .then((response) => {
         //console.log('Usuario autenticado:', response.data);

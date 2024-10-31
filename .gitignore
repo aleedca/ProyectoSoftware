@@ -1,5 +1,8 @@
 # Node.js
-node_modules/
+node_modules
+Codigo/Server/node_modules
+Codigo/client/node_modules
+Codigo/client/build
 npm-debug.log
 yarn-error.log
 yarn-debug.log*
@@ -17,18 +20,17 @@ pids
 .env.*
 
 # Database
-db/
+Codigo/Server/database
 
 # Build output
 build/
-dist/
+dist/*
 
 
 # Dependency directories
 jspm_packages/
 
 # IDEs and editors
-.vscode/
 .idea/
 *.suo
 *.ntvs*

@@ -18,7 +18,7 @@ function Inicio() {
 
   const [listOfPosts, setListOfPosts] = useState([]);
   /*useEffect(() => {
-    axios.get(link + "/basic").then((response) => {
+    axios.get(link + "/basic", { withCredentials: true }).then((response) => {
       setListOfPosts(response.data);
       console.log(response.data)
     });

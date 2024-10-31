@@ -40,9 +40,9 @@ function Edit() {
       nuevaContrasenna,
       nombre,
       primerApellido,
-      segundoApellido
+      segundoApellido   
 
-    })
+    }, { withCredentials: true })
       .then((response) => {
         const fullName = `${response.data[0].Name} ${response.data[0].LastName1} ${response.data[0].LastName2}`;
         navigate('/login')
@@ -73,7 +73,7 @@ function Edit() {
       params: {
         contrasenna,
         correo
-      }
+      }, withCredentials: true
     })
       .then((response) => {
         const fullName = `${response.data[0].Name} ${response.data[0].LastName1} ${response.data[0].LastName2}`;

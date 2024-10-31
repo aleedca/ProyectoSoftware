@@ -74,7 +74,7 @@ function Popup({ type, closePopup, details }) {
         // Función para obtener la lista de los detalles de los cursos
         const fetchCourses = async () => {
             try {
-                const response = await axios.get(link + '/getCourses');
+                const response = await axios.get(link + '/getCourses', { withCredentials: true });
                 setCourses(response.data);
             } catch (error) {
                 console.error('Error al obtener la lista de detalles de los cursos:', error);
@@ -88,7 +88,7 @@ function Popup({ type, closePopup, details }) {
         // Función para obtener la lista de profesores
         const fetchProfesores = async () => {
             try {
-                const response = await axios.get(link + '/getTeachers');
+                const response = await axios.get(link + '/getTeachers', { withCredentials: true });
                 setProfesores(response.data);
             } catch (error) {
                 console.error('Error al obtener la lista de profesores:', error);
@@ -102,7 +102,7 @@ function Popup({ type, closePopup, details }) {
         // Función para obtener la lista de profesores
         const fetchEventos = async () => {
             try {
-                const response = await axios.get(link + '/getHolidays');
+                const response = await axios.get(link + '/getHolidays', { withCredentials: true });
                 setEventos(response.data);
             } catch (error) {
                 console.error('Error al obtener la lista de eventos:', error);
@@ -116,7 +116,7 @@ function Popup({ type, closePopup, details }) {
         // Función para obtener la lista de grupos
         const fetchGrupos = async () => {
             try {
-                const response = await axios.get(link + '/getGroups');
+                const response = await axios.get(link + '/getGroups', { withCredentials: true });
                 setGrupos(response.data);
             } catch (error) {
                 console.error('Error al obtener la lista de grupos:', error);
@@ -130,7 +130,7 @@ function Popup({ type, closePopup, details }) {
         // Función para obtener la lista de grupos
         const fetchCatalogCourse = async () => {
             try {
-                const response = await axios.get(link + '/getCatalogCourses');
+                const response = await axios.get(link + '/getCatalogCourses', { withCredentials: true });
                 setCatalogCourses(response.data);
             } catch (error) {
                 console.error('Error al obtener la lista de catalogo de coursos:', error);
@@ -144,7 +144,7 @@ function Popup({ type, closePopup, details }) {
         // Función para obtener la lista de locaciones
         const fetchLocaciones = async () => {
             try {
-                const response = await axios.get(link + '/getLocations');
+                const response = await axios.get(link + '/getLocations', { withCredentials: true });
                 setLocaciones(response.data);
             } catch (error) {
                 console.error('Error al obtener la lista de locaciones:', error);
@@ -158,7 +158,7 @@ function Popup({ type, closePopup, details }) {
         // Función para obtener la lista de locaciones
         const fetchModalidades = async () => {
             try {
-                const response = await axios.get(link + '/getModalitys');
+                const response = await axios.get(link + '/getModalitys', { withCredentials: true });
                 setModalidades(response.data);
             } catch (error) {
                 console.error('Error al obtener la lista de modalidades:', error);
@@ -172,7 +172,7 @@ function Popup({ type, closePopup, details }) {
         // Función para obtener la lista de horarios
         const fetchSchedules = async () => {
             try {
-                const response = await axios.get(link + '/getSchedules');
+                const response = await axios.get(link + '/getSchedules', { withCredentials: true });
                 setHorarios(response.data);
             } catch (error) {
                 console.error('Error al obtener la lista de horarios:', error);
@@ -249,7 +249,7 @@ function Popup({ type, closePopup, details }) {
                 nombreEvento: formData.nombreEvento.trim(),
                 diaInicio: formattedDiaInicio,
                 diaFin: formattedDiaFin
-            });
+            }, { withCredentials: true });
             console.log('Evento creado:', response.data);
             closePopup();
             alert('Evento creado correctamente');
@@ -290,7 +290,7 @@ function Popup({ type, closePopup, details }) {
                 diaInicio: formattedDiaInicio,
                 diaFin: formattedDiaFin
 
-            });
+            }, { withCredentials: true });
             console.log('Evento actualizado:', response.data);
             closePopup();
             alert('Evento actualizado correctamente');
@@ -322,7 +322,7 @@ function Popup({ type, closePopup, details }) {
             const response = await axios.delete(link + '/deleteHoliday', {
                 data: {
                     idEvento: formData.idEvento
-                }
+                }, withCredentials: true
             });
             console.log('Evento Eliminado:', response.data);
             closePopup();
@@ -550,7 +550,7 @@ function Popup({ type, closePopup, details }) {
                 dias: formData.dias,
                 horaInicio: formattedHoraInicio,
                 horaFin: formattedHoraFin
-            });
+            }, { withCredentials: true });
             closePopup();
             alert('Horario creado correctamente');
         } catch (error) {
@@ -592,7 +592,7 @@ function Popup({ type, closePopup, details }) {
                 horaInicio: formattedHoraInicio,
                 horaFin: formattedHoraFin
 
-            });
+            }, { withCredentials: true });
             closePopup();
             alert('Horario actualizado correctamente');
         } catch (error) {
@@ -624,7 +624,7 @@ function Popup({ type, closePopup, details }) {
             const response = await axios.delete(link + '/deleteSchedule', {
                 data: {
                     idHorario: formData.idHorario
-                }
+                }, withCredentials: true
             });
             closePopup();
             alert('Horario eliminado correctamente');
@@ -657,7 +657,7 @@ function Popup({ type, closePopup, details }) {
                 nombre: formData.nombreProfesor.trim(),
                 correo: formData.correoProfesor.trim(),
                 identificacion: formData.identificacionProfesor.trim()
-            });
+            }, { withCredentials: true });
             closePopup();
             alert('Profesor creado correctamente');
         } catch (error) {
@@ -690,7 +690,7 @@ function Popup({ type, closePopup, details }) {
                 correo: formData.correoProfesor.trim(),
                 correoviejo: profesorConId.email.trim(),
                 identificacion: formData.identificacion.trim()
-            });
+            }, { withCredentials: true });
             closePopup();
             alert('Profesor actualizado correctamente');
         } catch (error) {
@@ -720,7 +720,7 @@ function Popup({ type, closePopup, details }) {
             const response = await axios.delete(link + '/deleteTeacher', {
                 data: {
                     correo: formData.correoProfesor
-                }
+                }, withCredentials: true
             });
             closePopup();
             alert('Profesor eliminado correctamente');
@@ -748,7 +748,7 @@ function Popup({ type, closePopup, details }) {
         try {
             const response = await axios.post(link + '/addGroup', {
                 nombre: formData.nombreGrupo.trim(),
-            });
+            }, { withCredentials: true });
 
             closePopup();
             alert('Grupo creado correctamente');
@@ -779,7 +779,7 @@ function Popup({ type, closePopup, details }) {
             const response = await axios.put(link + '/editGroup', {
                 nombrenuevo: formData.nombreGrupo.trim(),
                 nombreviejo: grupoConId.Name.trim(),
-            });
+            }, { withCredentials: true });
 
             closePopup();
             alert('Grupo actualizado correctamente');
@@ -809,7 +809,7 @@ function Popup({ type, closePopup, details }) {
             const response = await axios.delete(link + '/deleteGroup', {
                 data: {
                     nombre: formData.nombreGrupo.trim()
-                }
+                }, withCredentials: true
             });
 
             closePopup();
@@ -847,7 +847,7 @@ function Popup({ type, closePopup, details }) {
                 fechaFinal: formData.fechaFin,
                 notes: '',
 
-            });
+            }, { withCredentials: true });
             
             closePopup();
             alert('Curso creado correctamente');
@@ -891,7 +891,7 @@ function Popup({ type, closePopup, details }) {
                     idCurso2: formData.idCurso2,
                     opcion: formData.fusionarCursos ? 1 : 0
                 }
-            });
+            }, { withCredentials: true });
 
             closePopup();
             alert('Cursos fusionados correctamente');

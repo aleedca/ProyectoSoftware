@@ -45,7 +45,7 @@ function Calendar() {
   useEffect(() => {
     const fetchDetailsCourses = async () => {
       try {
-        const response = await axios.get(link + '/getCourses');
+        const response = await axios.get(link + '/getCourses', { withCredentials: true });
         setDetailsCourses(response.data);
       } catch (error) {
         console.error('Error al obtener la lista de detalles de los cursos:', error);
@@ -57,7 +57,7 @@ function Calendar() {
   useEffect(() => {
     const fetchDetailsHolidays = async () => {
       try {
-        const response = await axios.get(link + '/getHolidays');
+        const response = await axios.get(link + '/getHolidays', { withCredentials: true });
         setDetailsHolidays(response.data);
         console.log(response.data)
       } catch (error) {
