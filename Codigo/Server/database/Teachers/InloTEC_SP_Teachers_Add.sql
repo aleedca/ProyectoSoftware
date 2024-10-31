@@ -50,7 +50,7 @@ BEGIN
         -- Check if the email is already registered and active
         IF EXISTS (SELECT 1
 				   FROM [dbo].[Teachers]
-				   WHERE Email = LTRIM(RTRIM(@IN_email))
+				   WHERE LTRIM(RTRIM(Email)) = LTRIM(RTRIM(@IN_email))
 				   AND Deleted = 0 )
         BEGIN
 		RAISERROR('El correo electrónico ya está registrado. Por favor, utilice otro correo.', 16, 1);
@@ -59,7 +59,7 @@ BEGIN
         -- Check if the identityNumber is already registered and active
         IF EXISTS (SELECT 1
 				   FROM [dbo].[Teachers]
-				   WHERE IdentityNumber = LTRIM(RTRIM(@IN_identityNumber))
+				   WHERE LTRIM(RTRIM(IdentityNumber)) = LTRIM(RTRIM(@IN_identityNumber))
 				   AND Deleted = 0 )
         BEGIN
 		RAISERROR('El identificador ya está registrado. Por favor, utilice otro.', 16, 1);

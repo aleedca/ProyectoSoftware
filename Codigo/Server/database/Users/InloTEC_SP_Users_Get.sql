@@ -40,8 +40,8 @@ BEGIN
         -- Check if the user is already registered and active
         IF NOT EXISTS (SELECT 1 
 				   FROM [dbo].[Users] 
-				   WHERE email = LTRIM(RTRIM(@IN_Email))
-				   AND LTRIM(RTRIM(@IN_Passwordhash)) = Passwordhash
+				   WHERE LTRIM(RTRIM(Email)) = LTRIM(RTRIM(@IN_Email))
+				   AND LTRIM(RTRIM(@IN_Passwordhash)) = LTRIM(RTRIM(Passwordhash))
 				   AND Deleted = 0)
         BEGIN
             RAISERROR('El usuario no fue encontrado.', 16, 1);
@@ -50,8 +50,8 @@ BEGIN
 		--get the user id
 		SELECT @UserId = U.id
 		FROM [dbo].[Users] U
-		WHERE email = LTRIM(RTRIM(@IN_Email))
-		AND LTRIM(RTRIM(@IN_Passwordhash)) = Passwordhash
+		WHERE LTRIM(RTRIM(Email)) = LTRIM(RTRIM(@IN_Email))
+		AND LTRIM(RTRIM(@IN_Passwordhash)) = LTRIM(RTRIM(Passwordhash))
 		AND Deleted = 0
 
 		SELECT U.Name, U.LastName1, U.LastName2, A.Rol AS 'Rol'

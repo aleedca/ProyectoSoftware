@@ -100,7 +100,7 @@ BEGIN
 		SELECT @UserId = U.id
 		FROM [dbo].[Users] U
 		WHERE LTRIM(RTRIM(Email)) = LTRIM(RTRIM(@IN_oldEmail))
-		AND LTRIM(RTRIM(@IN_oldPasswordhash)) = U.Passwordhash 
+		AND LTRIM(RTRIM(@IN_oldPasswordhash)) = LTRIM(RTRIM(U.Passwordhash))
 		AND Deleted = 0
 
 		-- get the user name information if not provided
