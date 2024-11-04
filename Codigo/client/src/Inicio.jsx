@@ -65,26 +65,26 @@ function Inicio() {
 
           {/* Columna para la imagen */}
           <div className='columna '>
-          <img style={{ marginRight: '100px'}} src={imagen} alt='Imagen Login' />
+          <img style={{ marginRight: '200px'}} src={imagen} alt='Imagen Login' />
           </div>
   
           {/* Columna para el formulario */}
-          <div style={{width : '368px'}}>
+          <div style={{width : '450px'}}>
             
-              <body style={{ marginTop: '20px',textAlign:"end", fontWeight: 'bold', fontSize: '48px', color: '#004581'  }}>Bienvenido</body>
+              <body style={{ marginTop: '0px',textAlign:"end", fontWeight: 'bold', fontSize: '48px', color: '#004581'  }}>Bienvenido</body>
               
-              <body style={{ marginTop: '20px',textAlign:"end", fontWeight: 'bold', fontSize: '36px', color: '#018ABD'  }}>Gestión Cursos</body>
+              <body style={{ marginTop: '10px',textAlign:"end", fontWeight: 'bold', fontSize: '36px', color: '#018ABD'  }}>Gestión de cursos InloTEC</body>
               
-              <body style={{ marginTop: '20px',textAlign:"end", fontWeight: 'bold', fontSize: '28px', color: '#AFAFAF'  }}>Técnico en Logística e Inventarios</body>
+              <body style={{ marginTop: '0px',textAlign:"end", fontWeight: 'bold', fontSize: '28px', color: '#AFAFAF'  }}>Técnico en Logística e Inventarios</body>
               
             
-              <body style={{ marginTop: '20px',textAlign:"end", fontWeight: 'bold', fontSize: '16px'  }}>Información sobre FUNDATEC</body>
+              <body style={{ marginTop: '20px',textAlign:"end", fontWeight: 'bold', fontSize: '16px'  }}>Información sobre este técnico</body>
               
-              <body style={{ marginTop: '5px',textAlign:"end", color: 'gray', fontSize: '16px',color: '#6B7280'  }}>El Tecnológico de Costa Rica pone al servicio del sector productivo el potencial de recursos profesionales y de infraestructura a través de su Fundación.</body>
-              {/* <body style={{ marginTop: '20px',textAlign:"end", fontWeight: 'bold', fontSize: '16px'  }}>Contacto</body>
+              <body style={{ marginTop: '5px',textAlign:"justify", color: 'gray', fontSize: '12px',color: '#6B7280'  }}>El Técnico en Logística e Inventarios fue diseñado y desarrollado por la Escuela de Producción Industrial del TEC y está dirigido a personas en cargo labores relacionadas con la logística, cadenas de distribución, bodegas y similares.</body>
+              <body style={{ marginTop: '20px',textAlign:"end", fontWeight: 'bold', fontSize: '16px'  }}>Contacto</body>
               
-              <body style={{ marginTop: '5px',textAlign:"end", color: 'gray', fontSize: '16px',color: '#6B7280'  }}  >fundatec@tec.ac.cr <br/>
-              https://www.tec.ac.cr/fundatec</body>*/}
+              <body style={{ marginTop: '5px',textAlign:"end", color: 'gray', fontSize: '12px',color: '#6B7280'  }}  >+506 8405 2075 <br/>caplog@itcr.ac.cr <br/>
+              https://www.tec.ac.cr/tecnico-logistica-inventarios</body>
               <button style={{ marginTop: '20px' }} className="btn_naranja" onClick={() => navigate('/login')}>Continuar</button>
               <body style={{ marginTop: '20px',textAlign:"end", fontWeight: 'bold', fontSize: '16px',textAlign: 'center'  }}>¿No sabes como usar la plataforma?</body>
               <body style={{color: '#018ABD', fontWeight: 'bold', textAlign:'center'}}>  <Link to="" >Manual de usuario</Link></body>
