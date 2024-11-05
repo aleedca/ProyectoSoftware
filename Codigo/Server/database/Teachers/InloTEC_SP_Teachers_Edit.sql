@@ -5,7 +5,7 @@
 
 CREATE OR ALTER PROCEDURE [dbo].[InloTEC_SP_Teachers_Edit]
     -- Parameters
-	@IN_IdTeachers BIGINT,
+	@IN_oldEmail NVARCHAR(128),
 	@IN_newName NVARCHAR(128) = NULL,
 	@IN_newEmail NVARCHAR(128) = NULL,
 	@IN_newIdentityNumber NVARCHAR(64) = NULL
@@ -22,24 +22,38 @@ BEGIN
     -- VARIABLE DECLARATION
 	DECLARE @Rolname NVARCHAR(64) = 'Admin';
 	DECLARE @DeletedTeacherId INT = NULL;
+    DECLARE @IN_IdTeachers INT
 
     BEGIN TRY
         -- VALIDATIONS
 
 
+
 	-- Check if the teacher is already registered and active
 	IF NOT EXISTS (SELECT 1 
 				   FROM [dbo].[Teachers]
-				   WHERE Id = @IN_IdTeachers
+				   WHERE Email = LTRIM(RTRIM(@IN_oldEmail))
                    AND Deleted = 0)
         BEGIN
             RAISERROR('El profesor indicado para modificación no fue encontrado.', 16, 1);
         END;
 
+    -- obtencion del id del profesor
+    SELECT @IN_IdTeachers = Id
+	FROM [dbo].[Teachers]
+	WHERE Email = LTRIM(RTRIM(@IN_oldEmail))
+    AND Deleted = 0
+
 	-- getting old information if input was NULL
-	SELECT @IN_newName = CASE WHEN @IN_newName IS NULL THEN T.Name ELSE @IN_newName END,
-	@IN_newEmail = CASE WHEN @IN_newEmail IS NULL THEN T.Email ELSE @IN_newEmail END,
-	@IN_newIdentityNumber = CASE WHEN @IN_newIdentityNumber IS NULL THEN T.IdentityNumber ELSE @IN_newIdentityNumber END
+	SELECT @IN_newName = CASE WHEN @IN_newName IS NULL 
+                              THEN T.Name 
+                              ELSE @IN_newName END,
+	@IN_newEmail = CASE WHEN @IN_newEmail IS NULL 
+                        THEN T.Email 
+                        ELSE @IN_newEmail END,
+	@IN_newIdentityNumber = CASE WHEN @IN_newIdentityNumber IS NULL 
+                                 THEN T.IdentityNumber 
+                                 ELSE @IN_newIdentityNumber END
 	FROM [dbo].[Teachers] T
 	WHERE Id = @IN_IdTeachers
         AND Deleted = 0
@@ -80,7 +94,8 @@ BEGIN
         IF EXISTS (SELECT 1
 				   FROM [dbo].[Teachers]
 				   WHERE IdentityNumber = LTRIM(RTRIM(@IN_newIdentityNumber))
-				   AND Deleted = 0 )
+				   AND NOT (Id = @IN_IdTeachers)
+                   AND Deleted = 0 )
         BEGIN
 		RAISERROR('El identificador ya está registrado. Por favor, utilice otro.', 16, 1);
 		END;
