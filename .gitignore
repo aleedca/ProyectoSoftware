@@ -20,7 +20,7 @@ pids
 .env.*
 
 # Database
-Codigo/Server/database
+
 
 # Build output
 build/
