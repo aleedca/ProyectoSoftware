@@ -295,6 +295,7 @@ function Popup({ type, closePopup, details }) {
             });
             console.log('Evento actualizado:', response.data);
             closePopup();
+            setRefrescar(!refrescar)
             alert('Evento actualizado correctamente');
         } catch (error) {
             console.error('Error al actualizar el evento:', error);
@@ -328,6 +329,7 @@ function Popup({ type, closePopup, details }) {
             });
             console.log('Evento Eliminado:', response.data);
             closePopup();
+            setRefrescar(!refrescar)
             alert('Evento eliminado correctamente');
         } catch (error) {
             console.error('Error al eliminar el evento:', error);
@@ -561,6 +563,7 @@ function Popup({ type, closePopup, details }) {
                 horaFin: formattedHoraFin
             });
             closePopup();
+            setRefrescar(!refrescar)
             alert('Horario creado correctamente');
         } catch (error) {
             console.error('Error al crear el horario:', error);
@@ -603,6 +606,7 @@ function Popup({ type, closePopup, details }) {
 
             });
             closePopup();
+            setRefrescar(!refrescar)
             alert('Horario actualizado correctamente');
         } catch (error) {
             console.error('Error al actualizar el horario:', error);
@@ -636,6 +640,7 @@ function Popup({ type, closePopup, details }) {
                 }
             });
             closePopup();
+            setRefrescar(!refrescar)
             alert('Horario eliminado correctamente');
         } catch (error) {
             console.error('Error al eliminar el horario:', error);
@@ -668,6 +673,7 @@ function Popup({ type, closePopup, details }) {
                 identificacion: formData.identificacionProfesor.trim()
             });
             closePopup();
+            setRefrescar(!refrescar)
             alert('Profesor creado correctamente');
         } catch (error) {
             console.error('Error al crear el profesor:', error);
@@ -709,6 +715,7 @@ function Popup({ type, closePopup, details }) {
                 identificacion: formData.identificacionProfesor
             });
             closePopup();
+            setRefrescar(!refrescar)
             alert('Profesor actualizado correctamente');
         } catch (error) {
             console.error('Error al actualizar el profesor:', error);
@@ -740,6 +747,7 @@ function Popup({ type, closePopup, details }) {
                 }
             });
             closePopup();
+            setRefrescar(!refrescar)
             alert('Profesor eliminado correctamente');
         } catch (error) {
             console.error('Error al eliminar el profesor:', error);
@@ -768,6 +776,7 @@ function Popup({ type, closePopup, details }) {
             });
 
             closePopup();
+            setRefrescar(!refrescar)
             alert('Grupo creado correctamente');
         } catch (error) {
             console.error('Error al crear el grupo:', error);
@@ -799,6 +808,7 @@ function Popup({ type, closePopup, details }) {
             });
 
             closePopup();
+            setRefrescar(!refrescar)
             alert('Grupo actualizado correctamente');
         } catch (error) {
             console.error('Error al actualizar el grupo:', error);
@@ -830,6 +840,7 @@ function Popup({ type, closePopup, details }) {
             });
 
             closePopup();
+            setRefrescar(!refrescar)
             alert('Grupo eliminado correctamente');
         } catch (error) {
             console.error('Error al eliminar el grupo:', error);
@@ -867,6 +878,7 @@ function Popup({ type, closePopup, details }) {
             });
             
             closePopup();
+            setRefrescar(!refrescar)
             alert('Curso creado correctamente');
         } catch (error) {
             console.error('Error al crear el curso:', error);
@@ -911,6 +923,7 @@ function Popup({ type, closePopup, details }) {
             });
 
             closePopup();
+            setRefrescar(!refrescar)
             alert('Cursos fusionados correctamente');
         } catch (error) {
             console.error('Error al fusionar los cursos:', error);
