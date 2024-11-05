@@ -18,7 +18,7 @@ const localizer = momentLocalizer(moment);
 
 function Calendar() {
   //const [Courses, setCourses] = useState([]);
-  const { link } = useContext(UserContext); 
+  const { link,refrescar, setRefrescar } = useContext(UserContext); 
   const [detailsCourses, setDetailsCourses] = useState([]);
   const [detailsHolidays, setDetailsHolidays] = useState([]);
   const [selectedCourse, setSelectedCourse] = useState(null); 
@@ -41,7 +41,7 @@ function Calendar() {
     fetchCoursesCalendar();
   }, []);
   */
-
+  console.log(refrescar)
   useEffect(() => {
     const fetchDetailsCourses = async () => {
       try {
@@ -66,6 +66,32 @@ function Calendar() {
     };
     fetchDetailsHolidays();
   }, []);
+
+  useEffect(() => {
+    const fetchDetailsHolidays = async () => {
+      try {
+        const response = await axios.get(link + '/getHolidays');
+        setDetailsHolidays(response.data);
+        console.log(response.data)
+      } catch (error) {
+        console.error('Error al obtener la lista de detalles de los holidays:', error);
+      }
+    };
+    fetchDetailsHolidays();
+  }, [refrescar]);
+
+  useEffect(() => {
+    const fetchDetailsCourses = async () => {
+      try {
+        const response = await axios.get(link + '/getCourses');
+        setDetailsCourses(response.data);
+      } catch (error) {
+        console.error('Error al obtener la lista de detalles de los cursos:', error);
+      }
+    };
+    fetchDetailsCourses();
+  }, [refrescar]);
+
 
   const openPopup = (type) => {
     setPopupType(type);

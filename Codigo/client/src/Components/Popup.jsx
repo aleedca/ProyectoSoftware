@@ -14,7 +14,7 @@ import imaHorario from '../Assets/horario.png';
 import { UserContext } from '../UserContext'; // Asegúrate de importar UserContext
 
 function Popup({ type, closePopup, details }) {
-    const { link } = useContext(UserContext); 
+    const { link,refrescar, setRefrescar } = useContext(UserContext); 
     const [profesores, setProfesores] = useState([]);
     const [grupos, setGrupos] = useState([]);
     const [catalogCourses, setCatalogCourses] = useState([]);
@@ -252,10 +252,12 @@ function Popup({ type, closePopup, details }) {
             }, { withCredentials: true });
             console.log('Evento creado:', response.data);
             closePopup();
+            setRefrescar(!refrescar)
             alert('Evento creado correctamente');
         } catch (error) {
+            
             console.error('Error al crear el evento:', error);
-            alert('Hubo un error al crear el evento');
+            alert('Hubo un error al crear el evento'+':  '+ error['response']['data'].split("-")[0]);
         }
 
         closePopup();
@@ -293,10 +295,11 @@ function Popup({ type, closePopup, details }) {
             }, { withCredentials: true });
             console.log('Evento actualizado:', response.data);
             closePopup();
+            setRefrescar(!refrescar)
             alert('Evento actualizado correctamente');
         } catch (error) {
             console.error('Error al actualizar el evento:', error);
-            alert('Hubo un error al actualizar el evento');
+            alert('Hubo un error al actualizar el evento'+':  '+ error['response']['data'].split("-")[0]);
         }
     };
 
@@ -326,10 +329,11 @@ function Popup({ type, closePopup, details }) {
             });
             console.log('Evento Eliminado:', response.data);
             closePopup();
+            setRefrescar(!refrescar)
             alert('Evento eliminado correctamente');
         } catch (error) {
             console.error('Error al eliminar el evento:', error);
-            alert('Hubo un error al eliminar el evento');
+            alert('Hubo un error al eliminar el evento'+':  '+ error['response']['data'].split("-")[0]);
         }
     };
 
@@ -355,23 +359,30 @@ function Popup({ type, closePopup, details }) {
 
     // Función para manejar el cambio en la selección del profesor
     const handleSelectTeacherChange = (e) => {
-        const { key, value } = e.target;
-        console.log(e.target)
-        if (e.target.value != 0) {
-            const profesorConId = profesores.find(profesor => profesor.id === e.target.value);
-            console.log(profesorConId)
-            setFormData((prevFormData) => ({
-                ...prevFormData,
-                ['nombreProfesor']: profesorConId.Name,
-                ['correoProfesor']: profesorConId.email,
-                ['idProfesor']: profesorConId.id
-            }));
+        const selectedId = e.target.value;
+        const selectedTeacher = profesores.find(profesor => profesor.Id === selectedId);
+        console.log('Seleccionado id: ', selectedTeacher.Id);
+        console.log('Seleccionado nombre: ', selectedTeacher.name);
+        console.log('Seleccionado email: ', selectedTeacher.Email);
+        console.log('Seleccionado cedula: ', selectedTeacher.IdentityNumber);
+        if (selectedTeacher) {
+            setFormData(prevFormData => {
+                const updatedFormData = {
+                    ...prevFormData,
+                    nombreProfesor: selectedTeacher.name,
+                    idProfesor: selectedTeacher.Id,
+                    correoProfesor: selectedTeacher.Email,
+                    identificacionProfesor: selectedTeacher.IdentityNumber
+                };
+                return updatedFormData;
+            });
         } else {
-            setFormData((prevFormData) => ({
+            setFormData(prevFormData => ({
                 ...prevFormData,
-                ['nombreProfesor']: '',
-                ['correoProfesor']: '',
-                ['idProfesor']: 0
+                nombreProfesor: '',
+                idProfesor: 0,
+                correoProfesor: '',
+                identificacionProfesor: ''
             }));
         }
     };
@@ -552,10 +563,11 @@ function Popup({ type, closePopup, details }) {
                 horaFin: formattedHoraFin
             }, { withCredentials: true });
             closePopup();
+            setRefrescar(!refrescar)
             alert('Horario creado correctamente');
         } catch (error) {
             console.error('Error al crear el horario:', error);
-            alert('Hubo un error al crear el horario');
+            alert('Hubo un error al crear el horario'+':  '+ error['response']['data'].split("-")[0]);
         }
 
         closePopup();
@@ -594,10 +606,11 @@ function Popup({ type, closePopup, details }) {
 
             }, { withCredentials: true });
             closePopup();
+            setRefrescar(!refrescar)
             alert('Horario actualizado correctamente');
         } catch (error) {
             console.error('Error al actualizar el horario:', error);
-            alert('Hubo un error al actualizar el horario');
+            alert('Hubo un error al actualizar el horario'+':  '+ error['response']['data'].split("-")[0]);
         }
     };
 
@@ -627,10 +640,11 @@ function Popup({ type, closePopup, details }) {
                 }, withCredentials: true
             });
             closePopup();
+            setRefrescar(!refrescar)
             alert('Horario eliminado correctamente');
         } catch (error) {
             console.error('Error al eliminar el horario:', error);
-            alert('Hubo un error al eliminar el horario');
+            alert('Hubo un error al eliminar el horario'+':  '+ error['response']['data'].split("-")[0]);
         }
     };
 
@@ -659,15 +673,21 @@ function Popup({ type, closePopup, details }) {
                 identificacion: formData.identificacionProfesor.trim()
             }, { withCredentials: true });
             closePopup();
+            setRefrescar(!refrescar)
             alert('Profesor creado correctamente');
         } catch (error) {
             console.error('Error al crear el profesor:', error);
-            alert('Hubo un error al crear el profesor');
+            alert('Hubo un error al crear el profesor'+':  '+ error['response']['data'].split("-")[0]);
         }
     };
 
     // Función para manejar la edición de un profesor
     const editTeacher = async () => {
+
+        const profesorConId = profesores.find(profesor => profesor.Id === formData.idProfesor);
+        //console.log('viejo: ',profesorConId.Email);
+        //console.log('nuevo: ',formData.correoProfesor);
+        
         const errors = {
             nombreProfesor: !formData.nombreProfesor,
             correoProfesor: !formData.correoProfesor,
@@ -683,19 +703,23 @@ function Popup({ type, closePopup, details }) {
             alert('Por favor, complete todos los campos correctamente.');
             return false; // Detiene la ejecución si hay errores
         }
-        const profesorConId = profesores.find(profesor => profesor.id === formData.idProfesor);
+        
         try {
+            console.log(formData)
+            console.log(profesores)
             const response = await axios.put(link + '/editTeacher', {
-                nombre: formData.nombreProfesor.trim(),
-                correo: formData.correoProfesor.trim(),
-                correoviejo: profesorConId.email.trim(),
-                identificacion: formData.identificacion.trim()
+                
+                nombre: formData.nombreProfesor,
+                correo: formData.correoProfesor,
+                correoviejo: profesorConId.Email,
+                identificacion: formData.identificacionProfesor
             }, { withCredentials: true });
             closePopup();
+            setRefrescar(!refrescar)
             alert('Profesor actualizado correctamente');
         } catch (error) {
             console.error('Error al actualizar el profesor:', error);
-            alert('Hubo un error al actualizar el profesor');
+            alert('Hubo un error al actualizar el profesor:'+error['response']['data'].split("-")[0]);
         }
     };
 
@@ -723,10 +747,11 @@ function Popup({ type, closePopup, details }) {
                 }, withCredentials: true
             });
             closePopup();
+            setRefrescar(!refrescar)
             alert('Profesor eliminado correctamente');
         } catch (error) {
             console.error('Error al eliminar el profesor:', error);
-            alert('Hubo un error al eliminar el profesor');
+            alert('Hubo un error al eliminar el profesor'+':  '+ error['response']['data'].split("-")[0]);
         }
     };
 
@@ -751,10 +776,11 @@ function Popup({ type, closePopup, details }) {
             }, { withCredentials: true });
 
             closePopup();
+            setRefrescar(!refrescar)
             alert('Grupo creado correctamente');
         } catch (error) {
             console.error('Error al crear el grupo:', error);
-            alert('Hubo un error al crear el grupo');
+            alert('Hubo un error al crear el grupo'+':  '+ error['response']['data'].split("-")[0]);
         }
     };
 
@@ -782,10 +808,11 @@ function Popup({ type, closePopup, details }) {
             }, { withCredentials: true });
 
             closePopup();
+            setRefrescar(!refrescar)
             alert('Grupo actualizado correctamente');
         } catch (error) {
             console.error('Error al actualizar el grupo:', error);
-            alert('Hubo un error al actualizar el grupo');
+            alert('Hubo un error al actualizar el grupo'+':  '+ error['response']['data'].split("-")[0]);
         }
     };
 
@@ -813,10 +840,11 @@ function Popup({ type, closePopup, details }) {
             });
 
             closePopup();
+            setRefrescar(!refrescar)
             alert('Grupo eliminado correctamente');
         } catch (error) {
             console.error('Error al eliminar el grupo:', error);
-            alert('Hubo un error al eliminar el grupo');
+            alert('Hubo un error al eliminar el grupo'+':  '+ error['response']['data'].split("-")[0]);
         }
     };
 
@@ -850,10 +878,11 @@ function Popup({ type, closePopup, details }) {
             }, { withCredentials: true });
             
             closePopup();
+            setRefrescar(!refrescar)
             alert('Curso creado correctamente');
         } catch (error) {
             console.error('Error al crear el curso:', error);
-            alert('Hubo un error al crear el curso');
+            alert('Hubo un error al crear el curso'+':  '+ error['response']['data'].split("-")[0]);
         }
     };
 
@@ -894,10 +923,11 @@ function Popup({ type, closePopup, details }) {
             }, { withCredentials: true });
 
             closePopup();
+            setRefrescar(!refrescar)
             alert('Cursos fusionados correctamente');
         } catch (error) {
             console.error('Error al fusionar los cursos:', error);
-            alert('Hubo un error al fusionar los cursos');
+            alert('Hubo un error al fusionar los cursos'+':  '+ error['response']['data'].split("-")[0]);
         }
     };
 
@@ -937,11 +967,11 @@ function Popup({ type, closePopup, details }) {
                                 </div>
                                 <body>Profesor(a) responsable</body>
                                 <div className='input-contenedor'>
-                                    <select placeholder='Seleccione el profesor' onChange={handleSelectTeacherChange}>
-                                        <option value={0}>Seleccione un profesor </option>
+                                <select placeholder='Seleccione el profesor(a)' onChange={handleSelectTeacherChange}>
+                                        <option value={0}>Seleccione un profesor</option>
                                         {profesores.map((profesor) => (
-                                            <option key={profesor.email} value={profesor.id}>
-                                                {profesor.Name}
+                                            <option key={profesor.Id} value={profesor.Id}>
+                                                {profesor.name}
                                             </option>
                                         ))}
                                     </select>
@@ -1016,13 +1046,18 @@ function Popup({ type, closePopup, details }) {
                             <div className='columna columna-formulario' style={{ width: '400px' }}>
                                 <button className="close-popup" onClick={closePopup}>X</button>
                                 <h1>Gestionar Profesor</h1>
-                                <body>Seleccione el profesor a gestionar</body>
+                                <body>Seleccione el profesor(a) a gestionar</body>
                                 <div className='input-contenedor'>
-                                    <Dropdown type='dropdown'
-                                        options={profesores.map(profesor => profesor.Name)}
-                                        onSelect={handleSelectTeacher}
-                                    />
+                                    <select placeholder='Seleccione el profesor(a)' onChange={handleSelectTeacherChange}>
+                                        <option value={0}>Seleccione un profesor</option>
+                                        {profesores.map((profesor) => (
+                                            <option key={profesor.Id} value={profesor.Id}>
+                                                {profesor.name}
+                                            </option>
+                                        ))}
+                                    </select>
                                 </div>
+
                                 <body>Profesor(a)</body>
                                 <div className='input-contenedor'>
                                     <input
@@ -1041,17 +1076,12 @@ function Popup({ type, closePopup, details }) {
                                         placeholder='Identificacion'
                                         value={formData.identificacionProfesor}
                                         onChange={handleInputChange}
+                                        //readOnly={formData.idProfesor}
                                     />
                                 </div>
                                 <body>Correo electrónico</body>
                                 <div className='input-contenedor'>
-                                    <input
-                                        type='text'
-                                        name='correoProfesor'
-                                        placeholder='usuario@dominiotec.com'
-                                        value={formData.correoProfesor}
-                                        onChange={handleInputChange}
-                                    />
+                                    <input type='text' placeholder='usuario@dominiotec.com' name='correoProfesor' value={formData.correoProfesor} onChange={handleInputChange} />
                                 </div>
                                 {formData.idProfesor === 0 ? (
                                     <button className="btn_naranja" onClick={addTeacher}>Agregar profesor</button>
