@@ -949,11 +949,11 @@ function Popup({ type, closePopup, details }) {
                                 </div>
                                 <body>Profesor(a) responsable</body>
                                 <div className='input-contenedor'>
-                                    <select placeholder='Seleccione el profesor' onChange={handleSelectTeacherChange}>
-                                        <option value={0}>Seleccione un profesor </option>
+                                <select placeholder='Seleccione el profesor(a)' onChange={handleSelectTeacherChange}>
+                                        <option value={0}>Seleccione un profesor</option>
                                         {profesores.map((profesor) => (
-                                            <option key={profesor.email} value={profesor.id}>
-                                                {profesor.Name}
+                                            <option key={profesor.Id} value={profesor.Id}>
+                                                {profesor.name}
                                             </option>
                                         ))}
                                     </select>
