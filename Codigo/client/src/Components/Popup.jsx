@@ -14,7 +14,7 @@ import imaHorario from '../Assets/horario.png';
 import { UserContext } from '../UserContext'; // Asegúrate de importar UserContext
 
 function Popup({ type, closePopup, details }) {
-    const { link } = useContext(UserContext); 
+    const { link,refrescar, setRefrescar } = useContext(UserContext); 
     const [profesores, setProfesores] = useState([]);
     const [grupos, setGrupos] = useState([]);
     const [catalogCourses, setCatalogCourses] = useState([]);
@@ -252,10 +252,12 @@ function Popup({ type, closePopup, details }) {
             });
             console.log('Evento creado:', response.data);
             closePopup();
+            setRefrescar(!refrescar)
             alert('Evento creado correctamente');
         } catch (error) {
+            
             console.error('Error al crear el evento:', error);
-            alert('Hubo un error al crear el evento');
+            alert('Hubo un error al crear el evento'+':  '+ error['response']['data'].split("-")[0]);
         }
 
         closePopup();
@@ -296,7 +298,7 @@ function Popup({ type, closePopup, details }) {
             alert('Evento actualizado correctamente');
         } catch (error) {
             console.error('Error al actualizar el evento:', error);
-            alert('Hubo un error al actualizar el evento');
+            alert('Hubo un error al actualizar el evento'+':  '+ error['response']['data'].split("-")[0]);
         }
     };
 
@@ -329,7 +331,7 @@ function Popup({ type, closePopup, details }) {
             alert('Evento eliminado correctamente');
         } catch (error) {
             console.error('Error al eliminar el evento:', error);
-            alert('Hubo un error al eliminar el evento');
+            alert('Hubo un error al eliminar el evento'+':  '+ error['response']['data'].split("-")[0]);
         }
     };
 
@@ -562,7 +564,7 @@ function Popup({ type, closePopup, details }) {
             alert('Horario creado correctamente');
         } catch (error) {
             console.error('Error al crear el horario:', error);
-            alert('Hubo un error al crear el horario');
+            alert('Hubo un error al crear el horario'+':  '+ error['response']['data'].split("-")[0]);
         }
 
         closePopup();
@@ -604,7 +606,7 @@ function Popup({ type, closePopup, details }) {
             alert('Horario actualizado correctamente');
         } catch (error) {
             console.error('Error al actualizar el horario:', error);
-            alert('Hubo un error al actualizar el horario');
+            alert('Hubo un error al actualizar el horario'+':  '+ error['response']['data'].split("-")[0]);
         }
     };
 
@@ -637,7 +639,7 @@ function Popup({ type, closePopup, details }) {
             alert('Horario eliminado correctamente');
         } catch (error) {
             console.error('Error al eliminar el horario:', error);
-            alert('Hubo un error al eliminar el horario');
+            alert('Hubo un error al eliminar el horario'+':  '+ error['response']['data'].split("-")[0]);
         }
     };
 
@@ -669,14 +671,14 @@ function Popup({ type, closePopup, details }) {
             alert('Profesor creado correctamente');
         } catch (error) {
             console.error('Error al crear el profesor:', error);
-            alert('Hubo un error al crear el profesor');
+            alert('Hubo un error al crear el profesor'+':  '+ error['response']['data'].split("-")[0]);
         }
     };
 
     // Función para manejar la edición de un profesor
     const editTeacher = async () => {
 
-        const profesorConId = profesores.find(profesor => profesor.IdentityNumber === formData.identificacionProfesor);
+        const profesorConId = profesores.find(profesor => profesor.Id === formData.idProfesor);
         //console.log('viejo: ',profesorConId.Email);
         //console.log('nuevo: ',formData.correoProfesor);
         
@@ -697,17 +699,20 @@ function Popup({ type, closePopup, details }) {
         }
         
         try {
+            console.log(formData)
+            console.log(profesores)
             const response = await axios.put(link + '/editTeacher', {
+                
                 nombre: formData.nombreProfesor,
                 correo: formData.correoProfesor,
                 correoviejo: profesorConId.Email,
-                identificacion: formData.identificacion
+                identificacion: formData.identificacionProfesor
             });
             closePopup();
             alert('Profesor actualizado correctamente');
         } catch (error) {
             console.error('Error al actualizar el profesor:', error);
-            alert('Hubo un error al actualizar el profesor');
+            alert('Hubo un error al actualizar el profesor:'+error['response']['data'].split("-")[0]);
         }
     };
 
@@ -738,7 +743,7 @@ function Popup({ type, closePopup, details }) {
             alert('Profesor eliminado correctamente');
         } catch (error) {
             console.error('Error al eliminar el profesor:', error);
-            alert('Hubo un error al eliminar el profesor');
+            alert('Hubo un error al eliminar el profesor'+':  '+ error['response']['data'].split("-")[0]);
         }
     };
 
@@ -766,7 +771,7 @@ function Popup({ type, closePopup, details }) {
             alert('Grupo creado correctamente');
         } catch (error) {
             console.error('Error al crear el grupo:', error);
-            alert('Hubo un error al crear el grupo');
+            alert('Hubo un error al crear el grupo'+':  '+ error['response']['data'].split("-")[0]);
         }
     };
 
@@ -797,7 +802,7 @@ function Popup({ type, closePopup, details }) {
             alert('Grupo actualizado correctamente');
         } catch (error) {
             console.error('Error al actualizar el grupo:', error);
-            alert('Hubo un error al actualizar el grupo');
+            alert('Hubo un error al actualizar el grupo'+':  '+ error['response']['data'].split("-")[0]);
         }
     };
 
@@ -828,7 +833,7 @@ function Popup({ type, closePopup, details }) {
             alert('Grupo eliminado correctamente');
         } catch (error) {
             console.error('Error al eliminar el grupo:', error);
-            alert('Hubo un error al eliminar el grupo');
+            alert('Hubo un error al eliminar el grupo'+':  '+ error['response']['data'].split("-")[0]);
         }
     };
 
@@ -865,7 +870,7 @@ function Popup({ type, closePopup, details }) {
             alert('Curso creado correctamente');
         } catch (error) {
             console.error('Error al crear el curso:', error);
-            alert('Hubo un error al crear el curso');
+            alert('Hubo un error al crear el curso'+':  '+ error['response']['data'].split("-")[0]);
         }
     };
 
@@ -909,7 +914,7 @@ function Popup({ type, closePopup, details }) {
             alert('Cursos fusionados correctamente');
         } catch (error) {
             console.error('Error al fusionar los cursos:', error);
-            alert('Hubo un error al fusionar los cursos');
+            alert('Hubo un error al fusionar los cursos'+':  '+ error['response']['data'].split("-")[0]);
         }
     };
 
@@ -1058,6 +1063,7 @@ function Popup({ type, closePopup, details }) {
                                         placeholder='Identificacion'
                                         value={formData.identificacionProfesor}
                                         onChange={handleInputChange}
+                                        //readOnly={formData.idProfesor}
                                     />
                                 </div>
                                 <body>Correo electrónico</body>

@@ -18,7 +18,7 @@ const localizer = momentLocalizer(moment);
 
 function Calendar() {
   //const [Courses, setCourses] = useState([]);
-  const { link } = useContext(UserContext); 
+  const { link,refrescar, setRefrescar } = useContext(UserContext); 
   const [detailsCourses, setDetailsCourses] = useState([]);
   const [detailsHolidays, setDetailsHolidays] = useState([]);
   const [selectedCourse, setSelectedCourse] = useState(null); 
@@ -41,7 +41,7 @@ function Calendar() {
     fetchCoursesCalendar();
   }, []);
   */
-
+  
   useEffect(() => {
     const fetchDetailsCourses = async () => {
       try {
