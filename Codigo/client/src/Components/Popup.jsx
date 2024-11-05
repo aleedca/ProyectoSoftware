@@ -355,23 +355,30 @@ function Popup({ type, closePopup, details }) {
 
     // Función para manejar el cambio en la selección del profesor
     const handleSelectTeacherChange = (e) => {
-        const { key, value } = e.target;
-        console.log(e.target)
-        if (e.target.value != 0) {
-            const profesorConId = profesores.find(profesor => profesor.id === e.target.value);
-            console.log(profesorConId)
-            setFormData((prevFormData) => ({
-                ...prevFormData,
-                ['nombreProfesor']: profesorConId.Name,
-                ['correoProfesor']: profesorConId.email,
-                ['idProfesor']: profesorConId.id
-            }));
+        const selectedId = e.target.value;
+        const selectedTeacher = profesores.find(profesor => profesor.Id === selectedId);
+        console.log('Seleccionado id: ', selectedTeacher.Id);
+        console.log('Seleccionado nombre: ', selectedTeacher.name);
+        console.log('Seleccionado email: ', selectedTeacher.Email);
+        console.log('Seleccionado cedula: ', selectedTeacher.IdentityNumber);
+        if (selectedTeacher) {
+            setFormData(prevFormData => {
+                const updatedFormData = {
+                    ...prevFormData,
+                    nombreProfesor: selectedTeacher.name,
+                    idProfesor: selectedTeacher.Id,
+                    correoProfesor: selectedTeacher.Email,
+                    identificacionProfesor: selectedTeacher.IdentityNumber
+                };
+                return updatedFormData;
+            });
         } else {
-            setFormData((prevFormData) => ({
+            setFormData(prevFormData => ({
                 ...prevFormData,
-                ['nombreProfesor']: '',
-                ['correoProfesor']: '',
-                ['idProfesor']: 0
+                nombreProfesor: '',
+                idProfesor: 0,
+                correoProfesor: '',
+                identificacionProfesor: ''
             }));
         }
     };
@@ -668,6 +675,11 @@ function Popup({ type, closePopup, details }) {
 
     // Función para manejar la edición de un profesor
     const editTeacher = async () => {
+
+        const profesorConId = profesores.find(profesor => profesor.IdentityNumber === formData.identificacionProfesor);
+        //console.log('viejo: ',profesorConId.Email);
+        //console.log('nuevo: ',formData.correoProfesor);
+        
         const errors = {
             nombreProfesor: !formData.nombreProfesor,
             correoProfesor: !formData.correoProfesor,
@@ -683,13 +695,13 @@ function Popup({ type, closePopup, details }) {
             alert('Por favor, complete todos los campos correctamente.');
             return false; // Detiene la ejecución si hay errores
         }
-        const profesorConId = profesores.find(profesor => profesor.id === formData.idProfesor);
+        
         try {
             const response = await axios.put(link + '/editTeacher', {
-                nombre: formData.nombreProfesor.trim(),
-                correo: formData.correoProfesor.trim(),
-                correoviejo: profesorConId.email.trim(),
-                identificacion: formData.identificacion.trim()
+                nombre: formData.nombreProfesor,
+                correo: formData.correoProfesor,
+                correoviejo: profesorConId.Email,
+                identificacion: formData.identificacion
             });
             closePopup();
             alert('Profesor actualizado correctamente');
@@ -1016,13 +1028,18 @@ function Popup({ type, closePopup, details }) {
                             <div className='columna columna-formulario' style={{ width: '400px' }}>
                                 <button className="close-popup" onClick={closePopup}>X</button>
                                 <h1>Gestionar Profesor</h1>
-                                <body>Seleccione el profesor a gestionar</body>
+                                <body>Seleccione el profesor(a) a gestionar</body>
                                 <div className='input-contenedor'>
-                                    <Dropdown type='dropdown'
-                                        options={profesores.map(profesor => profesor.Name)}
-                                        onSelect={handleSelectTeacher}
-                                    />
+                                    <select placeholder='Seleccione el profesor(a)' onChange={handleSelectTeacherChange}>
+                                        <option value={0}>Seleccione un profesor</option>
+                                        {profesores.map((profesor) => (
+                                            <option key={profesor.Id} value={profesor.Id}>
+                                                {profesor.name}
+                                            </option>
+                                        ))}
+                                    </select>
                                 </div>
+
                                 <body>Profesor(a)</body>
                                 <div className='input-contenedor'>
                                     <input
@@ -1045,13 +1062,7 @@ function Popup({ type, closePopup, details }) {
                                 </div>
                                 <body>Correo electrónico</body>
                                 <div className='input-contenedor'>
-                                    <input
-                                        type='text'
-                                        name='correoProfesor'
-                                        placeholder='usuario@dominiotec.com'
-                                        value={formData.correoProfesor}
-                                        onChange={handleInputChange}
-                                    />
+                                    <input type='text' placeholder='usuario@dominiotec.com' name='correoProfesor' value={formData.correoProfesor} onChange={handleInputChange} />
                                 </div>
                                 {formData.idProfesor === 0 ? (
                                     <button className="btn_naranja" onClick={addTeacher}>Agregar profesor</button>

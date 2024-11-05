@@ -5,6 +5,7 @@ const getTeachers = async (req, res) => {
     try {
         const pool = await getConnection();
         const result = await pool.request().execute('InloTEC_SP_Teachers_List');
+        console.log(result);
         res.json(result.recordset);
     } catch (error) {
         const errorMessage = error.message || 'Error desconocido';
@@ -42,11 +43,11 @@ const editTeacher = async (req, res) => {
     try {
         const pool = await getConnection()
         console.log(req.body)
-
         let result = await pool.request()
             .input('IN_oldEmail', sql.NVarChar(128), req.body['correoviejo'])
             .input('IN_newName', sql.NVarChar(128), req.body['nombre'])
             .input('IN_newEmail', sql.NVarChar(128), req.body['correo'])
+            .input('IN_newIdentityNumber', sql.NVarChar(64), req.body['identificacion'])
             .execute('InloTEC_SP_Teachers_Edit'); // Nombre del procedimiento almacenado
 
         console.log(result); // Muestra el resultado
