@@ -1272,7 +1272,7 @@ function Popup({ type, closePopup, details }) {
                             </div>
                         </div>
                         <div>
-                            <img style={{ position: "absolute", bottom: 20, right: 60, zIndex: 10, width: "120px", height:"auto" }} src={logo} alt='Imagen logo' />
+                            <img style={{ position: "absolute", bottom: 0, right: 60, zIndex: 10, width: "110px", height:"auto" }} src={logo} alt='Imagen logo' />
                         </div>
                     </div>
                 );
