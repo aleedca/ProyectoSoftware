@@ -1,6 +1,6 @@
 // Calendar.jsx
 
-import React, { useState, useEffect ,useContext } from 'react';
+import React, { useState, useEffect ,useContext, cloneElement } from 'react';
 import Sidebar from './Sidebar';
 import Popup from './Popup';
 import { Calendar as BigCalendar, momentLocalizer } from 'react-big-calendar';
@@ -13,6 +13,7 @@ import axios from 'axios';
 import imaMostrar from '../Assets/MostrarInfo.png';
 import { UserContext } from '../UserContext'; // Asegúrate de importar UserContext
 import logo from '../Assets/logo_tecnico.png';
+import { FaTrash  } from "react-icons/fa";
 
 const localizer = momentLocalizer(moment);
 
@@ -41,6 +42,7 @@ function Calendar() {
     fetchCoursesCalendar();
   }, []);
   */
+  
   console.log(refrescar)
   useEffect(() => {
     const fetchDetailsCourses = async () => {
@@ -265,6 +267,37 @@ function EventComponent({ event }) {
 }
 
 function Tooltip({ course, closeTooltip }) {
+  const { link,refrescar, setRefrescar } = useContext(UserContext); 
+  const deleteCourse = async (IdDelete) => {
+    /*const errors = {
+        nombreGrupo: !formData.nombreGrupo,
+        idGrupo: !formData.idGrupo
+    };
+
+    setIsError(errors);
+
+    if (Object.values(errors).includes(true)) {
+        setError('Por favor, seleccione un curso.');
+        console.error('Por favor, seleccione un curso.');
+        alert('Por favor, seleccione un curso.');
+        return false; // Detiene la ejecución si hay errores
+    }*/
+
+    try {
+        const response = await axios.delete(link + '/deleteCourse', {
+            data: {
+                id: IdDelete
+            }, withCredentials: true
+        });
+
+        
+        setRefrescar(!refrescar)
+        alert('curso eliminado correctamente');
+    } catch (error) {
+        console.error('Error al eliminar el curso:', error);
+        alert('Hubo un error al eliminar el curso'+':  '+ error['response']['data'].split("-")[0]);
+    }
+};
   const { Id, Course, Teacher, Email, Group, Modality, Location, Days, StartDate, EndDate, StartTime, EndTime, Notes } = course;
   return (
     <div className="tooltip">
@@ -292,6 +325,10 @@ function Tooltip({ course, closeTooltip }) {
           <body style={{fontSize:'16px', marginTop: '10px'}}><strong>HORARIO: </strong>{moment(StartTime).format('HH:mm')} a {moment(EndTime).format('HH:mm')}</body>
           
           <body style={{fontSize:'16px', marginTop: '10px'}}><strong>NOTAS: </strong>{Notes || 'Ninguna'}</body>
+          <button className="buttons" style={{ alignItems: 'center' }} onClick={() => deleteCourse(Id)}>
+                                <FaTrash  style={{ color: "white" }} size={20} />
+                                
+          </button>
         </div>
       </div>
   </div>

@@ -116,6 +116,7 @@ function Register() {
                   <input type="Password" placeholder="Confirme la contraseña" value={confirmContrasenna} onChange={(e) => setConfirmContrasenna(e.target.value)} />
               </div>
               {error && <div className="error-message">{error}</div>}
+              <body style={{fontSize: 10}}>Tome en cuenta la contraseña debe ser alfanúmerica. Ej. "abc123".</body>
           </div>
 
           {/* Columna para la imagen */}
