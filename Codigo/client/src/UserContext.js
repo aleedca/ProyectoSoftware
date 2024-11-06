@@ -8,7 +8,7 @@ export const UserContext = createContext();
 export const UserProvider = ({ children }) => {
     const [fullName, setFullName] = useState('');
     const [refrescar, setRefrescar] = useState(false);
-    const [link, setLink] = useState('https://inlotec.azurewebsites.net');
+    const [link, setLink] = useState('https://inlo-tec.azurewebsites.net');
 
     return (
         <UserContext.Provider value={{ fullName, setFullName, link, setLink,refrescar, setRefrescar }}>
