@@ -8,7 +8,7 @@ import { FaLock, FaEnvelope } from 'react-icons/fa';
 import imagen from './Assets/login.png';
 import { useNavigate } from 'react-router-dom';
 import { UserContext } from './UserContext';
-
+import logo from './Assets/logo_blanco.png';
 
 function Login() {
   const navigate = useNavigate();
@@ -96,8 +96,14 @@ function Login() {
             <button style={{ marginTop: '20px' }} className="btn_naranja" onClick={sendData}>Iniciar sesión</button>
             <body> ¿No tienes una cuenta? <Link to="/registrarse" style={{ color: '#018ABD', fontWeight: 'bold', marginLeft: '80px' }}>Registrarse</Link></body>
 
+
+            
           </div>
+          
         </div>
+      </div>
+      <div>
+        <img style={{ position: "absolute", bottom: 20, right: 40, zIndex: 10, width: "120px", height:"auto" }} src={logo} alt='Imagen logo' />
       </div>
     </div>
   );

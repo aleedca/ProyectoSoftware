@@ -12,7 +12,7 @@ import '../App.css';
 import axios from 'axios';
 import imaMostrar from '../Assets/MostrarInfo.png';
 import { UserContext } from '../UserContext'; // Asegúrate de importar UserContext
-
+import logo from '../Assets/logo_tecnico.png';
 
 const localizer = momentLocalizer(moment);
 
@@ -338,6 +338,9 @@ function Toolbar(props) {
         >
           Mes
         </button>
+      </div>
+      <div>
+        <img style={{ position: "absolute", bottom: 20, right: 40, zIndex: 10, width: "120px", height:"auto" }} src={logo} alt='Imagen logo' />
       </div>
     </div>
   );

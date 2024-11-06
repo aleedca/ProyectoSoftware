@@ -6,6 +6,7 @@ import { useEffect, useState , useContext } from "react";
 import { Link } from 'react-router-dom';
 import { FaLock, FaEnvelope } from 'react-icons/fa';
 import imagen from './Assets/inicio.png';
+import logo from './Assets/logo_tecnico.png';
 import { useNavigate } from 'react-router-dom';
 import { UserContext } from './UserContext'; // Asegúrate de importar UserContext
 
@@ -89,7 +90,9 @@ function Inicio() {
               <body style={{ marginTop: '20px',textAlign:"end", fontWeight: 'bold', fontSize: '16px',textAlign: 'center'  }}>¿No sabes como usar la plataforma?</body>
               <body style={{color: '#018ABD', fontWeight: 'bold', textAlign:'center'}}>  <Link to="" >Manual de usuario</Link></body>
 
-              
+              <div>
+                <img style={{ position: "absolute", bottom: '100px', right: 60, zIndex: 10, width: "120px", height:"auto" }} src={logo} alt='Imagen logo' />
+              </div>
           </div>
         </div>
       </div>

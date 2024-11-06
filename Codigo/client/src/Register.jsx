@@ -8,6 +8,7 @@ import { FaLock, FaEnvelope, FaUser, FaIdCard, FaUnlock} from 'react-icons/fa';
 import imagen from './Assets/register.png';
 import { useNavigate } from 'react-router-dom';
 import { UserContext } from './UserContext'; // Asegúrate de importar UserContext
+import logo from './Assets/logo_blanco.png';
 
 function Register() {
   const navigate = useNavigate();
@@ -125,6 +126,9 @@ function Register() {
           </div>
 
         </div>
+      </div>
+      <div>
+        <img style={{ position: "absolute", bottom: 20, right: 40, zIndex: 10, width: "120px", height:"auto" }} src={logo} alt='Imagen logo' />
       </div>
     </div>
   );
