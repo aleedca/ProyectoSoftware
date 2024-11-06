@@ -12,6 +12,7 @@ import cerrar from '../Assets/cerrar.png';
 import imaEvento from '../Assets/eventos.png';
 import imaHorario from '../Assets/horario.png';
 import { UserContext } from '../UserContext'; // Asegúrate de importar UserContext
+import logo from '../Assets/logo_blanco.png';
 
 function Popup({ type, closePopup, details }) {
     const { link,refrescar, setRefrescar } = useContext(UserContext); 
@@ -1033,6 +1034,9 @@ function Popup({ type, closePopup, details }) {
                                 <button className="btn_naranja" onClick={addCourse}> Agregar curso </button>
                             </div>
                         </div>
+                        <div>
+                            <img style={{ position: "absolute", bottom: 30, left: 40, zIndex: 10, width: "120px", height:"auto" }} src={logo} alt='Imagen logo' />
+                        </div>
                     </div>
                 );
 
@@ -1093,6 +1097,9 @@ function Popup({ type, closePopup, details }) {
                                 )}
                             </div>
                         </div>
+                        <div>
+                            <img style={{ position: "absolute", bottom: 0, left: 40, zIndex: 10, width: "120px", height:"auto" }} src={logo} alt='Imagen logo' />
+                        </div>
                     </div>
                 );
 
@@ -1135,6 +1142,9 @@ function Popup({ type, closePopup, details }) {
                                 <button className="btn_naranja" onClick={handleFusionCourses}> Fusionar cursos </button>
                             </div>
                         </div>
+                        <div>
+                            <img style={{ position: "absolute", bottom: 20, right: 60, zIndex: 10, width: "120px", height:"auto" }} src={logo} alt='Imagen logo' />
+                        </div>
                     </div>
                 );
 
@@ -1175,6 +1185,9 @@ function Popup({ type, closePopup, details }) {
                                     </>
                                 )}
                             </div>
+                        </div>
+                        <div>
+                            <img style={{ position: "absolute", bottom: 20, right: 60, zIndex: 10, width: "120px", height:"auto" }} src={logo} alt='Imagen logo' />
                         </div>
                     </div>
                 );
@@ -1258,6 +1271,9 @@ function Popup({ type, closePopup, details }) {
                                 )}
                             </div>
                         </div>
+                        <div>
+                            <img style={{ position: "absolute", bottom: 20, right: 60, zIndex: 10, width: "120px", height:"auto" }} src={logo} alt='Imagen logo' />
+                        </div>
                     </div>
                 );
 
@@ -1330,6 +1346,9 @@ function Popup({ type, closePopup, details }) {
                                 )}
                             </div>
                         </div>
+                        <div>
+                            <img style={{ position: "absolute", bottom: 20, left: 40, zIndex: 10, width: "120px", height:"auto" }} src={logo} alt='Imagen logo' />
+                        </div>
                     </div>
                 );
 
@@ -1351,6 +1370,9 @@ function Popup({ type, closePopup, details }) {
                                     Cancelar
                                 </button>
                             </div>
+                        </div>
+                        <div>
+                            <img style={{ position: "absolute", bottom: 20, right: 60, zIndex: 10, width: "120px", height:"auto" }} src={logo} alt='Imagen logo' />
                         </div>
                     </div>
                 );

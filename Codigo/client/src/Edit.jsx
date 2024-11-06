@@ -5,7 +5,9 @@ import axios from "axios";
 import { useEffect, useState ,useContext } from "react";
 import { Link } from 'react-router-dom';
 import { FaLock, FaEnvelope, FaUser, FaIdCard, FaUnlock } from 'react-icons/fa';
-import imagen from './Assets/register.png';
+import imagen from './Assets/register.png'
+import logo from './Assets/logo_blanco.png'
+
 import { useNavigate } from 'react-router-dom';
 import { UserContext } from './UserContext'; // Asegúrate de importar UserContext
 function Edit() {
@@ -136,10 +138,13 @@ function Edit() {
           <div className='columna columna-imagen'>
             <img style={{ marginTop: '40px' }} src={imagen} alt='Imagen Login' />
             <button style={{ marginTop: '20px' }} onClick={sendData} className="btn_naranja">Actualizar cuenta</button>
+            <button style={{ marginTop: '-4px' }} className="btn_azul" onClick={() => navigate('/calendar')}>Volver</button>
             <body> ¿Desea eliminar la cuenta? <Link to="" style={{ color: '#018ABD', fontWeight: 'bold', marginLeft: '80px' }} onClick={sendDataDelete}>Eliminar</Link></body>
           </div>
-
         </div>
+      </div>
+      <div>
+        <img style={{ position: "absolute", bottom: 20, right: 40, zIndex: 10, width: "120px", height:"auto" }} src={logo} alt='Imagen logo' />
       </div>
     </div>
   );
