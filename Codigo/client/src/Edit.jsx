@@ -132,6 +132,7 @@ function Edit() {
               <FaUnlock className="icono" />
               <input type="Password" placeholder="Confirme la contraseña" value={nuevaContrasenna} onChange={(e) => setNuevaContrasenna(e.target.value)} />
             </div>
+            <body style={{fontSize: 10}}>Tome en cuenta la contraseña debe ser alfanúmerica. Ej. "abc123".</body>
           </div>
 
           {/* Columna para la imagen */}
