@@ -130,8 +130,27 @@ const editCourse = async (req, res) => {
     res.send("editando un curso");
 }
 
-const deleteCourse = (req, res) => {
-    res.send("eliminando un curso");
+const deleteCourse = async (req, res) => {
+    console.log("eliminando un curso")
+    try {
+        const pool = await getConnection();
+        console.log(req.body)
+        const num = parseInt(req.body['id'], 10);
+        
+
+
+
+        let result = await pool.request()
+            .input('IN_IdCourses_Details', sql.BigInt,num)
+            .execute('InloTEC_SP_Courses_Details_Delete');
+
+        console.log(result);
+        res.status(200).send('Curso eliminado')
+    } catch (error) {
+        const errorMessage = error.message || 'Error desconocido';
+        console.error('Error al ejecutar el query:', errorMessage);
+        res.status(500).send(errorMessage);
+    }
 }
 
 const fusionCourses = async (req, res) => {
