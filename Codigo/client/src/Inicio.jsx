@@ -88,7 +88,7 @@ function Inicio() {
               https://www.tec.ac.cr/tecnico-logistica-inventarios</body>
               <button style={{ marginTop: '20px' }} className="btn_naranja" onClick={() => navigate('/login')}>Continuar</button>
               <body style={{ marginTop: '20px',textAlign:"end", fontWeight: 'bold', fontSize: '16px',textAlign: 'center'  }}>¿No sabes como usar la plataforma?</body>
-              <body style={{color: '#018ABD', fontWeight: 'bold', textAlign:'center'}}>  <Link to="" >Manual de usuario</Link></body>
+              <body style={{color: '#018ABD', fontWeight: 'bold', textAlign:'center'}}>  <Link to="https://youtu.be/cT5ME6qtHtc" >Manual de usuario en vídeo</Link> <Link to="https://www.canva.com/design/DAGVTMBIb6Y/zanA1NqshTRJ5xeoeNpLpQ/view?utm_content=DAGVTMBIb6Y&utm_campaign=designshare&utm_medium=link&utm_source=editor" >Manual de usuario escrito</Link></body>
 
               <div>
                 <img style={{ position: "absolute", bottom: '100px', right: 60, zIndex: 10, width: "120px", height:"auto" }} src={logo} alt='Imagen logo' />
