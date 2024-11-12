@@ -289,7 +289,7 @@ function Tooltip({ course, closeTooltip }) {
           <body style={{fontSize:'16px'}}><strong>DÍA(S): </strong>{Days}</body>
           <body style={{fontSize:'16px', marginTop: '10px'}}><strong>FECHA INICIO: </strong>{moment(StartDate).format('LL')}</body>
           <body style={{fontSize:'16px', marginTop: '10px'}}><strong>FECHA FINAL: </strong>{moment(EndDate).format('LL')}</body>
-          <body style={{fontSize:'16px', marginTop: '10px'}}><strong>HORARIO: </strong>{moment(StartTime).format('HH:mm')} a {moment(EndTime).format('HH:mm')}</body>
+          <body style={{fontSize:'16px', marginTop: '10px'}}><strong>HORARIO: </strong>{moment(StartTime).add(6, 'hours').format('HH:mm')} a {moment(EndTime).add(6, 'hours').format('HH:mm')}</body>
           
           <body style={{fontSize:'16px', marginTop: '10px'}}><strong>NOTAS: </strong>{Notes || 'Ninguna'}</body>
           <button className="buttons" style={{ alignItems: 'center' }} onClick={() => deleteCourse(Id)}>
