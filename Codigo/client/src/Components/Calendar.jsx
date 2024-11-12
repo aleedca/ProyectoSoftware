@@ -28,20 +28,6 @@ function Calendar() {
   const [view, setView] = useState('month');
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [popupType, setPopupType] = useState('');
-
-  /*
-  useEffect(() => {
-    const fetchCoursesCalendar = async () => {
-      try {
-        const response = await axios.get(link + '/getCoursesCalendar');
-        setCourses(response.data);
-      } catch (error) {
-        console.error('Error al obtener la lista de cursos del calendario:', error);
-      }
-    };
-    fetchCoursesCalendar();
-  }, []);
-  */
   
   console.log(refrescar)
   useEffect(() => {
@@ -110,6 +96,7 @@ function Calendar() {
 
   const events = detailsCourses.flatMap((course) => {
     // Diccionario para convertir nombres de días a índices de JavaScript (0 para domingo a 6 para sábado)
+    console.log("course",course)
     const dayMap = {
       'Domingo': 0,
       'Lunes': 1,
@@ -168,16 +155,6 @@ function Calendar() {
   const closeTooltip = () => {
     setSelectedCourse(null);
   };
-
- /* const dayPropGetter = (date) => {
-    const today = new Date();
-    if (date.getDate() === today.getDate() && date.getMonth() === today.getMonth() && date.getFullYear() === today.getFullYear()) {
-      return {
-        style: { backgroundColor: '#ffdd57', color: '#333' } // Cambia el color aquí
-      };
-    }
-    return {};
-  };*/
 
   const dayPropGetter = (date) => {
     // Cambia el color de fondo si `date` está dentro del rango de un festivo
@@ -269,35 +246,25 @@ function EventComponent({ event }) {
 function Tooltip({ course, closeTooltip }) {
   const { link,refrescar, setRefrescar } = useContext(UserContext); 
   const deleteCourse = async (IdDelete) => {
-    /*const errors = {
-        nombreGrupo: !formData.nombreGrupo,
-        idGrupo: !formData.idGrupo
-    };
-
-    setIsError(errors);
-
-    if (Object.values(errors).includes(true)) {
-        setError('Por favor, seleccione un curso.');
-        console.error('Por favor, seleccione un curso.');
-        alert('Por favor, seleccione un curso.');
-        return false; // Detiene la ejecución si hay errores
-    }*/
+    const confirmDelete = window.confirm('¿Está seguro de que desea eliminar este curso?');
+    if (!confirmDelete) {
+      return;
+    }
 
     try {
-        const response = await axios.delete(link + '/deleteCourse', {
-            data: {
-                id: IdDelete
-            }
-        });
+      const response = await axios.delete(link + '/deleteCourse', {
+        data: {
+          id: IdDelete
+        }
+      });
 
-        
-        setRefrescar(!refrescar)
-        alert('curso eliminado correctamente');
+      setRefrescar(!refrescar);
+      alert('Curso eliminado correctamente');
     } catch (error) {
-        console.error('Error al eliminar el curso:', error);
-        alert('Hubo un error al eliminar el curso'+':  '+ error['response']['data'].split("-")[0]);
+      console.error('Error al eliminar el curso:', error);
+      alert('Error al eliminar el curso');
     }
-};
+  };
   const { Id, Course, Teacher, Email, Group, Modality, Location, Days, StartDate, EndDate, StartTime, EndTime, Notes } = course;
   return (
     <div className="tooltip">
