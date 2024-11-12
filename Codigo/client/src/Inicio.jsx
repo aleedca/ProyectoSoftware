@@ -87,8 +87,8 @@ function Inicio() {
               <body style={{ marginTop: '5px',textAlign:"end", color: 'gray', fontSize: '12px',color: '#6B7280'  }}  >+506 8405 2075 <br/>caplog@itcr.ac.cr <br/>
               https://www.tec.ac.cr/tecnico-logistica-inventarios</body>
               <button style={{ marginTop: '20px' }} className="btn_naranja" onClick={() => navigate('/login')}>Continuar</button>
-              <body style={{ marginTop: '20px',textAlign:"end", fontWeight: 'bold', fontSize: '16px',textAlign: 'center'  }}>¿No sabes como usar la plataforma?</body>
-              <body style={{color: '#018ABD', fontWeight: 'bold', textAlign:'center'}}>  <Link to="https://youtu.be/cT5ME6qtHtc" >Manual de usuario en vídeo</Link> <Link to="https://www.canva.com/design/DAGVTMBIb6Y/zanA1NqshTRJ5xeoeNpLpQ/view?utm_content=DAGVTMBIb6Y&utm_campaign=designshare&utm_medium=link&utm_source=editor" >Manual de usuario escrito</Link></body>
+              <body style={{ marginTop: '20px',textAlign:"end", fontWeight: 'bold', fontSize: '16px',textAlign: 'center'  }}>¿No sabes como usar la plataforma?</body><br/>
+              <body style={{color: '#018ABD', fontWeight: 'bold', textAlign:'center'}}>  <Link style={{marginRight: '20px'}} to="https://youtu.be/cT5ME6qtHtc" >Manual de usuario en vídeo</Link>     <Link to="https://www.canva.com/design/DAGVTMBIb6Y/zanA1NqshTRJ5xeoeNpLpQ/view?utm_content=DAGVTMBIb6Y&utm_campaign=designshare&utm_medium=link&utm_source=editor" >Manual de usuario escrito</Link></body>
 
               <div>
                 <img style={{ position: "absolute", bottom: '100px', right: 60, zIndex: 10, width: "120px", height:"auto" }} src={logo} alt='Imagen logo' />

@@ -123,7 +123,7 @@ function Register() {
           <div className='columna columna-imagen'>
             <img style={{ marginTop: '40px' }} src={imagen} alt='Imagen Login' />
             <button  type="submit" style={{ marginTop: '20px' }} className="btn_naranja" onClick={sendData}>Registrar cuenta</button>
-            <body> ¿Ya tienes cuenta? <Link to="/" style={{color: '#018ABD', fontWeight: 'bold', marginLeft: '80px'}}>Iniciar sesión</Link></body>
+            <body> ¿Ya tienes cuenta? <Link to="/login" style={{color: '#018ABD', fontWeight: 'bold', marginLeft: '80px'}}>Iniciar sesión</Link></body>
           </div>
 
         </div>

@@ -24,7 +24,10 @@ const addSchedule = async (req, res) => {
         console.log(req.body)
 
         // Convierte el array de días a un string separado por comas
-        const diasString = req.body['dias'].join(',');
+        const diasOrdenados = req.body['dias'].map(Number).sort((a, b) => a - b);
+        //console.log(diasOrdenados);
+        const diasString = diasOrdenados.join(',');
+        console.log('dias final: ',diasString);
         // Convierte las horas a un formato correcto de SQL Time (HH:mm:ss)
         console.log(req.body['nombreHorario']);
         console.log(req.body['horaInicio']);
@@ -83,7 +86,9 @@ const editSchedule = async (req, res) => {
         console.log(req.body)
 
         // Convierte el array de días a un string separado por comas
-        const diasString = req.body['dias'].join(',');
+        const diasOrdenados = req.body['dias'].map(Number).sort((a, b) => a - b);
+        //console.log(diasOrdenados);
+        const diasString = diasOrdenados.join(',');
         // Convierte las horas a un formato correcto de SQL Time (HH:mm:ss)
         //console.log(req.body['horaInicio']);
         //console.log(req.body['horaFin']);
